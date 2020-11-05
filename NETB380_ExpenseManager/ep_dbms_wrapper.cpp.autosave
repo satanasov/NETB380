@@ -1,0 +1,25 @@
+#include "ep_dbms_wrapper.h"
+
+EP_DBMS_Wrapper::EP_DBMS_Wrapper(QObject *parent) : QObject(parent)
+{
+    /*Default constructor.*/
+}
+
+void EP_DBMS_Wrapper::EP_Dbms_SetupThread(QThread &cThread)
+{
+    /*Make connection between main thread and the thread in DBMS wrapper. We will be executing "EP_Dbms_Main"
+    1) When this thread is emiting started signal then we will connect it to the slot/job EP_Dbms_Main.
+    2) This will permit us to make the connection with the DBMS to be ran on separate thread.  */
+    connect(&cThread,SIGNAL(started()),this,SLOT(EP_Dbms_Main()));
+}
+
+/*All necessary actions for DBMS Wrapper to work needs to be put here.*/
+void EP_DBMS_Wrapper::EP_Dbms_Main()
+{
+    /*Used for testings delete this.*/
+    for(int i = 0; i< 100; i++)
+    {
+        qDebug() << i;
+    }
+    emit
+}
