@@ -11,13 +11,15 @@ CONFIG += c++11
 SOURCES += \
     ep_register.cpp \
     ep_reportmain_wrapper.cpp \
+    ep_userdata.cpp \
     main.cpp \
     ep_main.cpp
 
 HEADERS += \
     ep_main.h \
     ep_register.h \
-    ep_reportmain_wrapper.h
+    ep_reportmain_wrapper.h \
+    ep_userdata.h
 
 FORMS += \
     ep_main.ui \

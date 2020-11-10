@@ -15,6 +15,9 @@ class EP_Main : public QMainWindow
 public:
     EP_Main(QWidget *parent = nullptr);
     ~EP_Main();
+    void EP_Main_SetUserDataPointer(EP_UserData *UserDataPointer);
+    EP_UserData* EP_Main_GetUserDataPointer();
+    void EP_Main_ConnectSlots_UserData();
 
 private slots:
 
@@ -27,5 +30,7 @@ private slots:
 private:
     Ui::EP_Main *ui;
     ep_register *ep_reg; //needed in order to open reg window from main window
+    /*User data pointer.*/
+    EP_UserData *PointerToUserData = nullptr;
 };
 #endif // EP_MAIN_H

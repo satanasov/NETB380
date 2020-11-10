@@ -18,6 +18,8 @@ signals:
 public slots:
     /*Create thread slot. (The job that will be executed)*/
     void EP_Report_Main();
+    /*Main_UI_Slot*/
+    void EP_GetUserDataRegister();
 };
 
 #endif // EP_REPORTMAIN_H

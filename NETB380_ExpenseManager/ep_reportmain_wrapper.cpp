@@ -20,13 +20,14 @@ void EP_ReportMain::EP_ReportMain_SetupThread(QThread &cThread)
     connect(&cThread,SIGNAL(started()),this,SLOT(EP_Report_Main()));
 }
 
-/*All necessary actions for Report Main to work needs to be put here.*/
+void EP_ReportMain::EP_GetUserDataRegister()
+{
+    qDebug() << "UserData slot created.";
+}
+
+/*Connection to the database to be established here.*/
 void EP_ReportMain::EP_Report_Main()
 {
-    /*Used for testings delete this.*/
-    for(int i = 0; i< 100; i++)
-    {
-        qDebug() << i;
-    }
-    emit
+
+
 }

@@ -9,7 +9,7 @@ EP_Main::EP_Main(QWidget *parent)
     , ui(new Ui::EP_Main)
 {
     ui->setupUi(this);
-
+    this->PointerToUserData = nullptr;
     ui->LogInUsername->setPlaceholderText("Enter your username");
     ui->LogInPassword->setPlaceholderText("Enter your password");
     //placeholders for log in fields
@@ -22,6 +22,10 @@ EP_Main::~EP_Main()
     delete ui;
 }
 
+void EP_Main::EP_Main_ConnectSlots_UserData()
+{
+    //connect(this,SIGNAL());
+}
 
 void EP_Main::on_pushButtonLogIn_clicked()
 {
@@ -43,5 +47,19 @@ void EP_Main::on_pushButtonCreateNewAccount_clicked()
 
     //hide(); don't think it's practical
     ep_reg = new ep_register(this); //needed in order to open reg window from main window
+    ep_reg->EP_Register_SetUserDataPointer(this->EP_Main_GetUserDataPointer());
+    ep_reg->EP_Register_ConnectSlots_UserData();
     ep_reg->show(); //show the reg window
+
+
+}
+/*Set pointer to user data class.*/
+void EP_Main::EP_Main_SetUserDataPointer(EP_UserData * UserDataPointer)
+{
+    this->PointerToUserData = UserDataPointer;
+}
+/*Get user data object location*/
+EP_UserData* EP_Main::EP_Main_GetUserDataPointer()
+{
+    return this->PointerToUserData;
 }
