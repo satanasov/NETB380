@@ -7,6 +7,7 @@ Here we will:
 */
 #include "ep_reportmain_wrapper.h"
 #include <QSettings>
+#include "ep_db_wrapper.h"
 
 EP_ReportMain::EP_ReportMain(QObject *parent) : QObject(parent)
 {
@@ -39,5 +40,10 @@ void EP_ReportMain::EP_Report_Main()
     if (DB_HOST == "" || DB_USER == "" || DB_PASS == "" || DB_NAME == "")
     {
         qDebug() << "You are missing DB settings :D";
+    }
+    else
+    {
+        EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+        sql->openDB(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     }
 }

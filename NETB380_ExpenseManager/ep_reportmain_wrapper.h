@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QThread>
 #include <QSettings>
+#include "ep_db_wrapper.h"
 
 class EP_ReportMain : public QObject
 {
@@ -14,6 +15,8 @@ public:
     explicit EP_ReportMain(QObject *parent = nullptr);
     /*Create connection between DBMS wrapper and the thread created in main.*/
     void EP_ReportMain_SetupThread(QThread &cThread);
+private:
+    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
 signals:
     /*Here we need to define signals that can be for example that a job is completed and the GUI to repaint.*/
 public slots:
