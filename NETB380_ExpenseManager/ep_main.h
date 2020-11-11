@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "ep_register.h" //needed in order to open reg window from main window
+#include "ep_db_settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EP_Main; }
@@ -30,6 +31,7 @@ private slots:
 private:
     Ui::EP_Main *ui;
     ep_register *ep_reg; //needed in order to open reg window from main window
+    ep_db_settings *ep_db_set;
     /*User data pointer.*/
     EP_UserData *PointerToUserData = nullptr;
 };

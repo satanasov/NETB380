@@ -1,6 +1,7 @@
 #include "ep_main.h"
 #include "ui_ep_main.h"
 #include "ep_reportmain_wrapper.h"
+#include "ep_db_settings.h"
 #include <QMessageBox>
 
 
@@ -37,7 +38,10 @@ void EP_Main::on_pushButtonLogIn_clicked()
 void EP_Main::on_pushButtonConnectDB_clicked()
 {
     //todo connect DB
-    QMessageBox::information(this, "See todo", "connect"); //testing purpose
+    //QMessageBox::information(this, "See todo", "connect"); //testing purpose
+    ep_db_set = new ep_db_settings();
+    ep_db_set->show();
+
 }
 
 void EP_Main::on_pushButtonCreateNewAccount_clicked()
