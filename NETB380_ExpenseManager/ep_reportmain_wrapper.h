@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QThread>
+#include <QSettings>
 
 class EP_ReportMain : public QObject
 {

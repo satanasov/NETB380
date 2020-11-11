@@ -6,6 +6,7 @@ Here we will:
 -> This class will be handled as a separate thread into the main.
 */
 #include "ep_reportmain_wrapper.h"
+#include <QSettings>
 
 EP_ReportMain::EP_ReportMain(QObject *parent) : QObject(parent)
 {
@@ -28,6 +29,15 @@ void EP_ReportMain::EP_GetUserDataRegister()
 /*Connection to the database to be established here.*/
 void EP_ReportMain::EP_Report_Main()
 {
+    // Request settings
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope, "Netb380", "EPManager");
+    QString DB_HOST = settings.value("DB_HOST", "").toString();
+    QString DB_USER = settings.value("DB_USER", "").toString();
+    QString DB_PASS = settings.value("DB_PASS", "").toString();
+    QString DB_NAME = settings.value("DB_NAME", "").toString();
 
-
+    if (DB_HOST == "" || DB_USER == "" || DB_PASS == "" || DB_NAME == "")
+    {
+        qDebug() << "You are missing DB settings :D";
+    }
 }
