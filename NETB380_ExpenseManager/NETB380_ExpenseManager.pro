@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql
 
 CONFIG += c++11
 
@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     ep_db_settings.cpp \
+    ep_db_wrapper.cpp \
     ep_register.cpp \
     ep_reportmain_wrapper.cpp \
     ep_userdata.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     ep_db_settings.h \
+    ep_db_wrapper.h \
     ep_main.h \
     ep_register.h \
     ep_reportmain_wrapper.h \
