@@ -37,6 +37,7 @@ void EP_ReportMain::EP_Report_Main()
     QString DB_PASS = settings.value("DB_PASS", "").toString();
     QString DB_NAME = settings.value("DB_NAME", "").toString();
 
+    // TODO: Check if DB settings have connected to the DB and recheck
     if (DB_HOST == "" || DB_USER == "" || DB_PASS == "" || DB_NAME == "")
     {
         qDebug() << "You are missing DB settings :D";
