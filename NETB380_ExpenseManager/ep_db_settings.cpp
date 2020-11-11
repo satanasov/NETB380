@@ -2,6 +2,7 @@
 #include "ui_ep_db_settings.h"
 #include <QMessageBox>
 #include <QSettings>
+#include "ep_db_wrapper.h"
 
 
 ep_db_settings::ep_db_settings(QWidget *parent) :
@@ -40,7 +41,11 @@ void ep_db_settings::on_pushButtonConnect_clicked()
     settings.setValue("DB_PASS", DB_PASS);
     settings.setValue("DB_NAME", DB_NAME);
 
-    this->close();
+
+    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+    sql->openDB(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
     qDebug() << settings.fileName();
+
+    this->close();
 }

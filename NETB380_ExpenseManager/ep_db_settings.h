@@ -4,6 +4,7 @@
 #include <QDialog>
 #include "ep_userdata.h"
 #include <QMutex>
+#include "ep_db_wrapper.h"
 
 namespace Ui {
 class ep_db_settings;
@@ -28,6 +29,7 @@ signals:
 
 private:
     Ui::ep_db_settings *ui;
+    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
 
 };
 
