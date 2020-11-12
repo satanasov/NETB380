@@ -17,12 +17,11 @@ class ep_db_settings : public QDialog
 public:
     explicit ep_db_settings(QWidget *parent = nullptr);
     ~ep_db_settings();
-    void EP_Register_SetUserDataPointer(EP_UserData *UserDataPointer);
-    EP_UserData* EP_Register_GetUserDataPointer();
-    void EP_Register_ConnectSlots_UserData();
 
 private slots:
     void on_pushButtonConnect_clicked();
+    void on_pushButtonDeploy_clicked();
+    void on_pushButtonDrop_clicked();
 
 signals:
     void registerDialogFilledCorrectly();
