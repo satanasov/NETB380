@@ -14,6 +14,11 @@ public:
     void closeDB();
     void deployTables();
     void dropTables();
+    int registerUser(QString username, QString password, QString email);
+
+public slots:
+    //void registerUserSlot(QString username, QString password, QString email);
+    void registerUserSlot();
 };
 
 #endif // EP_DB_WRAPPER_H
