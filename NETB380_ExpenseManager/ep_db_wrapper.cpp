@@ -5,6 +5,7 @@
 #include <QSqlQuery>
 #include <QDateTime>
 #include <QDebug>
+#include <QCryptographicHash>
 
 /**
  * Open DB connection
@@ -16,31 +17,37 @@
  */
 void EP_DB_Wrapper::openDB(QString host, QString username, QString pass, QString dbname)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
-    qDebug()<<"Let me try and connect";
-    db.setHostName(host);
-    db.setUserName(username);
-    db.setPassword(pass);
-    //db.setPassword(QString("pacmmm"));
-    db.setDatabaseName(dbname);
-    if (db.open())
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    qDebug() << db.isOpen();
+    if (!db.isOpen())
     {
-        qDebug()<<"DB Is HERE!!!!";
-    }
-    else
-    {
-        // So if we are not connected - display error message.
-        if (db.lastError().isValid()) {
-            qDebug() << db.lastError().text();
-           // QWidget *test = new QWidget();
-          //  QPalette pallette;
-          //  pallette.setColor(QPalette::Background, Qt::black);
-          //  QMessageBox *error = new QMessageBox;
-          //  error->setPalette(pallette);
-          //  QString text = db.lastError().text();
-          //  error->about(test, QObject::tr("DB Error detected"), QObject::tr(qPrintable(text)));
+        QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "appdb");
+        qDebug()<<"Let me try and connect";
+        db.setHostName(host);
+        db.setUserName(username);
+        db.setPassword(pass);
+        //db.setPassword(QString("pacmmm"));
+        db.setDatabaseName(dbname);
+        if (db.open())
+        {
+            qDebug()<<"DB Is HERE!!!!";
+        }
+        else
+        {
+            // So if we are not connected - display error message.
+            if (db.lastError().isValid()) {
+                qDebug() << db.lastError().text();
+               // QWidget *test = new QWidget();
+              //  QPalette pallette;
+              //  pallette.setColor(QPalette::Background, Qt::black);
+              //  QMessageBox *error = new QMessageBox;
+              //  error->setPalette(pallette);
+              //  QString text = db.lastError().text();
+              //  error->about(test, QObject::tr("DB Error detected"), QObject::tr(qPrintable(text)));
+            }
         }
     }
+
 }
 
 /**
@@ -92,4 +99,31 @@ void EP_DB_Wrapper::dropTables()
         db.exec("DROP TABLE ep_expenses_table;");
         qDebug() << db.lastError().text();
     }
+}
+
+void EP_DB_Wrapper::registerUserSlot()
+{
+    qDebug() << "called ya!";
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        qDebug() << "Shit";
+    }
+}
+
+int EP_DB_Wrapper::registerUser(QString username, QString password, QString email)
+{
+    qDebug() << "die";
+    //Username should be normilized
+    QString username_clean = username.toLower();
+    QByteArray pswNsalt (password.toStdString().c_str()) ;
+    pswNsalt.append("HAAGASFASDfasdfASDFWAERQ@#RASDFASDFQWFASDFASEFAS") ;
+    QByteArray hashedSaltedPsw = QCryptographicHash::hash(pswNsalt, QCryptographicHash::Sha256).toHex() ;
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        qDebug() << "Shit";
+    }
+
+    return 0;
 }
