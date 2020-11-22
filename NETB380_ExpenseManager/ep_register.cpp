@@ -1,6 +1,7 @@
 #include "ep_register.h"
 #include "ui_ep_register.h"
 #include <QMessageBox>
+#include "ep_db_wrapper.h"
 
 
 ep_register::ep_register(QWidget *parent) :
@@ -170,6 +171,7 @@ void ep_register::EP_Register_ConnectSlots_UserData()
 {
     /*Make save in user data.*/
     connect(this, SIGNAL(registerDialogFilledCorrectly()),this,SLOT(save_Data_In_UserData()));
+    connect(this, SIGNAL(registerDialogFilledCorrectly()), this->sql, SLOT(registerUserSlot()));
 }
 
 void ep_register::save_Data_In_UserData()
