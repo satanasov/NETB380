@@ -33,7 +33,7 @@ private:
     EP_UserData *PointerToUserData = nullptr;
     bool IsLineEditEmptyOrDefault(int FieldType);
     void CreateWarningDialog(int FieldType);
-    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+    //EP_DB_Wrapper *sql = new EP_DB_Wrapper();
 };
 
 #endif // EP_REGISTER_H

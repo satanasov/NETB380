@@ -12,26 +12,31 @@ public:
     EP_UserData();
     ~EP_UserData();
     /*Setters.*/
-    void EP_UserData_Set_UserName(QString ProvidedUserName);
-    void EP_UserData_Set_UserPassword(QString ProvidedUserPassword);
-    void EP_UserData_Set_UserEmail(QString ProvidedUserEmail);
+    void EP_UserData_Set_RegUserName(QString ProvidedUserName);
+    void EP_UserData_Set_RegUserPassword(QString ProvidedUserPassword);
+    void EP_UserData_Set_RegUserEmail(QString ProvidedUserEmail);
+    void EP_UserData_Set_LogUserName(QString ProvidedUserName);
+    void EP_UserData_Set_LogUserPassword(QString ProvidedUserPassword);
     /*Getters.*/
-    QString EP_UserData_Get_UserName();
-    QString EP_UserData_Get_UserPassword();
-    QString EP_UserData_Get_UserEmail();
+    QString EP_UserData_Get_RegUserName();
+    QString EP_UserData_Get_RegUserPassword();
+    QString EP_UserData_Get_RegUserEmail();
+    QString EP_UserData_Get_LogUserName();
+    QString EP_UserData_Get_LogUserPassword();
 private:
     /*To DO:
      * Add here the containers necessary to update GUI report and all User data that will be provided to and from the GUI.
     */
-    QString UserName;
-    QString UserPassword;
-    QString UserEmail;
+    QString RegUserName;
+    QString RegUserPassword;
+    QString RegUserEmail;
+    QString LogUserName;
+    QString LogUserPassword;
 
 signals:
 
-
 private slots:
-    void EP_UserData_GUI_RegisterData();
+    //void EP_UserData_GUI_RegisterData();
 };
 
 #endif // EP_USERDATA_H

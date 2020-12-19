@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QSettings>
 #include "ep_db_wrapper.h"
+#include "ep_userdata.h"
 
 class EP_ReportMain : public QObject
 {
@@ -17,13 +18,14 @@ public:
     void EP_ReportMain_SetupThread(QThread &cThread);
 private:
     EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+    EP_UserData *PointerToUserData = nullptr;
 signals:
     /*Here we need to define signals that can be for example that a job is completed and the GUI to repaint.*/
 public slots:
     /*Create thread slot. (The job that will be executed)*/
     void EP_Report_Main();
     /*Main_UI_Slot*/
-    void EP_GetUserDataRegister();
+    void EP_GetUserDataRegisterStatus();
 };
 
 #endif // EP_REPORTMAIN_H

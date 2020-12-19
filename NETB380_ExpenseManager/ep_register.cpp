@@ -171,7 +171,7 @@ void ep_register::EP_Register_ConnectSlots_UserData()
 {
     /*Make save in user data.*/
     connect(this, SIGNAL(registerDialogFilledCorrectly()),this,SLOT(save_Data_In_UserData()));
-    connect(this, SIGNAL(registerDialogFilledCorrectly()), this->sql, SLOT(registerUserSlot()));
+   // connect(this, SIGNAL(requestRegistratationStatus()),)
 }
 
 void ep_register::save_Data_In_UserData()
@@ -181,18 +181,18 @@ void ep_register::save_Data_In_UserData()
     /*Lock UserData object.*/
     mutex.lock();
     /*Take Email from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_UserEmail(ui->RegisterEmail->text());
+    this->PointerToUserData->EP_UserData_Set_RegUserEmail(ui->RegisterEmail->text());
     /*Take User name from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_UserName(ui->RegisterUsername->text());
+    this->PointerToUserData->EP_UserData_Set_RegUserName(ui->RegisterUsername->text());
     /*Take User name from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_UserPassword(ui->RegisterPassword->text());
+    this->PointerToUserData->EP_UserData_Set_RegUserPassword(ui->RegisterPassword->text());
     /*Unlock UserData object.*/
     mutex.unlock();
     /*Destroy mutex object.*/
     mutex.~QMutex();
     /*Show into the Application Output that the data is acquired into the UserData object.*/
-    qDebug() << this->PointerToUserData->EP_UserData_Get_UserEmail();
-    qDebug() << this->PointerToUserData->EP_UserData_Get_UserName();
-    qDebug() << this->PointerToUserData->EP_UserData_Get_UserPassword();
+    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserEmail();
+    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserName();
+    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserPassword();
     this->close();
 }

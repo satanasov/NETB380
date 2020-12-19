@@ -18,7 +18,7 @@ public:
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);
-    void registerUserSlot();
+   // void registerUserSlot();
 };
 
 #endif // EP_DB_WRAPPER_H

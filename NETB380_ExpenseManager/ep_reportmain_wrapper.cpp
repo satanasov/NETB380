@@ -22,9 +22,11 @@ void EP_ReportMain::EP_ReportMain_SetupThread(QThread &cThread)
     connect(&cThread,SIGNAL(started()),this,SLOT(EP_Report_Main()));
 }
 
-void EP_ReportMain::EP_GetUserDataRegister()
+void EP_ReportMain::EP_GetUserDataRegisterStatus()
 {
     qDebug() << "UserData slot created.";
+    /*All data is written to UserData, request from DB status of the registration.*/
+
 }
 
 /*Connection to the database to be established here.*/

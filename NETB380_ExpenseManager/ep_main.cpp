@@ -30,9 +30,13 @@ void EP_Main::EP_Main_ConnectSlots_UserData()
 
 void EP_Main::on_pushButtonLogIn_clicked()
 {
-    //todo
-    //when db is connected log in or show error message
-    QMessageBox::information(this, "See todo", "log"); //testing purpose
+    QMutex mutex;
+    /*Lock UserData object.*/
+    mutex.lock();
+    this->EP_Main_GetUserDataPointer()->EP_UserData_Set_LogUserName(ui->LogInUsername->text());
+    this->EP_Main_GetUserDataPointer()->EP_UserData_Set_LogUserPassword(ui->LogInPassword->text());
+    mutex.unlock();
+    mutex.~QMutex();
 }
 
 void EP_Main::on_pushButtonConnectDB_clicked()
@@ -41,7 +45,6 @@ void EP_Main::on_pushButtonConnectDB_clicked()
     //QMessageBox::information(this, "See todo", "connect"); //testing purpose
     ep_db_set = new ep_db_settings();
     ep_db_set->show();
-
 }
 
 void EP_Main::on_pushButtonCreateNewAccount_clicked()
@@ -54,14 +57,14 @@ void EP_Main::on_pushButtonCreateNewAccount_clicked()
     ep_reg->EP_Register_SetUserDataPointer(this->EP_Main_GetUserDataPointer());
     ep_reg->EP_Register_ConnectSlots_UserData();
     ep_reg->show(); //show the reg window
-
-
 }
+
 /*Set pointer to user data class.*/
 void EP_Main::EP_Main_SetUserDataPointer(EP_UserData * UserDataPointer)
 {
     this->PointerToUserData = UserDataPointer;
 }
+
 /*Get user data object location*/
 EP_UserData* EP_Main::EP_Main_GetUserDataPointer()
 {

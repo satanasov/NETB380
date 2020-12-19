@@ -101,15 +101,15 @@ void EP_DB_Wrapper::dropTables()
     }
 }
 
-void EP_DB_Wrapper::registerUserSlot()
-{
-    qDebug() << "called ya!";
-    QSqlDatabase db = QSqlDatabase::database("appdb");
-    if (db.isOpen())
-    {
-        qDebug() << "Shit";
-    }
-}
+//void EP_DB_Wrapper::registerUserSlot()
+//{
+//    qDebug() << "called ya!";
+//    QSqlDatabase db = QSqlDatabase::database("appdb");
+//    if (db.isOpen())
+//    {
+//        qDebug() << "Shit";
+//    }
+//}
 
 int EP_DB_Wrapper::registerUser(QString username, QString password, QString email)
 {

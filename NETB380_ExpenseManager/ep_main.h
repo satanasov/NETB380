@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "ep_register.h" //needed in order to open reg window from main window
 #include "ep_db_settings.h"
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class EP_Main; }

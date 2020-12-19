@@ -3,9 +3,11 @@
 EP_UserData::EP_UserData()
 {
     /*Initialize user data information.*/
-    this->UserEmail = "";
-    this->UserName = "";
-    this->UserPassword = "";
+    this->RegUserEmail = "";
+    this->RegUserName = "";
+    this->RegUserPassword = "";
+    this->LogUserName = "";
+    this->LogUserPassword = "";
 }
 
 EP_UserData::~EP_UserData()
@@ -14,38 +16,52 @@ EP_UserData::~EP_UserData()
 }
 
 /*Setters*/
-void EP_UserData::EP_UserData_Set_UserName(QString ProvidedUserName)
+void EP_UserData::EP_UserData_Set_RegUserName(QString ProvidedUserName)
 {
-    this->UserName = ProvidedUserName;
+    this->RegUserName = ProvidedUserName;
 }
 
-void EP_UserData::EP_UserData_Set_UserPassword(QString ProvidedUserPassword)
+void EP_UserData::EP_UserData_Set_RegUserPassword(QString ProvidedUserPassword)
 {
-    this->UserPassword = ProvidedUserPassword;
+    this->RegUserPassword = ProvidedUserPassword;
 }
 
-void EP_UserData::EP_UserData_Set_UserEmail(QString ProvidedUserEmail)
+void EP_UserData::EP_UserData_Set_RegUserEmail(QString ProvidedUserEmail)
 {
-    this->UserEmail = ProvidedUserEmail;
+    this->RegUserEmail = ProvidedUserEmail;
+}
+/*Setters*/
+void EP_UserData::EP_UserData_Set_LogUserName(QString ProvidedUserName)
+{
+    this->LogUserName = ProvidedUserName;
 }
 
+void EP_UserData::EP_UserData_Set_LogUserPassword(QString ProvidedUserPassword)
+{
+    this->LogUserPassword = ProvidedUserPassword;
+}
 /* Getters*/
-QString EP_UserData::EP_UserData_Get_UserName()
+QString EP_UserData::EP_UserData_Get_RegUserName()
 {
-    return this->UserName;
+    return this->RegUserName;
 }
 
-QString EP_UserData::EP_UserData_Get_UserPassword()
+QString EP_UserData::EP_UserData_Get_RegUserPassword()
 {
-    return this->UserPassword;
+    return this->RegUserPassword;
 }
-QString EP_UserData::EP_UserData_Get_UserEmail()
+QString EP_UserData::EP_UserData_Get_RegUserEmail()
 {
-     return this->UserEmail;
+     return this->RegUserEmail;
+}
+QString EP_UserData::EP_UserData_Get_LogUserName()
+{
+    return this->LogUserName;
 }
 
-/*Slots*/
-void EP_UserData::EP_UserData_GUI_RegisterData()
+QString EP_UserData::EP_UserData_Get_LogUserPassword()
 {
-    qDebug() << "User data slot connected properly.";
+    return this->LogUserPassword;
 }
+
+
