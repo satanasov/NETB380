@@ -36,7 +36,7 @@ private:
 signals:
 
 private slots:
-    //void EP_UserData_GUI_RegisterData();
+
 };
 
 #endif // EP_USERDATA_H

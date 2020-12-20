@@ -122,8 +122,9 @@ int EP_DB_Wrapper::registerUser(QString username, QString password, QString emai
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
     {
-        qDebug() << "Shit";
+        qDebug() << "Shit we are here :D";
     }
-
+    /*For testing.*/
+    //return 1;
     return 0;
 }

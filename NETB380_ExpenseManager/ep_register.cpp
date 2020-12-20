@@ -23,6 +23,7 @@ ep_register::~ep_register()
     delete ui;
 }
 
+/*LOCAL FUNCTIONS*/
 void ep_register::on_pushButtonRegister_clicked()
 {
     int WhichFieldIsEmpty = 0; // Init value.
@@ -49,7 +50,7 @@ void ep_register::on_pushButtonRegister_clicked()
     if(false == ErrorInField)
     {
       /*Emit signal that data is filled correctly and gather it in UserData object.*/
-       emit registerDialogFilledCorrectly();
+       emit EP_Register_registerDialogFilledCorrectly();
     }
 
     //QMessageBox::information(this, "See todo", "register"); //testing purpose
@@ -157,24 +158,38 @@ bool ep_register::IsLineEditEmptyOrDefault(int FieldType)
      }
 }
 
+/*SETTERS*/
 void ep_register::EP_Register_SetUserDataPointer(EP_UserData *UserDataPointer)
 {
     this->PointerToUserData = UserDataPointer;
 }
 
+void ep_register::EP_Register_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
+{
+    this->PointerToEventDispacther = EDPointer;
+}
+
+/*GETTERS*/
 EP_UserData* ep_register::EP_Register_GetUserDataPointer()
 {
     return this->PointerToUserData;
 }
 
+EP_EventDispatcher* ep_register::EP_Register_GetEDPointer()
+{
+    return this->PointerToEventDispacther;
+}
+
+/*CONNECTION*/
 void ep_register::EP_Register_ConnectSlots_UserData()
 {
     /*Make save in user data.*/
-    connect(this, SIGNAL(registerDialogFilledCorrectly()),this,SLOT(save_Data_In_UserData()));
+    connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
    // connect(this, SIGNAL(requestRegistratationStatus()),)
 }
 
-void ep_register::save_Data_In_UserData()
+/*SLOT*/
+void ep_register::EP_Register_Save_Data_In_UserData()
 {
     /*Create QMutex object to lock the memory for writing into UserData object.*/
     QMutex mutex;
@@ -190,9 +205,6 @@ void ep_register::save_Data_In_UserData()
     mutex.unlock();
     /*Destroy mutex object.*/
     mutex.~QMutex();
-    /*Show into the Application Output that the data is acquired into the UserData object.*/
-    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserEmail();
-    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserName();
-    qDebug() << this->PointerToUserData->EP_UserData_Get_RegUserPassword();
     this->close();
+    emit this->EP_Register_GetEDPointer()->EP_ED_RegistrationRequest();
 }

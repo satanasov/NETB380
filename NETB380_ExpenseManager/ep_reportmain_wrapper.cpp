@@ -5,9 +5,10 @@ Here we will:
 -> Process it and provide it into suitable shape/format for the GUI.
 -> This class will be handled as a separate thread into the main.
 */
-#include "ep_reportmain_wrapper.h"
 #include <QSettings>
+#include <QMutex>
 #include "ep_db_wrapper.h"
+#include "ep_reportmain_wrapper.h"
 
 EP_ReportMain::EP_ReportMain(QObject *parent) : QObject(parent)
 {
@@ -22,11 +23,49 @@ void EP_ReportMain::EP_ReportMain_SetupThread(QThread &cThread)
     connect(&cThread,SIGNAL(started()),this,SLOT(EP_Report_Main()));
 }
 
-void EP_ReportMain::EP_GetUserDataRegisterStatus()
+void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
 {
-    qDebug() << "UserData slot created.";
-    /*All data is written to UserData, request from DB status of the registration.*/
+    /*Connection between Event Dispatcher and report main.*/
+    connect(this->EP_ReportMain_GetEDPointer(),SIGNAL(EP_ED_LogInRequest()), this, SLOT(EP_ReportMain_GetUserLogInStatus()));
+    connect(this->EP_ReportMain_GetEDPointer(),SIGNAL(EP_ED_RegistrationRequest()), this, SLOT(EP_ReportMain_GetUserDataRegisterStatus()));
+}
 
+/* Function to DB.*/
+void EP_ReportMain::EP_ReportMain_GetUserDataRegisterStatus()
+{
+    /*Lock user data with current values.*/
+    QMutex mutex;
+    /*Create input validation here for the Log-in screen. For. e.x.: Some limitations.*/
+    mutex.lock();
+    /*Purpose of this function is to get the registration status from DB*/
+    int RegistrationStatus = 0;
+    /*All data is written to UserData, request from DB status of the registration.*/
+    RegistrationStatus = this->sql->registerUser(this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserName(),
+                            this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserPassword(),
+                            this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserEmail());
+    if(RegistrationStatus == 1)
+    {
+        qDebug() << "Registration is successfull";
+        emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(1);
+    }
+    else
+    {
+        qDebug() << "Registration is unsuccessfull";
+        emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(0);
+    }
+    /*Unlock UserData object.*/
+    mutex.unlock();
+    /*Destroy mutex object.*/
+    mutex.~QMutex();
+}
+
+void EP_ReportMain::EP_ReportMain_GetUserLogInStatus()
+{
+    qDebug() << "Log in slot executed.";
+    qDebug() << this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_LogUserName();
+    qDebug() << this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_LogUserPassword();
+    /*All data is written to UserData, request from DB status of the registration.*/
+    /*LOGIN to DB has to be made here.*/
 }
 
 /*Connection to the database to be established here.*/
@@ -49,4 +88,28 @@ void EP_ReportMain::EP_Report_Main()
         EP_DB_Wrapper *sql = new EP_DB_Wrapper();
         sql->openDB(DB_HOST, DB_USER, DB_PASS, DB_NAME);
     }
+}
+
+/*Set pointer to user data class.*/
+void EP_ReportMain::EP_ReportMain_SetUserDataPointer(EP_UserData * UserDataPointer)
+{
+    this->PointerToUserData = UserDataPointer;
+}
+
+/*Get user data object location*/
+EP_UserData* EP_ReportMain::EP_ReportMain_GetUserDataPointer()
+{
+    return this->PointerToUserData;
+}
+
+/*Set pointer to event dispatcher class.*/
+void EP_ReportMain::EP_ReportMain_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
+{
+    this->PointerToEventDispacther = EDPointer;
+}
+
+/*Get event dispatcher object location*/
+EP_EventDispatcher* EP_ReportMain::EP_ReportMain_GetEDPointer()
+{
+    return this->PointerToEventDispacther;
 }

@@ -23,20 +23,23 @@ EP_Main::~EP_Main()
     delete ui;
 }
 
-void EP_Main::EP_Main_ConnectSlots_UserData()
+void EP_Main::EP_Main_ConnectSlots_EventDispatcher()
 {
-    //connect(this,SIGNAL());
+    /*Connect only if neccessary.*/
+    connect(this->EP_Main_GetEDPointer(),SIGNAL(EP_ED_RegistrationStatus(int)), this, SLOT(EP_Main_RegistrationStatusWindow(int)));
 }
 
 void EP_Main::on_pushButtonLogIn_clicked()
 {
-    QMutex mutex;
     /*Lock UserData object.*/
+    QMutex mutex;
+    /*Create input validation here for the Log-in screen. For. e.x.: Some limitations.*/
     mutex.lock();
     this->EP_Main_GetUserDataPointer()->EP_UserData_Set_LogUserName(ui->LogInUsername->text());
     this->EP_Main_GetUserDataPointer()->EP_UserData_Set_LogUserPassword(ui->LogInPassword->text());
     mutex.unlock();
     mutex.~QMutex();
+    emit this->EP_Main_GetEDPointer()->EP_ED_LogInRequest();
 }
 
 void EP_Main::on_pushButtonConnectDB_clicked()
@@ -55,8 +58,24 @@ void EP_Main::on_pushButtonCreateNewAccount_clicked()
     //hide(); don't think it's practical
     ep_reg = new ep_register(this); //needed in order to open reg window from main window
     ep_reg->EP_Register_SetUserDataPointer(this->EP_Main_GetUserDataPointer());
+    ep_reg->EP_Register_SetEventDispatcherPointer(this->EP_Main_GetEDPointer());
     ep_reg->EP_Register_ConnectSlots_UserData();
     ep_reg->show(); //show the reg window
+}
+
+void EP_Main::EP_Main_RegistrationStatusWindow(int RegStatus)
+{
+    QMessageBox msg;
+    if ( RegStatus == 1)
+    {
+        msg.setText("Registration was successfull!");
+    }
+    else
+    {
+        msg.setText("Registration was unsuccessfull!");
+    }
+    msg.setWindowTitle("Registration status");
+    msg.exec();
 }
 
 /*Set pointer to user data class.*/
@@ -69,4 +88,16 @@ void EP_Main::EP_Main_SetUserDataPointer(EP_UserData * UserDataPointer)
 EP_UserData* EP_Main::EP_Main_GetUserDataPointer()
 {
     return this->PointerToUserData;
+}
+
+/*Set pointer to event dispatcher class.*/
+void EP_Main::EP_Main_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
+{
+    this->PointerToEventDispacther = EDPointer;
+}
+
+/*Get event dispatcher object location*/
+EP_EventDispatcher* EP_Main::EP_Main_GetEDPointer()
+{
+    return this->PointerToEventDispacther;
 }
