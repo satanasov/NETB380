@@ -15,6 +15,7 @@ SOURCES += \
     ep_register.cpp \
     ep_reportmain_wrapper.cpp \
     ep_userdata.cpp \
+    ep_welcome.cpp \
     main.cpp \
     ep_main.cpp
 
@@ -25,12 +26,14 @@ HEADERS += \
     ep_main.h \
     ep_register.h \
     ep_reportmain_wrapper.h \
-    ep_userdata.h
+    ep_userdata.h \
+    ep_welcome.h
 
 FORMS += \
     ep_db_settings.ui \
     ep_main.ui \
-    ep_register.ui
+    ep_register.ui \
+    ep_welcome.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

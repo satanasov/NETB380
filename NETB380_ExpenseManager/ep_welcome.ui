@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ep_welcome</class>
+ <widget class="QDialog" name="ep_welcome">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>856</width>
+    <height>519</height>
+   </rect>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::PreventContextMenu</enum>
+  </property>
+  <property name="windowTitle">
+   <string>Expense Manager</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="5" column="2">
+    <widget class="QPushButton" name="pushButtonAddMoney">
+     <property name="text">
+      <string>Add money</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="2">
+    <widget class="QPushButton" name="pushButtonClothes">
+     <property name="text">
+      <string>Clothes</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QPushButton" name="pushButtonYear">
+     <property name="text">
+      <string>This Year</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="5">
+    <widget class="QPushButton" name="pushButtonOther">
+     <property name="text">
+      <string>Other</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2" colspan="2">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Check your expenses by type:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="3">
+    <widget class="QPushButton" name="pushButtonUtility">
+     <property name="text">
+      <string>Utility</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QPushButton" name="pushButtonFood">
+     <property name="text">
+      <string>Food</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="4">
+    <widget class="QPushButton" name="pushButtonBank">
+     <property name="text">
+      <string>Bank</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2" colspan="2">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Check your expenses by date:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelDate">
+     <property name="text">
+      <string>Date</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QPushButton" name="pushButtonWeek">
+     <property name="text">
+      <string>This Week</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="4">
+    <widget class="QLabel" name="labelWelcome">
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+      </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="text">
+      <string>Welcome %loginname</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labelTime">
+     <property name="text">
+      <string>Time</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QPushButton" name="pushButtonMonth">
+     <property name="text">
+      <string>This Month</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="pushButtonNewExpense">
+     <property name="text">
+      <string>Add new expense</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QPushButton" name="pushButtonTransport">
+     <property name="text">
+      <string>Transport</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="4">
+    <widget class="QPushButton" name="pushButtonAllTime">
+     <property name="text">
+      <string>All Time</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QPushButton" name="pushButtonToday">
+     <property name="text">
+      <string>Today</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="5">
+    <widget class="QPushButton" name="pushButtonCustom">
+     <property name="text">
+      <string>Custom</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" colspan="2">
+    <widget class="QLabel" name="labelBalance">
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Your current balance is: %currentbalance</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
