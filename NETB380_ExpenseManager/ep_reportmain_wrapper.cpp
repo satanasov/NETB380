@@ -43,16 +43,30 @@ void EP_ReportMain::EP_ReportMain_GetUserDataRegisterStatus()
     RegistrationStatus = this->sql->registerUser(this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserName(),
                             this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserPassword(),
                             this->EP_ReportMain_GetUserDataPointer()->EP_UserData_Get_RegUserEmail());
-    if(RegistrationStatus == 1)
-    {
-        qDebug() << "Registration is successfull";
-        emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(1);
+    qDebug() << RegistrationStatus;
+    switch (RegistrationStatus) {
+        case -2:
+            qDebug() << "Registration is successfull";
+            emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(-2);
+        break;
+        case -1:
+            qDebug() << "Registration is successfull";
+            emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(-1);
+        break;
+        case 0:
+            qDebug() << "Registration is successfull";
+            emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(0);
+        break;
+        case 1:
+            qDebug() << "Registration is successfull";
+            emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(1);
+        break;
+        case 2:
+            qDebug() << "Registration is successfull";
+            emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(2);
+        break;
     }
-    else
-    {
-        qDebug() << "Registration is unsuccessfull";
-        emit this->EP_ReportMain_GetEDPointer()->EP_ED_RegistrationStatus(0);
-    }
+
     /*Unlock UserData object.*/
     mutex.unlock();
     /*Destroy mutex object.*/

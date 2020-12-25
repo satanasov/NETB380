@@ -66,13 +66,22 @@ void EP_Main::on_pushButtonCreateNewAccount_clicked()
 void EP_Main::EP_Main_RegistrationStatusWindow(int RegStatus)
 {
     QMessageBox msg;
-    if ( RegStatus == 1)
-    {
-        msg.setText("Registration was successfull!");
-    }
-    else
-    {
-        msg.setText("Registration was unsuccessfull!");
+    switch (RegStatus) {
+        case -2:
+           msg.setText("Unknown ERROR ... you should never see this.");
+        break;
+        case -1:
+           msg.setText("Database is not connected ... Do you know what you are doing?");
+        break;
+        case 0:
+           msg.setText("Registration was successfull!");
+        break;
+        case 1:
+           msg.setText("User alredy exists ...");
+        break;
+        case 2:
+           msg.setText("Email alredy in system ...");
+        break;
     }
     msg.setWindowTitle("Registration status");
     msg.exec();

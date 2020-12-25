@@ -101,19 +101,23 @@ void EP_DB_Wrapper::dropTables()
     }
 }
 
-//void EP_DB_Wrapper::registerUserSlot()
-//{
-//    qDebug() << "called ya!";
-//    QSqlDatabase db = QSqlDatabase::database("appdb");
-//    if (db.isOpen())
-//    {
-//        qDebug() << "Shit";
-//    }
-//}
-
+/**
+ * This is owr magical registration method :D
+ * @brief EP_DB_Wrapper::registerUser
+ * @param username
+ * @param password
+ * @param email
+ * @return
+ *
+ * Return values:
+ * 2 -> email exists
+ * 1 -> user exists
+ * 0 -> OK
+ * -1 -> no connection to DB
+ * -2 -> unknown error
+ */
 int EP_DB_Wrapper::registerUser(QString username, QString password, QString email)
 {
-    qDebug() << "die";
     //Username should be normilized
     QString username_clean = username.toLower();
     QByteArray pswNsalt (password.toStdString().c_str()) ;
@@ -122,9 +126,98 @@ int EP_DB_Wrapper::registerUser(QString username, QString password, QString emai
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
     {
-        qDebug() << "Shit we are here :D";
+        qDebug() << "here be dragon ... puf";
+        // Check for duplicate username
+        // TODO: Use clean username and use username_clean
+        //QSqlQuery query("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
+        QSqlQuery query =  db.exec("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
+        if (query.size() > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            QSqlQuery query1 =  db.exec("SELECT * FROM ep_users WHERE email LIKE '" + QString("%1").arg(email) + "';");
+            if (query1.size() > 0)
+            {
+                return 2;
+            }
+            else
+            {
+                QSqlQuery query2 = db.exec("INSERT INTO ep_users (username, username_crean, password, email) VALUES ('" + QString("%1").arg(username) +"', '" + QString("%1").arg(username_clean) +"', '" + QString("%1").arg(password) +"','" + QString("%1").arg(email) +"')");
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+
     }
-    /*For testing.*/
-    //return 1;
-    return 0;
+    else
+    {
+        return -1;
+    }
+    return -2;
+}
+
+
+/**
+ * This is login function.
+ * @brief EP_DB_Wrapper::loginUser
+ * @param username
+ * @param password
+ * @return
+ *
+ * Return values:
+ * 2 -> email exists
+ * 1 -> user exists
+ * 0 -> OK
+ * -1 -> no connection to DB
+ * -2 -> unknown error
+ */
+int EP_DB_Wrapper::loginUser(QString username, QString password)
+{
+    //Username should be normilized
+    QString username_clean = username.toLower();
+    QByteArray pswNsalt (password.toStdString().c_str()) ;
+    pswNsalt.append("HAAGASFASDfasdfASDFWAERQ@#RASDFASDFQWFASDFASEFAS") ;
+    QByteArray hashedSaltedPsw = QCryptographicHash::hash(pswNsalt, QCryptographicHash::Sha256).toHex() ;
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    QString input_pass = QString("%1").arg(password);
+    QString db_pass;
+    if (db.isOpen())
+    {
+        qDebug() << "here be dragon ... puf";
+        // Check for duplicate username
+        // TODO: Use clean username and use username_clean
+        //QSqlQuery query("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
+        QSqlQuery query =  db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
+        if (query.size() > 0)
+        {
+            return 1;
+        }
+        else
+        {
+            qDebug() << query.value(0).toString();
+            db_pass = query.value(3).toString();
+            if (db_pass == input_pass)
+            {
+                return 0;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return -2;
 }

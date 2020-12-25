@@ -15,6 +15,7 @@ public:
     void deployTables();
     void dropTables();
     int registerUser(QString username, QString password, QString email);
+    int loginUser(QString username, QString password);
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);
