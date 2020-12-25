@@ -6,109 +6,93 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>240</width>
-    <height>474</height>
+    <width>251</width>
+    <height>425</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Register form</string>
+   <string>DB Settings</string>
   </property>
-  <widget class="QGroupBox" name="groupBoxRegister">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>239</width>
-     <height>261</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>Register</string>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLabel" name="labelRegisterUsername">
-      <property name="text">
-       <string>DB Host</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="DBHost"/>
-    </item>
-    <item>
-     <widget class="QLabel" name="labelRegisterPassword">
-      <property name="text">
-       <string>DB Username</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="DBUsername">
-      <property name="echoMode">
-       <enum>QLineEdit::Normal</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="labelRegisterRepeat">
-      <property name="text">
-       <string>DB Pass</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="DBPass">
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="labelRegisterEmail">
-      <property name="text">
-       <string>DB Name</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="DBName"/>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButtonConnect">
-      <property name="text">
-       <string>Connect</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QPushButton" name="pushButtonDeploy">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>300</y>
-     <width>80</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Deploy tables</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButtonDrop">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>340</y>
-     <width>80</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Drop tables</string>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QGroupBox" name="groupBoxRegister">
+     <property name="title">
+      <string>DB Settings</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="labelRegisterUsername">
+        <property name="text">
+         <string>DB Host</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="DBHost"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelRegisterPassword">
+        <property name="text">
+         <string>DB Username</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="DBUsername">
+        <property name="echoMode">
+         <enum>QLineEdit::Normal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelRegisterRepeat">
+        <property name="text">
+         <string>DB Pass</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="DBPass">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelRegisterEmail">
+        <property name="text">
+         <string>DB Name</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="DBName"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonConnect">
+        <property name="text">
+         <string>Connect</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonDeploy">
+     <property name="text">
+      <string>Deploy tables</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButtonDrop">
+     <property name="text">
+      <string>Drop tables</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
