@@ -63,5 +63,3 @@ QString EP_UserData::EP_UserData_Get_LogUserPassword()
 {
     return this->LogUserPassword;
 }
-
-

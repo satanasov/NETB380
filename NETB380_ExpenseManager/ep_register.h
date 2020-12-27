@@ -3,30 +3,27 @@
 
 #include <QDialog>
 #include <QMutex>
-#include "ep_userdata.h"
 #include "ep_db_wrapper.h"
-#include "ep_eventdispatcher.h"
+#include "ep_baseclass_gui_reportmain.h"
 
 namespace Ui {
 class ep_register;
 }
 
-class ep_register : public QDialog
+class ep_register : public QDialog, EP_BaseClass_GUI_ReportMain
 {
     Q_OBJECT
 
 public:
     explicit ep_register(QWidget *parent = nullptr);
     ~ep_register();
-
-    /*Setters.*/
-    void EP_Register_SetUserDataPointer(EP_UserData *UserDataPointer);
-    void EP_Register_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer);
-    /*Getters.*/
-    EP_UserData* EP_Register_GetUserDataPointer();
-    EP_EventDispatcher* EP_Register_GetEDPointer();
     /*Connections.*/
     void EP_Register_ConnectSlots_UserData();
+    /*Exposing base class functions.*/
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer;
 
 private slots:
     void on_pushButtonRegister_clicked();
@@ -37,13 +34,8 @@ signals:
 
 private:
     Ui::ep_register *ui;
-    /*Pointer to User Data.*/
-    EP_UserData *PointerToUserData = nullptr;
-    /*Event dispatcher pointer.*/
-    EP_EventDispatcher *PointerToEventDispacther = nullptr;
     bool IsLineEditEmptyOrDefault(int FieldType);
     void CreateWarningDialog(int FieldType);
-    //EP_DB_Wrapper *sql = new EP_DB_Wrapper();
 };
 
 #endif // EP_REGISTER_H

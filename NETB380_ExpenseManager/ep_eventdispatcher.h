@@ -20,6 +20,7 @@ signals:
 
     /*Signals to GUI.*/
     void EP_ED_RegistrationStatus(int RegStatus);
+    void EP_ED_LoginStatus(int LogStatus);
 };
 
 #endif // EP_EVENTDISPATCHER_H

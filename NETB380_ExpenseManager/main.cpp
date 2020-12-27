@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
 
     /*Create main object -> GUI.*/
     EP_Main w;
-    w.EP_Main_SetUserDataPointer(&UserData);
-    w.EP_Main_SetEventDispatcherPointer(&ED);
+    w.EP_BaseClass_SetUserDataPointer(&UserData);
+    w.EP_BaseClass_SetEventDispatcherPointer(&ED);
     w.EP_Main_ConnectSlots_EventDispatcher();
 
     /*Create thread object to pass to DBMS_Wrapper.*/
@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
     /*Create DMBS_Wrapper object to pass the thread from main.*/
     EP_ReportMain Report_Main;
     /*Assign user data object and event dispatcher.*/
-    Report_Main.EP_ReportMain_SetUserDataPointer(&UserData);
-    Report_Main.EP_ReportMain_SetEventDispatcherPointer(&ED);
+    Report_Main.EP_BaseClass_SetUserDataPointer(&UserData);
+    Report_Main.EP_BaseClass_SetEventDispatcherPointer(&ED);
     Report_Main.EP_ReportMain_ConnectToEventDispacther();
     /*Connect DBMS Wrapper thread job to the main thread*/
     Report_Main.EP_ReportMain_SetupThread(ReportMain_Thread);

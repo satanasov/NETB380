@@ -29,7 +29,6 @@ signals:
 private:
     Ui::ep_db_settings *ui;
     EP_DB_Wrapper *sql = new EP_DB_Wrapper();
-
 };
 
 #endif // EP_DB_SETTINGS_H

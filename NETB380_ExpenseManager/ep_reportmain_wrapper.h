@@ -6,10 +6,9 @@
 #include <QThread>
 #include <QSettings>
 #include "ep_db_wrapper.h"
-#include "ep_userdata.h"
-#include "ep_eventdispatcher.h"
+#include "ep_baseclass_gui_reportmain.h"
 
-class EP_ReportMain : public QObject
+class EP_ReportMain : public QObject, EP_BaseClass_GUI_ReportMain
 {
     Q_OBJECT
 
@@ -20,28 +19,26 @@ public:
     void EP_ReportMain_SetupThread(QThread &cThread);
     /*Create connection between Event Dispatcher and Report Main.*/
     void EP_ReportMain_ConnectToEventDispacther();
-    /*Setters*/
-    void EP_ReportMain_SetUserDataPointer(EP_UserData *UserDataPointer);
-    void EP_ReportMain_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer);
-    /*Getters*/
-    EP_UserData* EP_ReportMain_GetUserDataPointer();
-    EP_EventDispatcher* EP_ReportMain_GetEDPointer();
+
+    /*Exposing base class functions.*/
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer;
 
 private:
+    /*Pointer to DB wrapper.*/
     EP_DB_Wrapper *sql = new EP_DB_Wrapper();
-    /*User data pointer.*/
-    EP_UserData *PointerToUserData = nullptr;
-    /*Event dispatcher pointer.*/
-    EP_EventDispatcher *PointerToEventDispacther = nullptr;
 
 public slots:
     /*Create thread slot. (The job that will be executed)*/
     void EP_Report_Main();
+
     /*Main_UI_Slot*/
     void EP_ReportMain_GetUserLogInStatus();
+
     /*Register_UI_Slots*/
     void EP_ReportMain_GetUserDataRegisterStatus();
-
 };
 
 #endif // EP_REPORTMAIN_H

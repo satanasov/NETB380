@@ -1,6 +1,6 @@
+#include <QMessageBox>
 #include "ep_register.h"
 #include "ui_ep_register.h"
-#include <QMessageBox>
 #include "ep_db_wrapper.h"
 
 
@@ -9,12 +9,10 @@ ep_register::ep_register(QWidget *parent) :
     ui(new Ui::ep_register)
 {
     ui->setupUi(this);
-
     ui->RegisterUsername->setPlaceholderText("Enter a username");
     ui->RegisterPassword->setPlaceholderText("Enter a password");
     ui->RegisterRepeat->setPlaceholderText("Repeat the password");
     ui->RegisterEmail->setPlaceholderText("Enter an email");
-    this->PointerToUserData = nullptr;
     //placeholders for register fields
 }
 
@@ -158,34 +156,11 @@ bool ep_register::IsLineEditEmptyOrDefault(int FieldType)
      }
 }
 
-/*SETTERS*/
-void ep_register::EP_Register_SetUserDataPointer(EP_UserData *UserDataPointer)
-{
-    this->PointerToUserData = UserDataPointer;
-}
-
-void ep_register::EP_Register_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
-{
-    this->PointerToEventDispacther = EDPointer;
-}
-
-/*GETTERS*/
-EP_UserData* ep_register::EP_Register_GetUserDataPointer()
-{
-    return this->PointerToUserData;
-}
-
-EP_EventDispatcher* ep_register::EP_Register_GetEDPointer()
-{
-    return this->PointerToEventDispacther;
-}
-
 /*CONNECTION*/
 void ep_register::EP_Register_ConnectSlots_UserData()
 {
     /*Make save in user data.*/
     connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
-   // connect(this, SIGNAL(requestRegistratationStatus()),)
 }
 
 /*SLOT*/
@@ -196,15 +171,16 @@ void ep_register::EP_Register_Save_Data_In_UserData()
     /*Lock UserData object.*/
     mutex.lock();
     /*Take Email from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_RegUserEmail(ui->RegisterEmail->text());
+    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserEmail(ui->RegisterEmail->text());
     /*Take User name from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_RegUserName(ui->RegisterUsername->text());
+    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserName(ui->RegisterUsername->text());
     /*Take User name from registration window.*/
-    this->PointerToUserData->EP_UserData_Set_RegUserPassword(ui->RegisterPassword->text());
+    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserPassword(ui->RegisterPassword->text());
+
     /*Unlock UserData object.*/
     mutex.unlock();
     /*Destroy mutex object.*/
     mutex.~QMutex();
     this->close();
-    emit this->EP_Register_GetEDPointer()->EP_ED_RegistrationRequest();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RegistrationRequest();
 }
