@@ -47,5 +47,6 @@ void ep_welcome::EP_WelcomeScreen_Initialize()
 
 void ep_welcome::on_pushButtonAddMoney_clicked()
 {
-    //add money dialog
+    ep_ad_m = new ep_add_money(this);
+    ep_ad_m->show();
 }

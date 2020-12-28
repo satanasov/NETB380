@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "ep_baseclass_gui_reportmain.h"
+#include "ep_add_money.h"
 
 namespace Ui {
 class ep_welcome;
@@ -31,6 +32,7 @@ public slots:
 
 private:
     Ui::ep_welcome *ui;
+    ep_add_money *ep_ad_m;
 };
 
 #endif // EP_WELCOME_H

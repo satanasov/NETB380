@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ep_add_money.cpp \
     ep_baseclass_gui_reportmain.cpp \
     ep_db_settings.cpp \
     ep_db_wrapper.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     ep_main.cpp
 
 HEADERS += \
+    ep_add_money.h \
     ep_baseclass_gui_reportmain.h \
     ep_db_settings.h \
     ep_db_wrapper.h \
@@ -32,6 +34,7 @@ HEADERS += \
     ep_welcome.h
 
 FORMS += \
+    ep_add_money.ui \
     ep_db_settings.ui \
     ep_main.ui \
     ep_register.ui \
