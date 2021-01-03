@@ -22,6 +22,8 @@ public:
     QList<QList<QString>> getCurrencies();
     int addExpenseGroup(int userId, QString name, QString description);
     QList<QList<QString>> getExpenseGroups(int userId);
+    int addUserAccount(int userId, int type, QString name, QString description, double ammount, int currency);
+    QList<QList<QString>> getUserAccounts(int userId);
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);

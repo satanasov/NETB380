@@ -475,3 +475,119 @@ QList<QList<QString>> getExpenseGroups(int userId)
     }
     return answers;
 }
+
+/**
+ * @brief EP_DB_Wrapper::addUserAccount
+ * @param userId
+ * @param type
+ * @param name
+ * @param description
+ * @param ammount
+ * @param currency
+ * @return
+ */
+int EP_DB_Wrapper::addUserAccount(int userId, int type, QString name, QString description, double ammount, int currency)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (usrQuery.size() < 1)
+        {
+            return -3;
+        }
+        else
+        {
+            int is_active = usrQuery.value(1).toInt();
+            if (is_active == 1)
+            {
+                QDateTime * timestamp = new QDateTime;
+                int added_at = timestamp->currentSecsSinceEpoch();
+                QSqlQuery accountQuery = db.exec("INSERT INTO ep_user_accounts (uid, type, name, description, amount, currency, added_at, last_change, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(type) + "', '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(ammount) + "', '" + QString("%1").arg(currency) + "', '" + QString("%1").arg(added_at) + "', '" + QString("%1").arg(added_at) + "', 1)");
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return -4;
+            }
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return -2;
+}
+
+/**
+* @brief EP_DB_Wrapper::getUserAccounts
+* @param userId
+* @return
+*/
+
+QList<QList<QString>> EP_DB_Wrapper::getUserAccounts(int userId)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    QList<QList<QString>> answers;
+    if (db.isOpen())
+    {
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (query.size() < 1)
+        {
+            QList<QString> a;
+            QString message = "Invalid user ... mhm ...";
+            a.append(message);
+            answers.append(a);
+        }
+        else
+        {
+            int is_active = query.value(1).toInt();
+            if (is_active == 1)
+            {
+                QSqlQuery query1 = db.exec("SELECT * FROM ep_user_accounts WHERE uid = '" + QString("%1").arg(userId));
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    while (query1.next()) {
+                        QList<QString> a;
+                        a.append(QString("%1").arg(query.value(0).toInt()));
+                        a.append(QString("%1").arg(query.value(2).toString()));
+                        a.append(QString("%1").arg(query.value(3).toString()));
+                        a.append(QString("%1").arg(query.value(4).toString()));
+                        a.append(QString("%1").arg(query.value(5).toDouble()));
+                        a.append(QString("%1").arg(query.value(6).toInt()));
+                        a.append(QString("%1").arg(query.value(7).toInt()));
+                        a.append(QString("%1").arg(query.value(8).toInt()));
+                        a.append(QString("%1").arg(query.value(9).toInt()));
+                        answers.append(a);
+                    }
+                }
+            }
+            else
+            {
+                QList<QString> a;
+                QString message = "User not active ... what are you trying to pull?";
+                a.append(message);
+                answers.append(a);
+            }
+        }
+    }
+    else
+    {
+        QList<QString> a;
+        QString message = "DB SUX ... Please check connection.";
+        a.append(message);
+        answers.append(a);
+    }
+    return answers;
+}
