@@ -18,6 +18,8 @@ public:
     int loginUser(QString username, QString password);
     int addAcountType(QString type, QString description);
     QList<QList<QString>> getAccountTypes();
+    int addCurency(QString ISO, QString longname);
+    QList<QList<QString>> getCurrencies();
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);
