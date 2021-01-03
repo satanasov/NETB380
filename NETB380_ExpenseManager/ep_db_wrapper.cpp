@@ -591,3 +591,152 @@ QList<QList<QString>> EP_DB_Wrapper::getUserAccounts(int userId)
     }
     return answers;
 }
+
+/**
+ * @brief EP_DB_Wrapper::addExpense
+ * @param userId
+ * @param accountId
+ * @param ammount
+ * @param name
+ * @param description
+ * @param expGroup
+ * @param added_at
+ * @return
+ */
+int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString name, QString description, int expGroup, int added_at)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (usrQuery.size() < 1)
+        {
+            return -3;
+        }
+        else
+        {
+            int is_active = usrQuery.value(1).toInt();
+            if (is_active == 1)
+            {
+                QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, ammount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, '" + QString("%1").arg(ammount) + "', '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return -4;
+            }
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return -2;
+}
+
+/**
+ * @brief EP_DB_Wrapper::getExpenses
+ * @param userId
+ * @param accountId
+ * @param type
+ * @param ammount
+ * @param ammount_delta
+ * @param name
+ * @param description
+ * @param expGroup
+ * @param fromTime
+ * @param toTime
+ * @param limit
+ * @return
+ */
+QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int type, double ammount, QString ammount_delta, QString name, QString description, int expGroup, int fromTime, int toTime, int limit)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    QList<QList<QString>> answers;
+    if (db.isOpen())
+    {
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (query.size() < 1)
+        {
+            QList<QString> a;
+            QString message = "Invalid user ... mhm ...";
+            a.append(message);
+            answers.append(a);
+        }
+        else
+        {
+            int is_active = query.value(1).toInt();
+            if (is_active == 1)
+            {
+                // Code goes here MF
+                QString request = "SELECT * FROM ep_expenses_table WHERE uid = " + QString("%1").arg(userId);
+                if (accountId != 0)
+                {
+                    request.append(" AND aid = " + QString("%1").arg(userId));
+                }
+                if (ammount != 0.0)
+                {
+                    request.append(" AND ammount " + QString("%1").arg(ammount_delta) + " " + QString("%1").arg(ammount));
+                }
+                if (name != "")
+                {
+                     request.append(" AND name LIKE '%" + QString("%1").arg(name) + "%'");
+                }
+                if (description != "")
+                {
+                     request.append(" AND description LIKE '%" + QString("%1").arg(description) + "%'");
+                }
+                if (expGroup != 0)
+                {
+                    request.append(" AND ammount = " + QString("%1").arg(expGroup));
+                }
+
+                request.append(" AND is_active = 1 LIMIT 0, 20");
+                QSqlQuery expQuery = db.exec(request);
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    while (expQuery.next()) {
+                        QList<QString> a;
+                        a.append(QString("%1").arg(query.value(0).toInt()));
+                        a.append(QString("%1").arg(query.value(2).toString()));
+                        a.append(QString("%1").arg(query.value(3).toString()));
+                        a.append(QString("%1").arg(query.value(4).toString()));
+                        a.append(QString("%1").arg(query.value(5).toDouble()));
+                        a.append(QString("%1").arg(query.value(6).toInt()));
+                        a.append(QString("%1").arg(query.value(7).toInt()));
+                        a.append(QString("%1").arg(query.value(8).toInt()));
+                        a.append(QString("%1").arg(query.value(9).toInt()));
+                        answers.append(a);
+                    }
+                }
+
+            }
+            else
+            {
+                QList<QString> a;
+                QString message = "User not active ... what are you trying to pull?";
+                a.append(message);
+                answers.append(a);
+            }
+        }
+    }
+    else
+    {
+        QList<QString> a;
+        QString message = "DB SUX ... Please check connection.";
+        a.append(message);
+        answers.append(a);
+    }
+    return answers;
+}
