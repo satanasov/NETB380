@@ -196,7 +196,7 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
         // Check for duplicate username
         // TODO: Use clean username and use username_clean
         //QSqlQuery query("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
-        QSqlQuery query =  db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
+        QSqlQuery query = db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
         if (query.size() > 0)
         {
             return -3;
@@ -220,4 +220,73 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
         return -1;
     }
     return -2;
+}
+
+/**
+ * @brief EP_DB_Wrapper::addAcountType
+ * @param type
+ * @param description
+ * @return
+ *
+ * Return values:
+ * 0 -> OK
+ * -1 -> no connection to DB
+ * -2 -> unknown error
+ */
+
+int EP_DB_Wrapper::addAcountType(QString type, QString description)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        QSqlQuery query = db.exec("INSERT INTO ep_account_types (type, description) VALUES ('" + QString("%1").arg(type) + "', '" + QString("%1").arg(description) + "')");
+        if (db.lastError().isValid())
+        {
+            qDebug() << db.lastError().text();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    return -2;
+}
+
+/**
+ * @brief EP_DB_Wrapper::getAccountTypes
+ * @return QList<QList<QString>> of all account types
+ * Form:
+ * [] => array(
+ *      QString ID,
+ *      QString type,
+ *      Qstring description
+ * )
+ */
+QList<QList<QString>> EP_DB_Wrapper::getAccountTypes()
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    QList<QList<QString>> answers;
+    if (db.isOpen())
+    {
+        QSqlQuery query = db.exec("SELECT * FROM ep_account_types");
+        while (query.next()) {
+            QList<QString> a;
+            a.append(QString("%1").arg(query.value(0).toInt()));
+            a.append(QString("%1").arg(query.value(1).toString()));
+            a.append(QString("%1").arg(query.value(2).toString()));
+            answers.append(a);
+        }
+    }
+    else
+    {
+        QList<QString> a;
+        QString message = "DB SUX ... Please check connection.";
+        a.append(message);
+        answers.append(a);
+    }
+    return answers;
 }

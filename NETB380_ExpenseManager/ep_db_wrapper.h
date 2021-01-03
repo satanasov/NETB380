@@ -16,6 +16,8 @@ public:
     void dropTables();
     int registerUser(QString username, QString password, QString email);
     int loginUser(QString username, QString password);
+    int addAcountType(QString type, QString description);
+    QList<QList<QString>> getAccountTypes();
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);
