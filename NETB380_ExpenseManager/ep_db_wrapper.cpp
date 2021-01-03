@@ -174,11 +174,11 @@ int EP_DB_Wrapper::registerUser(QString username, QString password, QString emai
  * @return
  *
  * Return values:
- * 2 -> email exists
- * 1 -> user exists
- * 0 -> OK
+ * >0 -> OK
  * -1 -> no connection to DB
  * -2 -> unknown error
+ * -3 -> User does not exist
+ * -4 -> Wrong pass!
  */
 int EP_DB_Wrapper::loginUser(QString username, QString password)
 {
@@ -199,7 +199,7 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
         QSqlQuery query =  db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
         if (query.size() > 0)
         {
-            return 1;
+            return -3;
         }
         else
         {
@@ -207,11 +207,11 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
             db_pass = query.value(3).toString();
             if (db_pass == input_pass)
             {
-                return 0;
+                return query.value(0).toInt();
             }
             else
             {
-                return 2;
+                return -4;
             }
         }
     }
