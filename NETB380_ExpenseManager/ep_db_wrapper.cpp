@@ -293,8 +293,8 @@ QList<QList<QString>> EP_DB_Wrapper::getAccountTypes()
 
 /**
  * @brief EP_DB_Wrapper::addCurency
- * @param type
- * @param description
+ * @param ISO
+ * @param longaneme
  * @return
  *
  * Return values:
@@ -360,3 +360,118 @@ QList<QList<QString>> EP_DB_Wrapper::getCurrencies()
     return answers;
 }
 
+/**
+ * @brief EP_DB_Wrapper::addExpenseGroup
+ * @param userId
+ * @param name
+ * @param description
+ * @return
+ *
+ * Return values:
+ * 0 -> OK
+ * -1 -> no connection to DB
+ * -2 -> unknown error
+ * -3 -> user does not exist
+ * -4 -> user is not active
+ */
+
+int EP_DB_Wrapper::addExpenseGroup(int userId, QString name, QString description)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if (db.isOpen())
+    {
+        // Check if user exists and is active
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (query.size() < 1)
+        {
+            return -3;
+        }
+        else
+        {
+            qDebug() << query.value(0).toString();
+            int is_active = query.value(1).toInt();
+            if (is_active == 1)
+            {
+                QSqlQuery query1 = db.exec("INSERT INTO ep_expenses_groups (uid, name, description) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "')");
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return -4;
+            }
+        }
+
+    }
+    else
+    {
+        return -1;
+    }
+    return -2;
+}
+
+/**
+ * Get expense groups for user ...
+ * @brief getExpenseGroups
+ * @param userId
+ * @return
+ */
+QList<QList<QString>> getExpenseGroups(int userId)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    QList<QList<QString>> answers;
+    if (db.isOpen())
+    {
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        if (query.size() < 1)
+        {
+            QList<QString> a;
+            QString message = "Invalid user ... mhm ...";
+            a.append(message);
+            answers.append(a);
+        }
+        else
+        {
+            int is_active = query.value(1).toInt();
+            if (is_active == 1)
+            {
+                QSqlQuery query1 = db.exec("SELECT * FROM ep_expenses_groups WHERE uid = '" + QString("%1").arg(userId));
+                if (db.lastError().isValid())
+                {
+                    qDebug() << db.lastError().text();
+                }
+                else
+                {
+                    while (query1.next()) {
+                        QList<QString> a;
+                        a.append(QString("%1").arg(query.value(0).toInt()));
+                        a.append(QString("%1").arg(query.value(2).toString()));
+                        a.append(QString("%1").arg(query.value(3).toString()));
+                        answers.append(a);
+                    }
+                }
+            }
+            else
+            {
+                QList<QString> a;
+                QString message = "User not active ... what are you trying to pull?";
+                a.append(message);
+                answers.append(a);
+            }
+        }
+    }
+    else
+    {
+        QList<QString> a;
+        QString message = "DB SUX ... Please check connection.";
+        a.append(message);
+        answers.append(a);
+    }
+    return answers;
+}

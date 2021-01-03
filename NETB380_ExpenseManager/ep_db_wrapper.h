@@ -20,6 +20,8 @@ public:
     QList<QList<QString>> getAccountTypes();
     int addCurency(QString ISO, QString longname);
     QList<QList<QString>> getCurrencies();
+    int addExpenseGroup(int userId, QString name, QString description);
+    QList<QList<QString>> getExpenseGroups(int userId);
 
 public slots:
     //void registerUserSlot(QString username, QString password, QString email);
