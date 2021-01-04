@@ -698,7 +698,7 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                     request.append(" AND ammount = " + QString("%1").arg(expGroup));
                 }
 
-                request.append(" AND is_active = 1 LIMIT 0, 20");
+                request.append(" AND is_active = 1 LIMIT 0, " + QString("%1").arg(limit));
                 QSqlQuery expQuery = db.exec(request);
                 if (db.lastError().isValid())
                 {
