@@ -50,3 +50,93 @@ void ep_welcome::on_pushButtonAddMoney_clicked()
     ep_ad_m = new ep_add_money(this);
     ep_ad_m->show();
 }
+
+void ep_welcome::on_pushButtonNewExpense_clicked()
+{
+    ep_ad_e = new ep_add_expense(this);
+    ep_ad_e->show();
+}
+
+void ep_welcome::on_pushButtonToday_clicked()
+{
+    //today
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonWeek_clicked()
+{
+    //this week
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonMonth_clicked()
+{
+    //this month
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonYear_clicked()
+{
+    //this year
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonAllTime_clicked()
+{
+    //all time
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonCustom_clicked()
+{
+    //custom ???????
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonTransport_clicked()
+{
+    //transport
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonFood_clicked()
+{
+    //food
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonClothes_clicked()
+{
+    //clothes
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonUtility_clicked()
+{
+    //utility
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonBank_clicked()
+{
+    //bank
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}
+
+void ep_welcome::on_pushButtonOther_clicked()
+{
+    //other
+    ep_sh_r = new ep_show_report(this);
+    ep_sh_r->show();
+}

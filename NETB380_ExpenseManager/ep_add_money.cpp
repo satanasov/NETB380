@@ -1,5 +1,6 @@
 #include "ep_add_money.h"
 #include "ui_ep_add_money.h"
+#include <QMessageBox>
 
 ep_add_money::ep_add_money(QWidget *parent) :
     QDialog(parent),
@@ -15,5 +16,7 @@ ep_add_money::~ep_add_money()
 
 void ep_add_money::on_pushButtonMoneyAdd_clicked()
 {
-    //todo succesfully add money to account
+    QMessageBox::information(this, "Success!", "Succesfully added %d to balance!");
+    // add code to get the user input from baseclass
+
 }
