@@ -58,8 +58,7 @@
     <item>
      <widget class="QPushButton" name="pushButtonConnectDB">
       <property name="text">
-       <string>CONNECT DB 
-BEFORE ENTERING ANYTHING</string>
+       <string>DB Connection Configuration</string>
       </property>
      </widget>
     </item>
@@ -78,7 +77,7 @@ BEFORE ENTERING ANYTHING</string>
      <x>0</x>
      <y>0</y>
      <width>345</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
