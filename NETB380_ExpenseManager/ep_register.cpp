@@ -166,21 +166,14 @@ void ep_register::EP_Register_ConnectSlots_UserData()
 /*SLOT*/
 void ep_register::EP_Register_Save_Data_In_UserData()
 {
-    /*Create QMutex object to lock the memory for writing into UserData object.*/
-    QMutex mutex;
-    /*Lock UserData object.*/
-    mutex.lock();
     /*Take Email from registration window.*/
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserEmail(ui->RegisterEmail->text());
     /*Take User name from registration window.*/
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserName(ui->RegisterUsername->text());
     /*Take User name from registration window.*/
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserPassword(ui->RegisterPassword->text());
-
-    /*Unlock UserData object.*/
-    mutex.unlock();
-    /*Destroy mutex object.*/
-    mutex.~QMutex();
+    /**/
     this->close();
+    /*Emit signal that registration is requested on DB side.*/
     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RegistrationRequest();
 }

@@ -26,19 +26,38 @@ public:
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer;
 
+    /*Setters*/
+    void EP_ReportMain_SetDBPointer(EP_DB_Wrapper *pointToDB);
+
+    /*Getters*/
+    EP_DB_Wrapper* EP_ReportMain_GetDBPointer();
+
 private:
     /*Pointer to DB wrapper.*/
-    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+    EP_DB_Wrapper *sql = nullptr;
+    /*DB Settings*/
+    QString EP_RM_DB_HOST;
+    QString EP_RM_DB_USERNAME;
+    QString EP_RM_DB_PASS;
+    QString EP_RM_DB_DBNAME;
+
+signals:
+    void EP_ReportMain_OpenDB();
 
 public slots:
-    /*Create thread slot. (The job that will be executed)*/
-    void EP_Report_Main();
-
     /*Main_UI_Slot*/
     void EP_ReportMain_GetUserLogInStatus();
 
     /*Register_UI_Slots*/
     void EP_ReportMain_GetUserDataRegisterStatus();
+
+    /*DB_Settings Slots*/
+    void EP_ReportMain_GetDBSettings();
+    void EP_ReportMain_DeployTableInCurrentDB();
+    void EP_ReportMain_DropTableInCurrentDB();
+
+    /*Internal slots*/
+    void EP_ReportMain_OpenDBConnection();
 };
 
 #endif // EP_REPORTMAIN_H

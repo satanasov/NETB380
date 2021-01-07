@@ -17,6 +17,9 @@ signals:
     /*Signals to Report Main.*/
     void EP_ED_RegistrationRequest();
     void EP_ED_LogInRequest();
+    void EP_ED_DBSettingsRequest();
+    void EP_ED_DBRequestDeployTable();
+    void EP_ED_DBRequestDropTable();
 
     /*Signals to GUI.*/
     void EP_ED_RegistrationStatus(int RegStatus);

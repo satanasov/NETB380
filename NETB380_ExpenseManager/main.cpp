@@ -22,20 +22,12 @@ int main(int argc, char *argv[])
     w.EP_BaseClass_SetEventDispatcherPointer(&ED);
     w.EP_Main_ConnectSlots_EventDispatcher();
 
-    /*Create thread object to pass to DBMS_Wrapper.*/
-    QThread ReportMain_Thread;
-    /*Create DMBS_Wrapper object to pass the thread from main.*/
+    /*Create ReportMain object. -> Connection between GUI and DB.*/
     EP_ReportMain Report_Main;
     /*Assign user data object and event dispatcher.*/
     Report_Main.EP_BaseClass_SetUserDataPointer(&UserData);
     Report_Main.EP_BaseClass_SetEventDispatcherPointer(&ED);
     Report_Main.EP_ReportMain_ConnectToEventDispacther();
-    /*Connect DBMS Wrapper thread job to the main thread*/
-    Report_Main.EP_ReportMain_SetupThread(ReportMain_Thread);
-    /*Part of QObject class, take DBMS_Wrapper object and move it to the assigned thread.*/
-    Report_Main.moveToThread(&ReportMain_Thread);
-    /*Initiate main thread*/
-    ReportMain_Thread.start();
 
     /*Show GUI.*/
     w.show();

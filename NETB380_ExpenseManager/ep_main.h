@@ -2,7 +2,6 @@
 #define EP_MAIN_H
 
 #include <QMainWindow>
-#include <QMutex>
 #include "ep_register.h" //needed in order to open reg window from main window
 #include "ep_db_settings.h"
 #include "ep_baseclass_gui_reportmain.h"

@@ -2,33 +2,34 @@
 #define EP_DB_SETTINGS_H
 
 #include <QDialog>
-#include "ep_userdata.h"
 #include <QMutex>
+#include "ep_userdata.h"
 #include "ep_db_wrapper.h"
+#include "ep_baseclass_gui_reportmain.h"
 
 namespace Ui {
 class ep_db_settings;
 }
 
-class ep_db_settings : public QDialog
+class ep_db_settings : public QDialog, EP_BaseClass_GUI_ReportMain
 {
     Q_OBJECT
 
 public:
     explicit ep_db_settings(QWidget *parent = nullptr);
     ~ep_db_settings();
+    /*Exposing base class functions.*/
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
 
 private slots:
     void on_pushButtonConnect_clicked();
     void on_pushButtonDeploy_clicked();
     void on_pushButtonDrop_clicked();
 
-signals:
-    void registerDialogFilledCorrectly();
-
 private:
     Ui::ep_db_settings *ui;
-    EP_DB_Wrapper *sql = new EP_DB_Wrapper();
+
 };
 
 #endif // EP_DB_SETTINGS_H

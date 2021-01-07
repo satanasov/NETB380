@@ -1,6 +1,5 @@
 #include <QMessageBox>
 #include <QThread>
-#include <QMutex>
 #include "ep_main.h"
 #include "ui_ep_main.h"
 #include "ep_reportmain_wrapper.h"
@@ -33,22 +32,16 @@ void EP_Main::EP_Main_ConnectSlots_EventDispatcher()
 
 void EP_Main::on_pushButtonLogIn_clicked()
 {
-    /*Lock UserData object.*/
-    QMutex mutex;
-    /*Create input validation here for the Log-in screen. For. e.x.: Some limitations.*/
-    mutex.lock();
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserName(ui->LogInUsername->text());
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserPassword(ui->LogInPassword->text());
-    mutex.unlock();
-    mutex.~QMutex();
     emit this->EP_BaseClass_GetEDPointer()->EP_ED_LogInRequest();
 }
 
 void EP_Main::on_pushButtonConnectDB_clicked()
 {
-    //todo connect DB
     //QMessageBox::information(this, "See todo", "connect"); //testing purpose
     ep_db_set = new ep_db_settings();
+    ep_db_set->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
     ep_db_set->show();
 }
 
@@ -95,6 +88,12 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
     ep_welcome WelcomeScreen;
     QMessageBox msg;
     switch (LogStatus) {
+        case -4:
+            msg.setText("Wrong password!");
+        break;
+        case -3:
+            msg.setText("User does not exist. Please register in DataBase!");
+        break;
         case -2:
            msg.setText("Unknown ERROR ... you should never see this.");
         break;
