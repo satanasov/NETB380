@@ -33,7 +33,7 @@ void ep_db_settings::on_pushButtonConnect_clicked()
     settings.setValue("DB_PASS", DB_PASS);
     settings.setValue("DB_NAME", DB_NAME);
     /*Request opening of DB and pass settings.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBWinRequestDBConnection();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBWinRequestDBConnection(1);
     /*Report Ini file location.*/
     qDebug() << settings.fileName();
 }

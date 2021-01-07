@@ -25,7 +25,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     /*Registration Window requests.*/
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RegWinRegistrationRequest()), this, SLOT(EP_ReportMain_GetUserDataRegisterStatus()));
     /*DB_Settings requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDBConnection()), this, SLOT(EP_ReportMain_DBWin_RequestDbConnection()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDBConnection(int)), this, SIGNAL(EP_ReportMain_OpenDB(int)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDeployTable()), this, SLOT(EP_ReportMain_DeployTableInCurrentDB()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDropTable()), this, SLOT(EP_ReportMain_DropTableInCurrentDB()));
 }
@@ -61,12 +61,6 @@ void EP_ReportMain::EP_ReportMain_GetUserLogInStatus()
                                        this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserPassword());
     /*Send the login-status to Event-Dispatcher*/
     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMLoginStatus(LoginStatus);
-}
-
-void EP_ReportMain::EP_ReportMain_DBWin_RequestDbConnection()
-{
-    /*Request to Open DB.*/
-    emit this->EP_ReportMain_OpenDB(1);
 }
 
 void EP_ReportMain::EP_ReportMain_DeployTableInCurrentDB()

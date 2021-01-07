@@ -17,7 +17,7 @@ signals:
     /*Signals to Report Main.*/
     void EP_ED_RegWinRegistrationRequest();
     void EP_ED_LogWinLogInRequest();
-    void EP_ED_DBWinRequestDBConnection();
+    void EP_ED_DBWinRequestDBConnection(int RequestId);
     void EP_ED_DBWinRequestDeployTable();
     void EP_ED_DBWinRequestDropTable();
 

@@ -49,7 +49,6 @@ public slots:
     void EP_ReportMain_GetUserDataRegisterStatus();
 
     /*DB_Settings Slots*/
-    void EP_ReportMain_DBWin_RequestDbConnection();
     void EP_ReportMain_DeployTableInCurrentDB();
     void EP_ReportMain_DropTableInCurrentDB();
 
