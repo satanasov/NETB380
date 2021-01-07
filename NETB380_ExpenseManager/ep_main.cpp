@@ -26,15 +26,35 @@ EP_Main::~EP_Main()
 void EP_Main::EP_Main_ConnectSlots_EventDispatcher()
 {
     /*Make all connections between Event Dispatcher and Main window slots..*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RegistrationStatus(int)), this, SLOT(EP_Main_RegistrationStatusWindow(int)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_LoginStatus(int)),this, SLOT(EP_Main_LoginStatusWindow(int)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMRegistrationStatus(int)), this, SLOT(EP_Main_RegistrationStatusWindow(int)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMLoginStatus(int)),this, SLOT(EP_Main_LoginStatusWindow(int)));
 }
 
 void EP_Main::on_pushButtonLogIn_clicked()
 {
-    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserName(ui->LogInUsername->text());
-    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserPassword(ui->LogInPassword->text());
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_LogInRequest();
+    /*Check IF:
+     * - UserName is empty.
+     * - Password is empty.
+    */
+    if((ui->LogInUsername->text() == "" || ui->LogInUsername->text() == " ")
+            ||
+        (ui->LogInPassword->text() == "" || ui->LogInPassword->text() == " ")
+            )
+    {
+        /*Display error message.*/
+        QMessageBox msg;
+        msg.setText("Username or Password Empty!");
+        msg.setWindowTitle("Log-In error status");
+        msg.exec();
+    }
+    else
+    {
+        /*Save log-in data.*/
+        this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserName(ui->LogInUsername->text());
+        this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_LogUserPassword(ui->LogInPassword->text());
+        /*Request log-in to DB.*/
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_LogWinLogInRequest();
+    }
 }
 
 void EP_Main::on_pushButtonConnectDB_clicked()
@@ -42,6 +62,7 @@ void EP_Main::on_pushButtonConnectDB_clicked()
     //QMessageBox::information(this, "See todo", "connect"); //testing purpose
     ep_db_set = new ep_db_settings();
     ep_db_set->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    ep_db_set->EP_DB_Settings_connectToEventDispatcher();
     ep_db_set->show();
 }
 
@@ -54,7 +75,6 @@ void EP_Main::on_pushButtonCreateNewAccount_clicked()
     ep_reg = new ep_register(this); //needed in order to open reg window from main window
     ep_reg->EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
     ep_reg->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
-    ep_reg->EP_Register_ConnectSlots_UserData();
     ep_reg->show(); //show the reg window
 }
 

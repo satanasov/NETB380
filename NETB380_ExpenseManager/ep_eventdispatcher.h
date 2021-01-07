@@ -15,15 +15,19 @@ public:
 
 signals:
     /*Signals to Report Main.*/
-    void EP_ED_RegistrationRequest();
-    void EP_ED_LogInRequest();
-    void EP_ED_DBSettingsRequest();
-    void EP_ED_DBRequestDeployTable();
-    void EP_ED_DBRequestDropTable();
+    void EP_ED_RegWinRegistrationRequest();
+    void EP_ED_LogWinLogInRequest();
+    void EP_ED_DBWinRequestDBConnection();
+    void EP_ED_DBWinRequestDeployTable();
+    void EP_ED_DBWinRequestDropTable();
 
     /*Signals to GUI.*/
-    void EP_ED_RegistrationStatus(int RegStatus);
-    void EP_ED_LoginStatus(int LogStatus);
+    /*Registration window.*/
+    void EP_ED_RMRegistrationStatus(int RegStatus);
+    /*Log-in window.*/
+    void EP_ED_RMLoginStatus(int LogStatus);
+    /*DB_Settings window.*/
+    void EP_ED_RMDBConectionSuccessfull();
 };
 
 #endif // EP_EVENTDISPATCHER_H

@@ -14,6 +14,7 @@ ep_register::ep_register(QWidget *parent) :
     ui->RegisterRepeat->setPlaceholderText("Repeat the password");
     ui->RegisterEmail->setPlaceholderText("Enter an email");
     //placeholders for register fields
+     connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
 }
 
 ep_register::~ep_register()
@@ -30,9 +31,7 @@ void ep_register::on_pushButtonRegister_clicked()
     /*
         when databese is connected
         -check if username already exists
-        -check if both passwords match
         -check if email is a valid one
-
         -make a new account
     */
     /**/
@@ -156,13 +155,6 @@ bool ep_register::IsLineEditEmptyOrDefault(int FieldType)
      }
 }
 
-/*CONNECTION*/
-void ep_register::EP_Register_ConnectSlots_UserData()
-{
-    /*Make save in user data.*/
-    connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
-}
-
 /*SLOT*/
 void ep_register::EP_Register_Save_Data_In_UserData()
 {
@@ -172,8 +164,8 @@ void ep_register::EP_Register_Save_Data_In_UserData()
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserName(ui->RegisterUsername->text());
     /*Take User name from registration window.*/
     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_RegUserPassword(ui->RegisterPassword->text());
-    /**/
+    /*Close register window.*/
     this->close();
     /*Emit signal that registration is requested on DB side.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RegistrationRequest();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RegWinRegistrationRequest();
 }

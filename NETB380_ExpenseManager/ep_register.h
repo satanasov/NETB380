@@ -17,8 +17,6 @@ class ep_register : public QDialog, EP_BaseClass_GUI_ReportMain
 public:
     explicit ep_register(QWidget *parent = nullptr);
     ~ep_register();
-    /*Connections.*/
-    void EP_Register_ConnectSlots_UserData();
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;

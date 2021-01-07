@@ -33,7 +33,7 @@ void ep_db_settings::on_pushButtonConnect_clicked()
     settings.setValue("DB_PASS", DB_PASS);
     settings.setValue("DB_NAME", DB_NAME);
     /*Request opening of DB and pass settings.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBSettingsRequest();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBWinRequestDBConnection();
     /*Report Ini file location.*/
     qDebug() << settings.fileName();
 }
@@ -41,11 +41,25 @@ void ep_db_settings::on_pushButtonConnect_clicked()
 /*Request deployment of DB tables.*/
 void ep_db_settings::on_pushButtonDeploy_clicked()
 {
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBRequestDeployTable();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBWinRequestDeployTable();
 }
 
 /*Request deletion of DB tables.*/
 void ep_db_settings::on_pushButtonDrop_clicked()
 {
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBRequestDropTable();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_DBWinRequestDropTable();
+}
+
+/*Check DB configuration and conncetion status.*/
+void ep_db_settings::EP_DB_Settings_DBConnectionAndSettingsStatus()
+{
+    QMessageBox msg;
+    msg.setText("Connection to DB succssefull. DB Settings saved.");
+    msg.setWindowTitle("DB Connection Status");
+    msg.exec();
+}
+
+void ep_db_settings::EP_DB_Settings_connectToEventDispatcher()
+{
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMDBConectionSuccessfull()),this, SLOT(EP_DB_Settings_DBConnectionAndSettingsStatus()));
 }

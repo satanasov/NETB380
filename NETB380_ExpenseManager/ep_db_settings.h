@@ -21,11 +21,16 @@ public:
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
+    /*Local functions.*/
+    void EP_DB_Settings_connectToEventDispatcher();
 
 private slots:
     void on_pushButtonConnect_clicked();
     void on_pushButtonDeploy_clicked();
     void on_pushButtonDrop_clicked();
+
+public slots:
+    void EP_DB_Settings_DBConnectionAndSettingsStatus();
 
 private:
     Ui::ep_db_settings *ui;

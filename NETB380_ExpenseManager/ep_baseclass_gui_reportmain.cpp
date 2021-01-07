@@ -13,16 +13,17 @@ void EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer(EP_UserData * 
     this->PointerToUserData = UserDataPointer;
 }
 
-/*Get user data object location*/
-EP_UserData* EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer()
-{
-    return this->PointerToUserData;
-}
 
 /*Set pointer to event dispatcher class.*/
 void EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
 {
     this->PointerToEventDispacther = EDPointer;
+}
+
+/*Get user data object location*/
+EP_UserData* EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer()
+{
+    return this->PointerToUserData;
 }
 
 /*Get event dispatcher object location*/

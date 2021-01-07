@@ -19,6 +19,7 @@ ep_welcome::~ep_welcome()
     delete ui;
 }
 
+/**/
 void ep_welcome::updateTime()
 {
     QTime time = QTime::currentTime();
@@ -29,20 +30,13 @@ void ep_welcome::updateTime()
     ui->labelDate->setText(date_text);
 }
 
+/**/
 void ep_welcome::EP_WelcomeScreen_Initialize()
 {
-    /*Create QMutex object to lock the memory for writing into UserData object.*/
-    QMutex mutex;
-    /*Lock UserData object.*/
-    mutex.lock();
     /*Take Email from registration window.*/
     ui->labelWelcome->setText("Welcome : " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName());
     /*Add balance from DB.*/
 
-    /*Unlock UserData object.*/
-    mutex.unlock();
-    /*Destroy mutex object.*/
-    mutex.~QMutex();
 }
 
 void ep_welcome::on_pushButtonAddMoney_clicked()
