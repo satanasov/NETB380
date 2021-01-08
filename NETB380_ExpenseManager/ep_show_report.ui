@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Report</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources.qrc">
+    <normaloff>:/new/icon/images/ep_icon.ico</normaloff>:/new/icon/images/ep_icon.ico</iconset>
+  </property>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
@@ -133,6 +137,8 @@
    </widget>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
