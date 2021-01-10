@@ -120,7 +120,7 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
         case -1:
            msg.setText("Database is not connected ... Do you know what you are doing?");
         break;
-        case 0:
+        default:
            /*Log-In is successfull*/
            this->~EP_Main();
            /* Execute welocme screen.*/
@@ -132,12 +132,6 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
            /* Create all necessary connections here and cofiguration for WelcomeScreen.*/
            // TO DO.
            /**/
-        break;
-        case 1:
-           msg.setText("User alredy exists ...");
-        break;
-        case 2:
-           msg.setText("Email alredy in system ...");
         break;
     }
     /*Check-if Log-in Status message object is still available.*/
