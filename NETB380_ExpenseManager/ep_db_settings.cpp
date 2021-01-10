@@ -9,6 +9,12 @@ ep_db_settings::ep_db_settings(QWidget *parent) :
     ui(new Ui::ep_db_settings)
 {
     ui->setupUi(this);
+    QSettings settings(QSettings::IniFormat, QSettings::UserScope,"Netb380", "EPManager");
+    // Request settings for opening DB connection.
+    ui->DBHost->setText(settings.value("DB_HOST", "").toString());
+    ui->DBUsername->setText(settings.value("DB_USER", "").toString());
+    ui->DBPass->setText(settings.value("DB_PASS", "").toString());
+    ui->DBName->setText(settings.value("DB_NAME", "").toString());
 }
 
 ep_db_settings::~ep_db_settings()
@@ -23,10 +29,13 @@ ep_db_settings::~ep_db_settings()
 void ep_db_settings::on_pushButtonConnect_clicked()
 {
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,"Netb380", "EPManager");
+    // Request settings for opening DB connection.
+
     QString DB_HOST = ui->DBHost->text();
     QString DB_USER = ui->DBUsername->text();
     QString DB_PASS = ui->DBPass->text();
     QString DB_NAME = ui->DBName->text();
+
 
     settings.setValue("DB_HOST", DB_HOST);
     settings.setValue("DB_USER", DB_USER);
