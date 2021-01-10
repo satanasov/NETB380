@@ -56,7 +56,7 @@ void EP_DB_Wrapper::openDB(QString host, QString username, QString pass, QString
  */
 void EP_DB_Wrapper::closeDB()
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    QSqlDatabase db = QSqlDatabase::database("appdb");
     db.close();
 }
 
@@ -72,7 +72,7 @@ void EP_DB_Wrapper::deployTables()
     {
         qDebug() << "DB is open tables are deployed";
         // Create users_table (ep_users)
-        db.exec("CREATE TABLE ep_users (id serial PRIMARY KEY, username VARCHAR (64) NOT NULL, username_crean VARCHAR (80) UNIQUE NOT NULL, password VARCHAR (60) NOT NULL, email VARCHAR (256) UNIQUE NOT NULL, name VARCHAR (512), reg_date NUMERIC, last_active NUMERIC, user_active smallint );");
+        db.exec("CREATE TABLE ep_users (id serial PRIMARY KEY, username VARCHAR (64) NOT NULL, username_clean VARCHAR (80) UNIQUE NOT NULL, password VARCHAR (60) NOT NULL, email VARCHAR (256) UNIQUE NOT NULL, name VARCHAR (512), reg_date NUMERIC, last_active NUMERIC, user_active smallint );");
         db.exec("CREATE TABLE ep_account_types(id serial PRIMARY KEY, type VARCHAR (64), description text);");
         db.exec("CREATE TABLE ep_currencies (id serial PRIMARY KEY, iso VARCHAR (8) UNIQUE NOT NULL, long_name VARCHAR (256));");
         db.exec("CREATE TABLE ep_expenses_groups (id serial PRIMARY KEY, uid NUMERIC, name VARCHAR (256), description TEXT");
@@ -145,7 +145,7 @@ int EP_DB_Wrapper::registerUser(QString username, QString password, QString emai
             }
             else
             {
-                QSqlQuery query2 = db.exec("INSERT INTO ep_users (username, username_crean, password, email) VALUES ('" + QString("%1").arg(username) +"', '" + QString("%1").arg(username_clean) +"', '" + QString("%1").arg(password) +"','" + QString("%1").arg(email) +"')");
+                QSqlQuery query2 = db.exec("INSERT INTO ep_users (username, username_clean, password, email) VALUES ('" + QString("%1").arg(username) +"', '" + QString("%1").arg(username_clean) +"', '" + QString("%1").arg(password) +"','" + QString("%1").arg(email) +"')");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();
@@ -191,6 +191,7 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
     QSqlDatabase db = QSqlDatabase::database("appdb");
     QString input_pass = QString("%1").arg(password);
     QString db_pass;
+    qDebug() << username_clean;
     if (db.isOpen())
     {
         qDebug() << "here be dragon ... puf";
@@ -198,6 +199,8 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
         // TODO: Use clean username and use username_clean
         //QSqlQuery query("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
         QSqlQuery query = db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
+        qDebug() << "SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';";
+        qDebug() << query.size();
         if (query.size() > 0)
         {
             return -3;
