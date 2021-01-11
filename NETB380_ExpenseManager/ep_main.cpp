@@ -13,8 +13,6 @@ EP_Main::EP_Main(QWidget *parent)
     ui->setupUi(this);
     ui->LogInUsername->setPlaceholderText("Enter your username");
     ui->LogInPassword->setPlaceholderText("Enter your password");
-    //placeholders for log in fields
-
     ui->pushButtonConnectDB->setStyleSheet("color: #FF0000"); //red text alert of button
 }
 
@@ -59,7 +57,7 @@ void EP_Main::on_pushButtonLogIn_clicked()
 
 void EP_Main::on_pushButtonConnectDB_clicked()
 {
-    //QMessageBox::information(this, "See todo", "connect"); //testing purpose
+    /*Create DataBase configuration window.*/
     ep_db_set = new ep_db_settings();
     ep_db_set->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
     ep_db_set->EP_DB_Settings_connectToEventDispatcher();
@@ -68,10 +66,7 @@ void EP_Main::on_pushButtonConnectDB_clicked()
 
 void EP_Main::on_pushButtonCreateNewAccount_clicked()
 {
-    //todo Create new account in database
-    //QMessageBox::information(this, "See todo", "create"); //testing purpose
-
-    //hide(); don't think it's practical
+    /*Create new register window to handle the registration.*/
     ep_reg = new ep_register(this); //needed in order to open reg window from main window
     ep_reg->EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
     ep_reg->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
@@ -127,11 +122,9 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
            WelcomeScreen.EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
            WelcomeScreen.EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
            /*Initialize Function to update welcomescreen.*/
+           WelcomeScreen.EP_WelcomeScreen_ConnectoToED();
            WelcomeScreen.EP_WelcomeScreen_Initialize();
            WelcomeScreen.exec();
-           /* Create all necessary connections here and cofiguration for WelcomeScreen.*/
-           // TO DO.
-           /**/
         break;
     }
     /*Check-if Log-in Status message object is still available.*/
@@ -140,5 +133,9 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
         /*Set dialog name and execute it.*/
         msg.setWindowTitle("Log-In status");
         msg.exec();
+    }
+    else
+    {
+        msg.~QMessageBox();
     }
 }

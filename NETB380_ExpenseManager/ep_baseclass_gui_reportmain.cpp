@@ -13,7 +13,6 @@ void EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer(EP_UserData * 
     this->PointerToUserData = UserDataPointer;
 }
 
-
 /*Set pointer to event dispatcher class.*/
 void EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer(EP_EventDispatcher *EDPointer)
 {

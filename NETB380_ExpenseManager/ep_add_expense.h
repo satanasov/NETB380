@@ -15,6 +15,8 @@ public:
     explicit ep_add_expense(QWidget *parent = nullptr);
     ~ep_add_expense();
 
+
+
 private slots:
     void on_pushButtonExpenseAdd_clicked();
 

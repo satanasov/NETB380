@@ -30,7 +30,7 @@ void EP_UserData::EP_UserData_Set_RegUserEmail(QString ProvidedUserEmail)
 {
     this->RegUserEmail = ProvidedUserEmail;
 }
-/*Setters*/
+
 void EP_UserData::EP_UserData_Set_LogUserName(QString ProvidedUserName)
 {
     this->LogUserName = ProvidedUserName;
@@ -40,6 +40,12 @@ void EP_UserData::EP_UserData_Set_LogUserPassword(QString ProvidedUserPassword)
 {
     this->LogUserPassword = ProvidedUserPassword;
 }
+
+void EP_UserData::EP_UserData_Set_ActiveUserId(int ActiveUserId)
+{
+    this->ActiveUserId = ActiveUserId;
+}
+
 /* Getters*/
 QString EP_UserData::EP_UserData_Get_RegUserName()
 {
@@ -62,4 +68,9 @@ QString EP_UserData::EP_UserData_Get_LogUserName()
 QString EP_UserData::EP_UserData_Get_LogUserPassword()
 {
     return this->LogUserPassword;
+}
+
+int EP_UserData::EP_UserData_Get_ActiveUserId()
+{
+    return this->ActiveUserId;
 }

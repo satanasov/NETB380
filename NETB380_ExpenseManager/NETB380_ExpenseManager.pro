@@ -12,6 +12,7 @@ SOURCES += \
     ep_add_expense.cpp \
     ep_add_money.cpp \
     ep_baseclass_gui_reportmain.cpp \
+    ep_customfunctions.cpp \
     ep_db_settings.cpp \
     ep_db_wrapper.cpp \
     ep_eventdispatcher.cpp \
@@ -27,6 +28,8 @@ HEADERS += \
     ep_add_expense.h \
     ep_add_money.h \
     ep_baseclass_gui_reportmain.h \
+    ep_customfunctions.h \
+    ep_customtypes.h \
     ep_db_settings.h \
     ep_db_wrapper.h \
     ep_eventdispatcher.h \
