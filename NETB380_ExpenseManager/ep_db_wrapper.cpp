@@ -73,11 +73,13 @@ void EP_DB_Wrapper::deployTables()
         qDebug() << "DB is open tables are deployed";
         // Create users_table (ep_users)
         db.exec("CREATE TABLE ep_account_types(id serial PRIMARY KEY, type VARCHAR (64), description text);");
-        db.exec("CREATE TABLE ep_currencies (id serial PRIMARY KEY, iso VARCHAR (8) UNIQUE NOT NULL, long_name VARCHAR (256));");
+        db.exec("CREATE TABLE ep_currencies (id serial PRIMARY KEY, iso VARCHAR (8) UNIQUE NOT NULL, long_name VARCHAR (256), short_name VARCHAR (8), rate NUMERIC);");
         db.exec("CREATE TABLE ep_expenses_groups (id serial PRIMARY KEY, uid NUMERIC, name VARCHAR (256), description TEXT);");
         db.exec("CREATE TABLE ep_users (id serial PRIMARY KEY, username VARCHAR (64) NOT NULL, username_clean VARCHAR (80) UNIQUE NOT NULL, password VARCHAR (60) NOT NULL, email VARCHAR (256) UNIQUE NOT NULL, name VARCHAR (512), reg_date NUMERIC, last_active NUMERIC, user_active smallint );");
         db.exec("CREATE TABLE ep_expenses_table (id serial PRIMARY KEY, uid NUMERIC, aid NUMERIC, type NUMERIC, amount DECIMAL, name VARCHAR (256), description TEXT, group_name NUMERIC, added_at NUMERIC, is_active smallint);");
         db.exec("CREATE TABLE ep_user_accounts (id serial PRIMARY KEY, uid NUMERIC, type NUMERIC, name VARCHAR (256), description TEXT, amount DECIMAL, currency NUMERIC, added_at NUMERIC, last_change NUMERIC, is_active smallint);");
+        // Let's create some default values
+        db.exec("INSERT INTO ep_currencies (iso, long_name, short_name, rate) VALUES ('BGN', 'Bulgarian Lev', ' лв.', 1);");
         qDebug() << db.lastError().text();
     }
 }
@@ -111,6 +113,8 @@ void EP_DB_Wrapper::dropTables()
  * @return
  *
  * Return values:
+ * 4 -> there was error creating the account
+ * 3 -> there was error retreaving the user id
  * 2 -> email exists
  * 1 -> user exists
  * 0 -> OK
@@ -145,13 +149,29 @@ int EP_DB_Wrapper::registerUser(QString username, QString password, QString emai
             }
             else
             {
-                QSqlQuery query2 = db.exec("INSERT INTO ep_users (username, username_clean, password, email) VALUES ('" + QString("%1").arg(username) +"', '" + QString("%1").arg(username_clean) +"', '" + QString("%1").arg(password) +"','" + QString("%1").arg(email) +"')");
+                QSqlQuery query2 = db.exec("INSERT INTO ep_users (username, username_clean, password, email, user_active) VALUES ('" + QString("%1").arg(username) +"', '" + QString("%1").arg(username_clean) +"', '" + QString("%1").arg(password) +"','" + QString("%1").arg(email) +"', 1)");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();
                 }
                 else
                 {
+                    // Let's create default account
+                    // let's get last user ID
+                    QSqlQuery query3 = db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
+                    query3.next();
+                    int userId = query3.value(0).toInt();
+                    qDebug() << userId;
+                    if (userId < 0)
+                    {
+                        return 3;
+                    }
+                    int accountResponse = this->addUserAccount(userId, 1, "default", "This is some base description", 0, 1);
+                    qDebug() << accountResponse;
+                    if (accountResponse != 0)
+                    {
+                        return 4;
+                    }
                     return 0;
                 }
             }
@@ -494,13 +514,14 @@ int EP_DB_Wrapper::addUserAccount(int userId, int type, QString name, QString de
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
     {
-        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userId) + "';");
         if (usrQuery.size() < 1)
         {
             return -3;
         }
         else
         {
+            usrQuery.next();
             int is_active = usrQuery.value(1).toInt();
             if (is_active == 1)
             {
