@@ -217,7 +217,6 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
         qDebug() << "here be dragon ... puf";
         // Check for duplicate username
         // TODO: Use clean username and use username_clean
-        //QSqlQuery query("SELECT * FROM ep_users WHERE username LIKE '" + QString("%1").arg(username) + "';");
         QSqlQuery query = db.exec("SELECT * FROM ep_users WHERE username_clean LIKE '" + QString("%1").arg(username_clean) + "';");
         if (query.size() < 1)
         {
