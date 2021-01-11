@@ -6,8 +6,6 @@
 #include "ep_add_money.h"
 #include "ep_add_expense.h"
 #include "ep_show_report.h"
-#include "ep_customtypes.h"
-#include "ep_customfunctions.h"
 
 namespace Ui {
 class ep_welcome;
@@ -18,13 +16,10 @@ class ep_welcome : public QDialog, EP_BaseClass_GUI_ReportMain
     Q_OBJECT
 
 public:
-    /*Functions.*/
     explicit ep_welcome(QWidget *parent = nullptr);
     ~ep_welcome();
-    /*Initilize function.*/
     void EP_WelcomeScreen_Initialize();
-    /*Connect to ED.*/
-    void EP_WelcomeScreen_ConnectoToED();
+
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;
@@ -62,10 +57,6 @@ private slots:
 
 public slots:
     void updateTime();
-    void EP_WlcWin_UpdateCurrency(EP_Currencies currentCurrency, QString valueToDisplay);
-    void EP_WlcWin_GetComboBoxIndex(int indexOfComboBox);
-signals:
-    void EP_WlcWinUpdateCurrencyDueToComboBoxChange(EP_Currencies currentCurrency, QString valueToDisplay);
 
 private:
     Ui::ep_welcome *ui;

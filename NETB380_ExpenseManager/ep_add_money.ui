@@ -39,12 +39,12 @@
     <widget class="QComboBox" name="comboBox">
      <item>
       <property name="text">
-       <string>BGN</string>
+       <string>USD</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>USD</string>
+       <string>BGN</string>
       </property>
      </item>
      <item>

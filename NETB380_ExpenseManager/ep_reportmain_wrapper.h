@@ -7,8 +7,6 @@
 #include <QSettings>
 #include "ep_db_wrapper.h"
 #include "ep_baseclass_gui_reportmain.h"
-#include "ep_customtypes.h"
-#include "ep_customfunctions.h"
 
 class EP_ReportMain : public QObject, EP_BaseClass_GUI_ReportMain
 {
@@ -56,12 +54,6 @@ public slots:
 
     /*Internal slots*/
     void EP_ReportMain_OpenDBConnection(int idOfRequest);
-
-    /*Welcome Screen Requests.*/
-    void EP_ReportMain_GetCurrency(EP_Currencies typeOfCurrency);
-
-    /*Add Money Scren Requests.*/
-    void EP_ReportMain_AddCurrencyToDB(QString ValueToAdd, EP_Currencies typeOfCurrnecy);
 };
 
 #endif // EP_REPORTMAIN_H

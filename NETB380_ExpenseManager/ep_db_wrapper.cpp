@@ -210,7 +210,6 @@ int EP_DB_Wrapper::loginUser(QString username, QString password)
             if (db_pass == input_pass)
             {
                 qDebug() << query.value(0).toInt();
-                /*return AccountID.*/
                 return query.value(0).toInt();
             }
             else

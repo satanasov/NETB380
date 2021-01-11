@@ -9,12 +9,9 @@ ep_welcome::ep_welcome(QWidget *parent) :
     ui(new Ui::ep_welcome)
 {
     ui->setupUi(this);
-    /*Set Timer to update the clock of the program.*/
     QTimer *timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(updateTime()));
     timer->start();
-    /*Connect comboBox signals.*/
-    connect(ui->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(EP_WlcWin_GetComboBoxIndex(int)));
 }
 
 ep_welcome::~ep_welcome()
@@ -36,18 +33,15 @@ void ep_welcome::updateTime()
 /**/
 void ep_welcome::EP_WelcomeScreen_Initialize()
 {
-    /*Initialize welcome screen.*/
+    /*Take Email from registration window.*/
     ui->labelWelcome->setText("Welcome : " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName());
-    QString currentBalance = ui->comboBox->currentText();
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_WelcWinRequestCurrentBalance(EP_CustomFunctions::translateStringToCurrency(currentBalance));
     /*Add balance from DB.*/
+
 }
 
 void ep_welcome::on_pushButtonAddMoney_clicked()
 {
     ep_ad_m = new ep_add_money(this);
-    ep_ad_m->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
-    ep_ad_m->EP_Add_Money_connectToED();
     ep_ad_m->show();
 }
 
@@ -139,30 +133,4 @@ void ep_welcome::on_pushButtonOther_clicked()
     //other
     ep_sh_r = new ep_show_report(this);
     ep_sh_r->show();
-}
-
-/*SLOT: Update currentbalance on welcome screen.*/
-void ep_welcome::EP_WlcWin_UpdateCurrency(EP_Currencies currentCurrency, QString valueToDisplay)
-{
-    ui->labelBalance->setText(EP_CustomFunctions::defaultWelcomeScreenCurrency + valueToDisplay);
-    /*Change to appropriate currency.*/
-    ui->comboBox->setCurrentText(EP_CustomFunctions::translateCurrencyToString(currentCurrency));
-}
-
-/*Local function for ED connection.*/
-void ep_welcome::EP_WelcomeScreen_ConnectoToED()
-{
-    /*Connect Welcome screen to Event Dispatcher.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWSUpdateCurrentCurrency(EP_Currencies,QString)),this, SLOT(EP_WlcWin_UpdateCurrency(EP_Currencies, QString )));
-}
-
-/*Slot connected to combobox changes.*/
-void ep_welcome::EP_WlcWin_GetComboBoxIndex(int indexOfComboBox)
-{
-    QString GetCurrentCurrency = EP_CustomFunctions::possibleCurrency.at(indexOfComboBox);
-    EP_Currencies CurrentWorkingCurrency = EP_CustomFunctions::translateStringToCurrency(GetCurrentCurrency);
-    /*Value to be taken from current Active User.*/
-    QString ValueToDisplay = EP_CustomFunctions::adapatCurrency(this->EP_BaseClass_GetUserDataPointer()->activeUserMoneyInBgn,EP_BGN, CurrentWorkingCurrency);
-
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWSUpdateCurrentCurrency(CurrentWorkingCurrency,ValueToDisplay);
 }
