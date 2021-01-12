@@ -18,7 +18,8 @@ class ep_welcome : public QDialog, EP_BaseClass_GUI_ReportMain
 public:
     explicit ep_welcome(QWidget *parent = nullptr);
     ~ep_welcome();
-    void EP_WelcomeScreen_Initialize();
+    void EP_WelcomeScreen_ConnectToED();
+    void EP_WelcomeScreen_InitValues();
 
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;

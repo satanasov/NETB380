@@ -561,7 +561,7 @@ QList<QList<QString>> EP_DB_Wrapper::getUserAccounts(int userId)
     QList<QList<QString>> answers;
     if (db.isOpen())
     {
-        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userId) + "';");
         if (query.size() < 1)
         {
             QList<QString> a;
@@ -571,10 +571,11 @@ QList<QList<QString>> EP_DB_Wrapper::getUserAccounts(int userId)
         }
         else
         {
+            query.next();
             int is_active = query.value(1).toInt();
             if (is_active == 1)
             {
-                QSqlQuery query1 = db.exec("SELECT * FROM ep_user_accounts WHERE uid = '" + QString("%1").arg(userId));
+                QSqlQuery query1 = db.exec("SELECT * FROM ep_user_accounts WHERE uid = '" + QString("%1").arg(userId) + "'");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();
@@ -583,15 +584,15 @@ QList<QList<QString>> EP_DB_Wrapper::getUserAccounts(int userId)
                 {
                     while (query1.next()) {
                         QList<QString> a;
-                        a.append(QString("%1").arg(query.value(0).toInt()));
-                        a.append(QString("%1").arg(query.value(2).toString()));
-                        a.append(QString("%1").arg(query.value(3).toString()));
-                        a.append(QString("%1").arg(query.value(4).toString()));
-                        a.append(QString("%1").arg(query.value(5).toDouble()));
-                        a.append(QString("%1").arg(query.value(6).toInt()));
-                        a.append(QString("%1").arg(query.value(7).toInt()));
-                        a.append(QString("%1").arg(query.value(8).toInt()));
-                        a.append(QString("%1").arg(query.value(9).toInt()));
+                        a.append(query1.value(0).toString());
+                        a.append(query1.value(2).toString());
+                        a.append(query1.value(3).toString());
+                        a.append(query1.value(4).toString());
+                        a.append(query1.value(5).toString());
+                        a.append(query1.value(6).toString());
+                        a.append(query1.value(7).toString());
+                        a.append(query1.value(8).toString());
+                        a.append(query1.value(9).toString());
                         answers.append(a);
                     }
                 }
@@ -631,17 +632,18 @@ int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
     {
-        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery usrQuery = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userId) + "';");
         if (usrQuery.size() < 1)
         {
             return -3;
         }
         else
         {
+            usrQuery.next();
             int is_active = usrQuery.value(1).toInt();
             if (is_active == 1)
             {
-                QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, ammount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, '" + QString("%1").arg(ammount) + "', '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
+                QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, amount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, '" + QString("%1").arg(ammount) + "', '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();

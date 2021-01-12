@@ -19,5 +19,4 @@ void ep_add_money::on_pushButtonMoneyAdd_clicked()
     double money = ui->doubleSpinBoxAmmount->value();
     QMessageBox::information(this, "Success!", "Succesfully added %d to balance!");
     // add code to get the user input from baseclass
-
 }

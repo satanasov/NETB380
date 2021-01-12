@@ -84,35 +84,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
-    <widget class="QComboBox" name="comboBoxCurrencyExpense">
-     <item>
-      <property name="text">
-       <string>USD</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>BGN</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>EUR</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>GBP</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>JPY</string>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="1" column="4">
     <widget class="QDateEdit" name="dateEditDateExpense"/>
    </item>
@@ -120,6 +91,13 @@
     <widget class="QPushButton" name="pushButtonExpenseAdd">
      <property name="text">
       <string>Add Expense</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>   BGN</string>
      </property>
     </widget>
    </item>

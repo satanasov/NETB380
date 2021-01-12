@@ -120,18 +120,22 @@ void EP_Main::EP_Main_LoginStatusWindow(int LogStatus)
         case -1:
            msg.setText("Database is not connected ... Do you know what you are doing?");
         break;
+        case 0:
+            /*Log-In is successfull*/
+            this->~EP_Main();
+            /* Execute welocme screen.*/
+            WelcomeScreen.EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+            WelcomeScreen.EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+            WelcomeScreen.EP_WelcomeScreen_ConnectToED();
+            WelcomeScreen.EP_WelcomeScreen_InitValues();
+            /*Initialize Function to update welcomescreen.*/
+            WelcomeScreen.exec();
+            /* Create all necessary connections here and cofiguration for WelcomeScreen.*/
+            // TO DO.
+            /**/
+        break;
         default:
-           /*Log-In is successfull*/
-           this->~EP_Main();
-           /* Execute welocme screen.*/
-           WelcomeScreen.EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
-           WelcomeScreen.EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
-           /*Initialize Function to update welcomescreen.*/
-           WelcomeScreen.EP_WelcomeScreen_Initialize();
-           WelcomeScreen.exec();
-           /* Create all necessary connections here and cofiguration for WelcomeScreen.*/
-           // TO DO.
-           /**/
+            msg.setText("Unknown ERROR ... you should never see this.");
         break;
     }
     /*Check-if Log-in Status message object is still available.*/

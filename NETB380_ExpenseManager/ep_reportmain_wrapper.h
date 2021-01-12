@@ -52,6 +52,12 @@ public slots:
     void EP_ReportMain_DeployTableInCurrentDB();
     void EP_ReportMain_DropTableInCurrentDB();
 
+    /*Welcome screen slots.*/
+  //  void EP_ReportMain_ActiveUserNameAndAmount();
+
+    /*Add expense window*/
+    void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QDateTime date);
+
     /*Internal slots*/
     void EP_ReportMain_OpenDBConnection(int idOfRequest);
 };
