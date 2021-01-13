@@ -9,6 +9,7 @@ Here we will:
 #include <QThread>
 #include <QMessageBox>
 #include <QDateTime>
+#include <QList>
 #include "ep_db_wrapper.h"
 #include "ep_reportmain_wrapper.h"
 
@@ -32,7 +33,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     /*Welcome screen requests.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcWinRequestCurrentActiveUserBalanceAndName),this,SLOT(EP_ReportMain_GetCurrentUserAvalCurrency));
     /*Add exepense requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QDateTime)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QDateTime)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime)));
 }
 
 /* Function to DB.*/
@@ -118,25 +119,102 @@ void EP_ReportMain::EP_ReportMain_OpenDBConnection(int idOfRequest)
     }
 }
 
-/**/
-void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QDateTime date)
+/*Add expense program.*/
+void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date)
 {
-    /*Set time format to UNIX*/
-    date.setTimeSpec(Qt::UTC);
-    /*Assign the value to int.*/
-    int UTC_Time = date.toTime_t();
-    /*Request adding expense to DB.*/
-    this->EP_ReportMain_GetDBPointer()->addExpense(
-                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
-                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
-                amountOfExpense.toDouble(),
-                nameOfExpense,
-                typeOfExpense,
-                0,
-                UTC_Time
-                );
+    /*Initialize local variables.*/
+    int getCurrentExpenseGroupIdInTable = -1; // Default value.
+    int addExpenseGroupStatus = -2;
+    int addExpenseStatus = -2;
+    QString emptyTable = "emptyTable";
+    /*Get expense available expense groups.*/
+    QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    /*Check if expense group is available, if not add the expense group.*/
+    bool isExpenseGroupAval = false;
+    bool isExpenseGroupsDBAval = false;
+    /*Check if current DB query is empty.*/
+    if(currentUserExpenseGroups.empty())
+    {
+        /*Empty query means that current user still has not added to the ep_expense_groups.*/
+        isExpenseGroupAval = false;
+    }
+    else
+    {
+        /*Check if table is empty*/
+        if (currentUserExpenseGroups.at(0).at(0) == emptyTable)
+        {
+            /*No availalbe entries in database, database empty..*/
+            isExpenseGroupAval = false;
+            /*It will be first ID in table.*/
+            getCurrentExpenseGroupIdInTable = 1;
+        }
+        else
+        {
+            /*Expense groups is available.*/
+            isExpenseGroupsDBAval = true;
+            /*Locate id of this particular expense type.*/
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                /*Type is available only if already added by current user.*/
+                if((currentUserExpenseGroups.at(i).at(2) == typeOfExpense)
+                        &&
+                        /*Check if current user added the group.*/
+                       (this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId() == currentUserExpenseGroups.at(i).at(1).toInt()))
+                {
+                    /*ID tables are starting from .1.*/
+                    getCurrentExpenseGroupIdInTable = currentUserExpenseGroups.at(i).at(0).toInt();
+                    isExpenseGroupAval = true;
+                    break;
+                }
+            }
+        }
+    }
+    /*Add expense group if not available.*/
+    if(isExpenseGroupAval == false)
+    {
+        /*Add expense group.*/
+        addExpenseGroupStatus = this->EP_ReportMain_GetDBPointer()->addExpenseGroup(
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                    typeOfExpense,
+                    "default"
+                    );
+          /*Clear container of QLists*/
+          currentUserExpenseGroups.clear();
+          /*Get data from DB for expense groups.*/
+          currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+          /*Get current expense id in table.*/
+          getCurrentExpenseGroupIdInTable = currentUserExpenseGroups.last().at(0).toInt();
+    }
+    else
+    {
+        /*Expense group already part of DB.*/
+        addExpenseGroupStatus = 0;
+    }
+    /*If group is present or successfully added.*/
+    if(addExpenseGroupStatus == 0)
+    {
+        /*Set time format to UNIX*/
+        date.setTimeSpec(Qt::UTC);
+        /*Assign the value to int.*/
+        int UTC_Time = date.toTime_t();
+        /*Request adding expense to DB.*/
+        addExpenseStatus = this->EP_ReportMain_GetDBPointer()->addExpense(
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
+                    amountOfExpense.toDouble(),
+                    nameOfExpense,
+                    descriptionOfExpense,
+                    getCurrentExpenseGroupIdInTable,
+                    UTC_Time
+                    );
+    }
+    else
+    {
+        /*For all other problems request reconnection to DB and closing the program.*/
+        addExpenseStatus = -2;
+    }
     /*Get added expense status and send to Add expense window.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddExpenseStatus(0);
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddExpenseStatus(addExpenseStatus);
 }
 
 /*Setters*/

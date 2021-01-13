@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>105</height>
+    <width>619</width>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,6 +18,22 @@
     <normaloff>:/new/icon/images/ep_icon.ico</normaloff>:/new/icon/images/ep_icon.ico</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="4" column="0" colspan="5">
+    <widget class="QPushButton" name="pushButtonExpenseAdd">
+     <property name="text">
+      <string>Add Expense</string>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLineEdit" name="lineEditNameExpense"/>
+   </item>
+   <item row="1" column="4">
+    <widget class="QDateEdit" name="dateEditDateExpense"/>
+   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="labelNameExpense">
      <property name="text">
@@ -25,6 +41,16 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QDoubleSpinBox" name="doubleSpinBoxPriceExpense">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="maximum">
+      <double>999999999.000000000000000</double>
      </property>
     </widget>
    </item>
@@ -48,16 +74,6 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QLabel" name="labelCurrencyExpense">
-     <property name="text">
-      <string>Currency</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="4">
     <widget class="QLabel" name="labelDateExpense">
      <property name="text">
@@ -68,31 +84,18 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLineEdit" name="lineEditNameExpense"/>
+   <item row="0" column="3">
+    <widget class="QLabel" name="labelCurrencyExpense">
+     <property name="text">
+      <string>Currency</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1">
     <widget class="QLineEdit" name="lineEditTypeExpense"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QDoubleSpinBox" name="doubleSpinBoxPriceExpense">
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="maximum">
-      <double>999999999.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="4">
-    <widget class="QDateEdit" name="dateEditDateExpense"/>
-   </item>
-   <item row="2" column="0" colspan="5">
-    <widget class="QPushButton" name="pushButtonExpenseAdd">
-     <property name="text">
-      <string>Add Expense</string>
-     </property>
-    </widget>
    </item>
    <item row="1" column="3">
     <widget class="QLabel" name="label">
@@ -100,6 +103,19 @@
       <string>   BGN</string>
      </property>
     </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Description</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="5">
+    <widget class="QLineEdit" name="lineEditDescription"/>
    </item>
   </layout>
  </widget>

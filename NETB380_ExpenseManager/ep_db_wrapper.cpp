@@ -403,13 +403,14 @@ int EP_DB_Wrapper::addExpenseGroup(int userId, QString name, QString description
     if (db.isOpen())
     {
         // Check if user exists and is active
-        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userId) + "';");
         if (query.size() < 1)
         {
             return -3;
         }
         else
         {
+            query.next();
             qDebug() << query.value(0).toString();
             int is_active = query.value(1).toInt();
             if (is_active == 1)
@@ -444,13 +445,13 @@ int EP_DB_Wrapper::addExpenseGroup(int userId, QString name, QString description
  * @param userId
  * @return
  */
-QList<QList<QString>> getExpenseGroups(int userId)
+QList<QList<QString>> EP_DB_Wrapper::getExpenseGroups(int userId)
 {
     QSqlDatabase db = QSqlDatabase::database("appdb");
     QList<QList<QString>> answers;
     if (db.isOpen())
     {
-        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id =' " + QString("%1").arg(userId) + "';");
         if (query.size() < 1)
         {
             QList<QString> a;
@@ -460,22 +461,46 @@ QList<QList<QString>> getExpenseGroups(int userId)
         }
         else
         {
+            query.next();
             int is_active = query.value(1).toInt();
             if (is_active == 1)
             {
-                QSqlQuery query1 = db.exec("SELECT * FROM ep_expenses_groups WHERE uid = '" + QString("%1").arg(userId));
+                //query.next();
+                QSqlQuery query2 = db.exec("SELECT EXISTS (SELECT 1 FROM ep_expenses_groups);");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();
                 }
                 else
                 {
-                    while (query1.next()) {
+                    query2.next();
+                    if(query2.value(0) == "FALSE")
+                    {
+                        /*User hasnt still added a expense group.*/
                         QList<QString> a;
-                        a.append(QString("%1").arg(query.value(0).toInt()));
-                        a.append(QString("%1").arg(query.value(2).toString()));
-                        a.append(QString("%1").arg(query.value(3).toString()));
+                        QString message = "emptyTable";
+                        a.append(message);
                         answers.append(a);
+                    }
+                    else
+                    {
+                        query.next();
+                        QSqlQuery query1 = db.exec("SELECT * FROM ep_expenses_groups WHERE uid = '" + QString("%1").arg(userId) + "';");
+                        if (db.lastError().isValid())
+                        {
+                            qDebug() << db.lastError().text();
+                        }
+                        else
+                        {
+                            while (query1.next()) {
+                                QList<QString> a;
+                                a.append(QString("%1").arg(query1.value(0).toString()));
+                                a.append(QString("%1").arg(query1.value(1).toString()));
+                                a.append(QString("%1").arg(query1.value(2).toString()));
+                                a.append(QString("%1").arg(query1.value(3).toString()));
+                                answers.append(a);
+                            }
+                        }
                     }
                 }
             }

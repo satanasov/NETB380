@@ -25,9 +25,9 @@ void ep_add_expense::on_pushButtonExpenseAdd_clicked()
     QString nameOfExpense = ui->lineEditNameExpense->text();
     QString typeOfExpense = ui->lineEditTypeExpense->text();
     QString amountOfExpense = ui->doubleSpinBoxPriceExpense->text();
-
+    QString descriptionOfExpense = ui->lineEditDescription->text();
     /* Request expense adding.*/
-    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,ui->dateEditDateExpense->dateTime());
+    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,descriptionOfExpense,ui->dateEditDateExpense->dateTime());
 }
 
 /* Local function.*/
@@ -45,8 +45,11 @@ void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
     /*Extend if you need further error handling.*/
     QMessageBox msg;
     switch (Status) {
+        case -3:
+           msg.setText("User not available.");
+        break;
         case -2:
-           msg.setText("Unknown ERROR ... you should never see this.");
+           msg.setText("Expense group not added correctly, please restart program and check DB connection.");
         break;
         case -1:
            msg.setText("Database is not connected ... Do you know what you are doing?");
@@ -55,7 +58,7 @@ void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
            msg.setText("Expense succesfully added!");
         break;
         case 1:
-           msg.setText("User alredy exists ...");
+           msg.setText("Expense group already exists ...");
         break;
         case 2:
            msg.setText("Email alredy in system ...");

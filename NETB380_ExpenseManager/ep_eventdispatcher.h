@@ -27,7 +27,7 @@ signals:
     /*WelcomeScreen.*/
    // void EP_ED_WlcScreenRequestInit();
     /*Add expense window*/
-    void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QDateTime date);
+    void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString description, QDateTime date);
 
     /*Signals to GUI.*/
     /*Registration window.*/

@@ -56,7 +56,7 @@ public slots:
   //  void EP_ReportMain_ActiveUserNameAndAmount();
 
     /*Add expense window*/
-    void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QDateTime date);
+    void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date);
 
     /*Internal slots*/
     void EP_ReportMain_OpenDBConnection(int idOfRequest);
