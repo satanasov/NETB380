@@ -194,6 +194,7 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
     /*If group is present or successfully added.*/
     if(addExpenseGroupStatus == 0)
     {
+        amountOfExpense.replace(",", ".");
         /*Set time format to UNIX*/
         date.setTimeSpec(Qt::UTC);
         /*Assign the value to int.*/
