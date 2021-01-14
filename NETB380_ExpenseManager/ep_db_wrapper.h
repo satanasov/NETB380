@@ -20,6 +20,7 @@ public:
     int loginUser(QString username, QString password);
     int addAcountType(QString type, QString description);
     QList<QList<QString>> getAccountTypes();
+    int updateUserAccount(int aid, int newType, QString newName, QString newDesc, int newCurr);
     int addCurency(QString ISO, QString longname);
     QList<QList<QString>> getCurrencies();
     int addExpenseGroup(int userId, QString name, QString description);
