@@ -36,6 +36,7 @@ void ep_welcome::EP_WelcomeScreen_ConnectToED()
 {
     /*All connections to ED to be made here.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString, QString)),this,SLOT(EP_WelcomeScreen_InitValues(QString, QString)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateTodayReport(QList<QList<QString>>)),this,SLOT(generateTodayReport(QList<QList<QString>>)));
 }
 
 void ep_welcome::EP_WelcomeScreen_InitValues()
@@ -65,8 +66,18 @@ void ep_welcome::on_pushButtonNewExpense_clicked()
 
 void ep_welcome::on_pushButtonToday_clicked()
 {
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport();
+}
+
+void ep_welcome::generateTodayReport(QList<QList<QString>> queryResult)
+{
     //today
     ep_sh_r = new ep_show_report(this);
+    ep_sh_r->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    ep_sh_r->EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+    /*Process query result.*/
+    ep_sh_r->EP_ShowReport_ProcessReport(queryResult);
+    /*Request report.*/
     ep_sh_r->show();
 }
 

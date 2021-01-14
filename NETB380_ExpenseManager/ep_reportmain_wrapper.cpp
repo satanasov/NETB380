@@ -32,6 +32,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDropTable()), this, SLOT(EP_ReportMain_DropTableInCurrentDB()));
     /*Welcome screen requests.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcWinRequestCurrentActiveUserBalanceAndName),this,SLOT(EP_ReportMain_GetCurrentUserAvalCurrency));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport()),this,SLOT(EP_ReportMain_ProcessReport()));
     /*Add exepense requests.*/
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime)));
 }
@@ -199,8 +200,8 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
         int UTC_Time = date.toTime_t();
         /*Request adding expense to DB.*/
         addExpenseStatus = this->EP_ReportMain_GetDBPointer()->addExpense(
-                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
-                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(), // User uid
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(), // user id in ep_accounts table.
                     amountOfExpense.toDouble(),
                     nameOfExpense,
                     descriptionOfExpense,
@@ -215,6 +216,27 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
     }
     /*Get added expense status and send to Add expense window.*/
     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddExpenseStatus(addExpenseStatus);
+}
+
+/*Process expenses and provide to report.*/
+void EP_ReportMain::EP_ReportMain_ProcessReport()
+{
+    /*Get All expenses.*/
+   QList<QList<QString>> currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(
+                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
+                0, // All groups.
+                0, // Without filter for amounts
+               "", // Empty ammount delta, this is necessary whem amount is presented.
+               "", // Empty filter for sorting by expense name
+               "", // Empty filter for sorting by description
+                0, // Empty filter for sorting by expensegroups.
+                0, // Empty filter for sorting by time -> Starting point.
+                0, // Empty filter for sorting by time -> Ending point.
+                0 // Emppty filter for adding limit to the requested expenses.
+                );
+   /*Emit signal to GUI to generate the window.*/
+   emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateTodayReport(currentUserExpenses);
 }
 
 /*Setters*/

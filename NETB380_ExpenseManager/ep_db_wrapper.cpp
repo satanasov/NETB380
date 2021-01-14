@@ -712,7 +712,7 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
     QList<QList<QString>> answers;
     if (db.isOpen())
     {
-        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id LIKE " + QString("%1").arg(userId) + ";");
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userId) + "';");
         if (query.size() < 1)
         {
             QList<QString> a;
@@ -722,6 +722,7 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
         }
         else
         {
+            query.next();
             int is_active = query.value(1).toInt();
             if (is_active == 1)
             {
@@ -733,7 +734,7 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                 }
                 if (ammount != 0.0)
                 {
-                    request.append(" AND ammount " + QString("%1").arg(ammount_delta) + " " + QString("%1").arg(ammount));
+                    request.append(" AND amount " + QString("%1").arg(ammount_delta) + " " + QString("%1").arg(ammount));
                 }
                 if (name != "")
                 {
@@ -745,10 +746,9 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                 }
                 if (expGroup != 0)
                 {
-                    request.append(" AND ammount = " + QString("%1").arg(expGroup));
+                    request.append(" AND id = " + QString("%1").arg(expGroup));
                 }
-
-                request.append(" AND is_active = 1 LIMIT 0, " + QString("%1").arg(limit));
+                request.append(" AND is_active = 1;"); //+ QString("%1").arg(limit));
                 QSqlQuery expQuery = db.exec(request);
                 if (db.lastError().isValid())
                 {
@@ -758,15 +758,15 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                 {
                     while (expQuery.next()) {
                         QList<QString> a;
-                        a.append(QString("%1").arg(query.value(0).toInt()));
-                        a.append(QString("%1").arg(query.value(2).toString()));
-                        a.append(QString("%1").arg(query.value(3).toString()));
-                        a.append(QString("%1").arg(query.value(4).toString()));
-                        a.append(QString("%1").arg(query.value(5).toDouble()));
-                        a.append(QString("%1").arg(query.value(6).toInt()));
-                        a.append(QString("%1").arg(query.value(7).toInt()));
-                        a.append(QString("%1").arg(query.value(8).toInt()));
-                        a.append(QString("%1").arg(query.value(9).toInt()));
+                        a.append(expQuery.value(0).toString());
+                        a.append(expQuery.value(2).toString());
+                        a.append(expQuery.value(3).toString());
+                        a.append(expQuery.value(4).toString());
+                        a.append(expQuery.value(5).toString());
+                        a.append(expQuery.value(6).toString());
+                        a.append(expQuery.value(7).toString());
+                        a.append(expQuery.value(8).toString());
+                        a.append(expQuery.value(9).toString());
                         answers.append(a);
                     }
                 }

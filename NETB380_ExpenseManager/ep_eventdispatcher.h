@@ -26,6 +26,7 @@ signals:
     void EP_ED_DBWinRequestDropTable();
     /*WelcomeScreen.*/
    // void EP_ED_WlcScreenRequestInit();
+    void EP_ED_RMWlcScreen_getReport();
     /*Add expense window*/
     void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString description, QDateTime date);
 
@@ -38,6 +39,7 @@ signals:
     void EP_ED_RMDBConectionSuccessfull();
     /*Welcom screen window.*/
     //void EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString amount, QString Name);
+    void EP_ED_RMWlcScreen_GenerateTodayReport(QList<QList<QString>> queryResult);
     /*Add expense window.*/
     void EP_ED_RM_AddExpenseStatus(int Status);
 
