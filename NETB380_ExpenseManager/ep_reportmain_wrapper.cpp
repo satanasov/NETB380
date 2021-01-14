@@ -209,6 +209,8 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
                     getCurrentExpenseGroupIdInTable,
                     UTC_Time
                     );
+        // This is example of how edit works.
+        //addExpenseStatus = this->EP_ReportMain_GetDBPointer()->updateExpense(1, 0, 0, 25.9, 0, "edit test");
     }
     else
     {

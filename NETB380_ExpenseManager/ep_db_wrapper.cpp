@@ -697,7 +697,7 @@ int EP_DB_Wrapper::updateUserAccount(int aid, int newType = 0, QString newName =
     if (db.isOpen())
     {
         // Let's build query
-        QString request = "UPDATE INTO ep_user_accounts SET";
+        QString request = "UPDATE ep_user_accounts SET";
         QStringList req;
         if (newType > 0)
         {
@@ -762,14 +762,13 @@ int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString
             if (is_active == 1)
             {
                 QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, amount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, " + QString("%1").arg(ammount) + ", '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
-                qDebug() << "INSERT INTO ep_expenses_table (uid, aid, type, amount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, " + QString("%1").arg(ammount) + ", '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)";
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();
                 }
                 else
                 {
-                    db.exec("UPDATE INTO ep_user_accounts SET amount = amount - " + QString("%1").arg(ammount) + " WHERE id = " + QString("%1").arg(accountId));
+                    db.exec("UPDATE ep_user_accounts SET amount = amount - " + QString("%1").arg(ammount) + " WHERE id = " + QString("%1").arg(accountId));
                     return 0;
                 }
             }
@@ -903,7 +902,7 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
     if (db.isOpen())
     {
         // Let's build query
-        QString request = "UPDATE INTO ep_expenses_table SET";
+        QString request = "UPDATE ep_expenses_table SET";
         QStringList req;
         if (new_aid > 0)
         {
@@ -915,7 +914,7 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         }
         if (ammount > 0)
         {
-            req << " ammount = " + QString("%1").arg(ammount);
+            req << " amount = " + QString("%1").arg(ammount);
         }
         if (new_group_name > 0)
         {
@@ -928,6 +927,7 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         QString rq = req.join(",");
         request.append(rq);
         request.append(" WHERE id = " + QString("%1").arg(expense_id));
+        qDebug() << request;
         db.exec(request);
         if (db.lastError().isValid())
         {
