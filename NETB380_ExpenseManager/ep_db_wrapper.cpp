@@ -60,6 +60,57 @@ void EP_DB_Wrapper::closeDB()
     db.close();
 }
 
+
+
+/** Check if database is opened.
+ * @brief EP_DB_Wrapper::isDBOpen
+ * @return DBConnectionStatus -> Check if DB connection is opened.
+ */
+bool EP_DB_Wrapper::isDBOpen()
+{
+    bool DBConnectionStatus = false;
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if(true == db.isOpen())
+    {
+        DBConnectionStatus = true;
+    }
+    else
+    {
+        DBConnectionStatus = false;
+    }
+
+    return DBConnectionStatus;
+}
+
+int EP_DB_Wrapper::isValid(int userid)
+{
+    QSqlDatabase db = QSqlDatabase::database("appdb");
+    if(!this->isDBOpen())
+    {
+        return -1;
+    }
+    else
+    {
+        QSqlQuery query = db.exec("SELECT id, user_active FROM ep_users WHERE id = '" + QString("%1").arg(userid) + "';");
+        if (query.size() < 1)
+        {
+            return -3;
+        }
+        else
+        {
+            query.next();
+            qDebug() << query.value(0).toString();
+            int is_active = query.value(1).toInt();
+            if (is_active == 1)
+            {
+                return 0;
+            }
+        }
+    }
+    return -2;
+}
+
+
 /**
  * We will use this method to deply our tables :D (DUH!!!)
  * @brief EP_DB_Wrapper::deployTables
@@ -790,22 +841,8 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
     }
     return answers;
 }
-/** Check if database is opened.
- * @brief EP_DB_Wrapper::isDBOpen
- * @return DBConnectionStatus -> Check if DB connection is opened.
- */
-bool EP_DB_Wrapper::isDBOpen()
-{
-    bool DBConnectionStatus = false;
-    QSqlDatabase db = QSqlDatabase::database("appdb");
-    if(true == db.isOpen())
-    {
-        DBConnectionStatus = true;
-    }
-    else
-    {
-        DBConnectionStatus = false;
-    }
 
-    return DBConnectionStatus;
+int EP_DB_Wrapper::editExpense(int expense_id, int new_aid, int type, double ammount, int new_group_name)
+{
+
 }

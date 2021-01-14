@@ -12,6 +12,7 @@ class EP_DB_Wrapper : public QObject
 public:
     void openDB(QString hostname, QString username, QString password, QString dbname);
     void closeDB();
+    int isValid(int userId);
     void deployTables();
     void dropTables();
     bool isDBOpen();
@@ -27,6 +28,7 @@ public:
     QList<QList<QString>> getUserAccounts(int userId);
     int addExpense(int userId, int accountId, double ammount, QString name, QString description, int expGroup, int added_at);
     QList<QList<QString>> getExpenses(int userId, int accountId = 0, int type = 0, double ammount = 0.0, QString ammount_delta = "<", QString name = "", QString description = "", int expGroup = 0, int fromTime = 0, int toTime = 0, int limit = 20);
+    int editExpense(int expense_id, int new_aid, int type, double ammount, int new_group_name);
 };
 
 #endif // EP_DB_WRAPPER_H
