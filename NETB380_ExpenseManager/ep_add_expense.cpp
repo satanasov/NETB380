@@ -27,7 +27,7 @@ void ep_add_expense::on_pushButtonExpenseAdd_clicked()
     QString amountOfExpense = ui->doubleSpinBoxPriceExpense->text();
     QString descriptionOfExpense = ui->lineEditDescription->text();
     /* Request expense adding.*/
-    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,descriptionOfExpense,ui->dateEditDateExpense->dateTime());
+    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,descriptionOfExpense,ui->dateEditDateExpense->dateTime(),1);
 }
 
 /* Local function.*/

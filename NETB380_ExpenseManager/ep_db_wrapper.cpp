@@ -745,7 +745,7 @@ int EP_DB_Wrapper::updateUserAccount(int aid, int newType = 0, QString newName =
  * @param added_at
  * @return
  */
-int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString name, QString description, int expGroup, int added_at)
+int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString name, QString description, int expGroup, int added_at , int expType)
 {
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
@@ -761,7 +761,7 @@ int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString
             int is_active = usrQuery.value(1).toInt();
             if (is_active == 1)
             {
-                QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, amount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', 1, " + QString("%1").arg(ammount) + ", '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
+                QSqlQuery expQuery = db.exec("INSERT INTO ep_expenses_table (uid, aid, type, amount, name, description, group_name, added_at, is_active) VALUES ('" + QString("%1").arg(userId) + "', '" + QString("%1").arg(accountId) + "', '" + QString("%1").arg(expType) + "', " + QString("%1").arg(ammount) + ", '" + QString("%1").arg(name) + "', '" + QString("%1").arg(description) + "', '" + QString("%1").arg(expGroup) + "', '" + QString("%1").arg(added_at) + "', 1)");
                 if (db.lastError().isValid())
                 {
                     qDebug() << db.lastError().text();

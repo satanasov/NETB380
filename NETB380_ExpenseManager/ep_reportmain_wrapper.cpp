@@ -35,7 +35,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport()),this,SLOT(EP_ReportMain_ProcessReport()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
     /*Add exepense requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
 }
 
 /* Function to DB.*/
@@ -130,7 +130,7 @@ void EP_ReportMain::EP_ReportMain_OpenDBConnection(int idOfRequest)
 }
 
 /*Add expense program.*/
-void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date)
+void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date, int ExpType)
 {
     /*Initialize local variables.*/
     int getCurrentExpenseGroupIdInTable = -1; // Default value.
@@ -216,7 +216,8 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
                     nameOfExpense,
                     descriptionOfExpense,
                     getCurrentExpenseGroupIdInTable,
-                    UTC_Time
+                    UTC_Time,
+                    ExpType
                     );
         // This is example of how edit works.
         //addExpenseStatus = this->EP_ReportMain_GetDBPointer()->updateExpense(1, 0, 0, 25.9, 0, "edit test");
@@ -226,8 +227,22 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
         /*For all other problems request reconnection to DB and closing the program.*/
         addExpenseStatus = -2;
     }
-    /*Get added expense status and send to Add expense window.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddExpenseStatus(addExpenseStatus);
+    /*If expense type is 1, then expense is added.*/
+    if(1 == ExpType)
+    {
+        /*Get added expense status and send to Add expense window.*/
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddExpenseStatus(addExpenseStatus);
+    }
+    else if(0 == ExpType)
+    {
+        /*To do: emit signal to add_money.*/
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_AddMoneyStatus(addExpenseStatus);
+    }
+    else
+    {
+        // Can be deleted. For whatever reason.
+    }
+
 }
 
 /*Process expenses and provide to report.*/

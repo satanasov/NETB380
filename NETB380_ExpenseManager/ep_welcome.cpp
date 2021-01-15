@@ -61,6 +61,9 @@ void ep_welcome::updateCurrentUserAmount()
 void ep_welcome::on_pushButtonAddMoney_clicked()
 {
     ep_ad_m = new ep_add_money(this);
+    ep_ad_m -> EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+    ep_ad_m -> EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    ep_ad_m ->EP_AddMoney_ConnectToED();
     ep_ad_m->show();
 }
 

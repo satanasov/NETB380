@@ -29,7 +29,7 @@ signals:
     void EP_ED_WlcScreenUpdateCurrentUserData();
     void EP_ED_RMWlcScreen_getReport();
     /*Add expense window*/
-    void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString description, QDateTime date);
+    void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString description, QDateTime date, int expType);
 
     /*Signals to GUI.*/
     /*Registration window.*/
@@ -44,7 +44,8 @@ signals:
     void EP_ED_RMWlcScreen_UpdateCurrentUserAmount();
     /*Add expense window.*/
     void EP_ED_RM_AddExpenseStatus(int Status);
-
+    /*Add money window.*/
+    void EP_ED_RM_AddMoneyStatus(int Status);
 };
 
 #endif // EP_EVENTDISPATCHER_H
