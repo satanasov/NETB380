@@ -33,6 +33,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     /*Welcome screen requests.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcWinRequestCurrentActiveUserBalanceAndName),this,SLOT(EP_ReportMain_GetCurrentUserAvalCurrency));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport()),this,SLOT(EP_ReportMain_ProcessReport()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
     /*Add exepense requests.*/
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime)));
 }
@@ -78,6 +79,14 @@ void EP_ReportMain::EP_ReportMain_GetUserLogInStatus()
 
     /*Send the login-status to Event-Dispatcher*/
     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMLoginStatus(LoginStatus);
+}
+
+void EP_ReportMain::EP_ReportMain_Update_activeUserData()
+{
+    /*Update current user from data.*/
+    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_activeUserData(this->EP_ReportMain_GetDBPointer()->getUserAccounts(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId()));
+    /*Request welcome screen update.*/
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_UpdateCurrentUserAmount();
 }
 
 void EP_ReportMain::EP_ReportMain_DeployTableInCurrentDB()

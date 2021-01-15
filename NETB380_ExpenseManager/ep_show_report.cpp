@@ -27,36 +27,36 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
     QString dateTime = dateANDtime.currentDateTime().toString();
     ui->label_3->setText(dateTime);
     /*Add expenses to */
-    for(int i = 0; i< reportData.size(); i++)
+    for(int i = 0; i < reportData.size(); i++)
     {
         /*Name of expense.*/
         QLabel *label = new QLabel(this);
         label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText(reportData.at(0).at(4));
+        label->setText(reportData.at(i).at(4));
         label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
         /*Type of expense.*/
         QLabel *label1 = new QLabel(this);
-        label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText(reportData.at(0).at(6));
-        label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+        label1->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+        label1->setText(reportData.at(i).at(6));
+        label1->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
         /*Price of expense*/
         QLabel *label2 = new QLabel(this);
-        label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText(reportData.at(0).at(3));
-        label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+        label2->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+        label2->setText(reportData.at(i).at(3));
+        label2->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
         /*Currency of expense.*/
         QLabel *label3 = new QLabel(this);
-        label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText("BGN");
-        label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+        label3->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+        label3->setText("BGN");
+        label3->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
         /*Date of expense.*/
         QDateTime timestamp;
-        timestamp.setTime_t(reportData.at(0).at(7).toUInt());
+        timestamp.setTime_t(reportData.at(i).at(7).toUInt());
         QString expense_date = timestamp.toString();
         QLabel *label4 = new QLabel(this);
-        label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText(expense_date);
-        label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+        label4->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+        label4->setText(expense_date);
+        label4->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
 
         /*Configure gridLayout*/
 //        ui->gridLayout->setColumnMinimumWidth(4,4);

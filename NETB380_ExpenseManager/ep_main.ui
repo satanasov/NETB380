@@ -17,6 +17,9 @@
    <iconset resource="resources.qrc">
     <normaloff>:/new/icon/images/ep_icon.ico</normaloff>:/new/icon/images/ep_icon.ico</iconset>
   </property>
+  <property name="locale">
+   <locale language="C" country="AnyCountry"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -81,7 +84,7 @@
      <x>0</x>
      <y>0</y>
      <width>345</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

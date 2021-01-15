@@ -58,7 +58,9 @@ private slots:
 
 public slots:
     void updateTime();
+    void updateCurrentUserAmount();
     void generateTodayReport(QList<QList<QString>> queryResult);
+
 
 private:
     Ui::ep_welcome *ui;

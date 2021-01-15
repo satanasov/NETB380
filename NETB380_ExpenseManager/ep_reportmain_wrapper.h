@@ -55,6 +55,7 @@ public slots:
     /*Welcome screen slots.*/
   //  void EP_ReportMain_ActiveUserNameAndAmount();
     void EP_ReportMain_ProcessReport();
+    void EP_ReportMain_Update_activeUserData();
 
     /*Add expense window*/
     void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date);

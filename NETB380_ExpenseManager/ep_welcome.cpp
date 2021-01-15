@@ -37,16 +37,25 @@ void ep_welcome::EP_WelcomeScreen_ConnectToED()
     /*All connections to ED to be made here.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString, QString)),this,SLOT(EP_WelcomeScreen_InitValues(QString, QString)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateTodayReport(QList<QList<QString>>)),this,SLOT(generateTodayReport(QList<QList<QString>>)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateCurrentUserAmount()),this,SLOT(updateCurrentUserAmount()));
 }
-
+/**/
 void ep_welcome::EP_WelcomeScreen_InitValues()
 {
    /**/
    QString amount = this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(4);
    QString nameToDiplay = this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName();
    /**/
-   ui->labelWelcome->setText("Your welcome : " + nameToDiplay);
-   ui->labelBalance->setText("Your current amount is : " + amount + " BGN");
+   ui->labelWelcome->setText("Welcome back: " + nameToDiplay);
+   ui->labelBalance->setText("Your current amount is: " + amount + " BGN");
+}
+
+void ep_welcome::updateCurrentUserAmount()
+{
+    /**/
+    QString amount = this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(4);
+    /**/
+    ui->labelBalance->setText("Your current amount is: " + amount + " BGN");
 }
 
 void ep_welcome::on_pushButtonAddMoney_clicked()

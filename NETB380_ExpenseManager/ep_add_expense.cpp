@@ -56,6 +56,8 @@ void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
         break;
         case 0:
            msg.setText("Expense succesfully added!");
+           /*Request welcome screen update of money.*/
+           emit this->EP_BaseClass_GetEDPointer()->EP_ED_WlcScreenUpdateCurrentUserData();
         break;
         case 1:
            msg.setText("Expense group already exists ...");

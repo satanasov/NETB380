@@ -17,6 +17,9 @@
    <iconset resource="resources.qrc">
     <normaloff>:/new/icon/images/ep_icon.ico</normaloff>:/new/icon/images/ep_icon.ico</iconset>
   </property>
+  <property name="locale">
+   <locale language="C" country="AnyCountry"/>
+  </property>
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
@@ -143,7 +146,11 @@
        <height>241</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout"/>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinAndMaxSize</enum>
+      </property>
+     </layout>
     </widget>
    </widget>
   </widget>
