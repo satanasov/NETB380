@@ -6,9 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>628</width>
-    <height>444</height>
+    <width>545</width>
+    <height>334</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::PreventContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>Report</string>
@@ -20,184 +29,61 @@
   <property name="locale">
    <locale language="C" country="AnyCountry"/>
   </property>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>-40</x>
-     <y>130</y>
-     <width>701</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelNameExpense">
-   <property name="geometry">
-    <rect>
-     <x>16</x>
-     <y>150</y>
-     <width>157</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Name of expense</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelPriceExpense">
-   <property name="geometry">
-    <rect>
-     <x>343</x>
-     <y>150</y>
-     <width>107</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Price</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelDateExpense">
-   <property name="geometry">
-    <rect>
-     <x>518</x>
-     <y>150</y>
-     <width>92</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Date</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelCurrencyExpense">
-   <property name="geometry">
-    <rect>
-     <x>457</x>
-     <y>150</y>
-     <width>54</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Currency</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelTypeExpense">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>150</y>
-     <width>156</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Type of expense</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QScrollArea" name="scrollAreaReport">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>180</y>
-     <width>611</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="sizeAdjustPolicy">
-    <enum>QAbstractScrollArea::AdjustIgnored</enum>
-   </property>
-   <property name="widgetResizable">
-    <bool>true</bool>
-   </property>
-   <widget class="QWidget" name="scrollAreaWidgetContents">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>609</width>
-      <height>239</height>
-     </rect>
-    </property>
-    <widget class="QWidget" name="gridLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>611</width>
-       <height>241</height>
-      </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="labelDefaultUser">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMinAndMaxSize</enum>
-      </property>
-     </layout>
+     <property name="text">
+      <string>Default user</string>
+     </property>
     </widget>
-   </widget>
-  </widget>
-  <widget class="QLabel" name="labelDefaultUser">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>301</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Default user</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="labelAmountOfMoney">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>80</y>
-     <width>201</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Your amount of money : </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>70</y>
-     <width>151</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Current date is :</string>
-   </property>
-  </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="labelAmountOfMoney">
+     <property name="text">
+      <string>Your amount of money : </string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Current date is :</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QScrollArea" name="scrollAreaReport">
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>525</width>
+        <height>257</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources>
   <include location="resources.qrc"/>
