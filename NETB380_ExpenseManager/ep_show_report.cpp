@@ -54,6 +54,7 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
             {
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
+                label->setMinimumSize(100,25);
                 label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
                 /*Add first row name of columns*/
                 if(-1 == i)
