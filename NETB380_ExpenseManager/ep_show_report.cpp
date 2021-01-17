@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
 #include <QHBoxLayout>
+#include <QFrame>
 #include "ep_show_report.h"
 #include "ui_ep_show_report.h"
 
@@ -12,6 +13,8 @@ ep_show_report::ep_show_report(QWidget *parent) :
     ui->setupUi(this);
     /*/*Add VBoxLayout to the scrollArea.*/
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->setContentsMargins(1, 1, 1, 1);
+    mainLayout->setSpacing(0);
     ui->scrollAreaReport->widget()->setLayout(mainLayout);
 }
 
@@ -26,34 +29,45 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
     /*TO DO get real money aval.*/
     ui->labelAmountOfMoney->setText("Your current amount is: " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(4) + " BGN");
     /*Set current user*/
-    ui->labelDefaultUser->setText("Name: " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName());
+    ui->labelDefaultUser->setText("Username: " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName());
     /*Get current time and date for report generation.*/
     QDateTime dateANDtime = QDateTime::currentDateTime();
     QString dateTime = dateANDtime.currentDateTime().toString();
-    ui->label_3->setText(dateTime);
+    QString final_date = "Current date is: " + dateTime;
+    ui->label_3->setText(final_date);
     /*Indexes in reportData.*/
-    int array[5] = {4,6,3,255,7}; // 255 should be subsitute with the currency type of the expense.
+    int arrayIndexesInDataReport[5] = {4,6,3,255,7}; // 255 should be subsitute with the currency type of the expense.
+    /*Start of report first column of */
+    QString firstRow[5] = {"Name","Type","Amount","Currency Type","Date"};
     /*Process all expenses/incomes only if they are available. */
     if(false == reportData.isEmpty())
     {
-        for(int i = 0; i < reportData.size(); i++)
+        for(int i = -1; i < reportData.size(); i++)
         {
             /*Create widget container.*/
             QWidget *newWidgetContainer = new QWidget;
             /*Create horizontal box layout.*/
             QHBoxLayout *labelLayout = new QHBoxLayout;
-            /*Create Table widget item and add to table widget.*/
+            labelLayout->setContentsMargins(0, 0, 0, 0);
+            labelLayout->setSpacing(0);
             for(int j = 0; j < 5; j++)
             {
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
-                label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-                if(array[j] == 255)
+                label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+                /*Add first row name of columns*/
+                if(-1 == i)
+                {
+                    /*Take name columns from arrayIndexesInDataReport of names.*/
+                    label->setText(firstRow[j]);
+                    label->setStyleSheet("QLabel { background-color : orange; color : black; }");
+                }
+                else if(arrayIndexesInDataReport[j] == 255)
                 {
                     /*TO DO: Here should be the currency type.*/
                     label->setText("BGN");
                 }
-                else if(array[j] == 7)
+                else if(arrayIndexesInDataReport[j] == 7)
                 {
                     /*Date of expense-income.*/
                     QDateTime timestamp;
@@ -65,18 +79,18 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                 else
                 {
                     /*Take all other data.*/
-                    label->setText(reportData.at(i).at(array[j]));
+                    label->setText(reportData.at(i).at(arrayIndexesInDataReport[j]));
                 }
                 /*Make center alignment*/
                 label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
                 /*Add label to layout*/
                 labelLayout->addWidget(label);
-            }
-            /*Set to the container widget all gathered Qlabels.*/
-            newWidgetContainer->setLayout(labelLayout);
-            /*Add to the scrollAreaReport.*/
-            ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
 
+                /*Set to the container widget all gathered Qlabels.*/
+                newWidgetContainer->setLayout(labelLayout);
+                /*Add to the scrollAreaReport.*/
+                ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
+            }
         }
     }
     else
@@ -87,8 +101,8 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         QHBoxLayout *labelLayout = new QHBoxLayout;
         /**/
         QLabel *label = new QLabel();
-        label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-        label->setText("No data to present. Please add the requested report data firstly.");
+        label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+        label->setText("No data to present. Please firstly add the requested data for report.");
         label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
         labelLayout->addWidget(label);
         /*Set to the container widget all gathered Qlabels.*/

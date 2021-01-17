@@ -89,6 +89,8 @@ void ep_welcome::generateTodayReport(QList<QList<QString>> queryResult)
     ep_sh_r->EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
     /*Process query result.*/
     ep_sh_r->EP_ShowReport_ProcessReport(queryResult);
+    ep_sh_r->setWindowTitle("Report : All expenses for today");
+    //ep_sh_r->setWindowIconText()
     /*Request report.*/
     ep_sh_r->show();
 }

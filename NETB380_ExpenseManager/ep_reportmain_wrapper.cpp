@@ -248,6 +248,8 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
 /*Process expenses and provide to report.*/
 void EP_ReportMain::EP_ReportMain_ProcessReport()
 {
+    /*Get All expense groups.*/
+   QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
     /*Get All expenses.*/
    QList<QList<QString>> currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(
                 this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
@@ -262,6 +264,18 @@ void EP_ReportMain::EP_ReportMain_ProcessReport()
                 0, // Empty filter for sorting by time -> Ending point.
                 0 // Emppty filter for adding limit to the requested expenses.
                 );
+
+   for(int i = 0; i< currentUserExpenses.count();i++)
+   {
+       for(int j = 0; j< currentUserExpenseGroups.count();j++)
+       {
+           if(currentUserExpenses.at(i).at(6).toInt() == currentUserExpenseGroups.at(j).at(0).toInt())
+           {
+               currentUserExpenses[i][6] = currentUserExpenseGroups[j][2];
+               break;
+           }
+       }
+   }
    /*Emit signal to GUI to generate the window.*/
    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateTodayReport(currentUserExpenses);
 }
