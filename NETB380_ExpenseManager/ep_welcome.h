@@ -6,6 +6,7 @@
 #include "ep_add_money.h"
 #include "ep_add_expense.h"
 #include "ep_show_report.h"
+#include "EP_CustomTypes.h"
 
 namespace Ui {
 class ep_welcome;
@@ -59,7 +60,8 @@ private slots:
 public slots:
     void updateTime();
     void updateCurrentUserAmount();
-    void generateTodayReport(QList<QList<QString>> queryResult);
+    void generateReport(QList<QList<QString>> queryResult, EP_Report_Types typeOfReport);
+    void openAddExpenseWindow();
 
 
 private:

@@ -19,6 +19,7 @@ public:
     void EP_UserData_Set_LogUserPassword(QString ProvidedUserPassword);
     void EP_UserData_Set_ActiveUserId(int saveThisID);
     void EP_UserData_Set_activeUserData(QList<QList<QString>> setThisData);
+    void EP_UserData_Set_activeUserExpGroups(QList<QList<QString>> setThisData);
     /*Getters.*/
     QString EP_UserData_Get_RegUserName();
     QString EP_UserData_Get_RegUserPassword();
@@ -27,6 +28,7 @@ public:
     QString EP_UserData_Get_LogUserPassword();
     int EP_UserData_Get_ActiveUserId();
     QList<QList<QString>> EP_UserData_Get_activeUserData();
+    QList<QList<QString>> EP_UserData_Get_activeUserExpGroups();
 private:
     /*To DO:
      * Add here the containers necessary to update GUI report and all User data that will be provided to and from the GUI.
@@ -38,6 +40,7 @@ private:
     QString LogUserPassword;
     int ActiveUserId;
     QList<QList<QString>> activeUserData;
+    QList<QList<QString>> activeUserExpGroups;
 
 signals:
 

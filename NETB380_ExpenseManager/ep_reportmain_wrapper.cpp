@@ -10,6 +10,7 @@ Here we will:
 #include <QMessageBox>
 #include <QDateTime>
 #include <QList>
+#include <QTimeZone>
 #include "ep_db_wrapper.h"
 #include "ep_reportmain_wrapper.h"
 
@@ -32,10 +33,10 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDropTable()), this, SLOT(EP_ReportMain_DropTableInCurrentDB()));
     /*Welcome screen requests.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcWinRequestCurrentActiveUserBalanceAndName),this,SLOT(EP_ReportMain_GetCurrentUserAvalCurrency));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport()),this,SLOT(EP_ReportMain_ProcessReport()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport(EP_Report_Types,QList<QString>)),this,SLOT(EP_ReportMain_ProcessReport(EP_Report_Types,QList<QString>)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
-    /*Add exepense requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)), this, SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)),this,SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups()), this, SLOT(EP_ReportMain_Update_activeUserExpGroups()));
 }
 
 /* Function to DB.*/
@@ -245,26 +246,192 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
 
 }
 
+void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups()
+{
+    QString defaulTypes[5] = {"Bank","Transport","Utility","Food","Clothes"};
+    QString defaulTypesDesc[5] = {"Bank expenses.","Transport expenses.","Utility expenses.","Food expenses.","Clothes expenses."};
+     /*Get current exp groups.*/
+     QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+     if(!(currentUserExpenseGroups.empty()))
+     {
+         /*Check if table is empty*/
+         if (currentUserExpenseGroups.at(0).at(0) == "emptyTable")
+         {
+             currentUserExpenseGroups.clear();
+             // Brand new user no records.
+             for(int i =0 ; i < 5; i++)
+             {
+                 QList<QString> firstRow;
+                 firstRow.append("-1"); // Fake id as it is defaults.
+                 firstRow.append(QString::number(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId()));
+                 firstRow.append(defaulTypes[i]);
+                 firstRow.append(defaulTypesDesc[i]);
+                 currentUserExpenseGroups.append(firstRow);
+             }
+
+         }
+         else
+         {
+            for(int j = 0; j < 5;j++)
+            {
+                int isDefaultTypeAval = false;
+                for(int i = 0; i < currentUserExpenseGroups.size();i++)
+                {
+                    /*Type is available only if already added by current user.*/
+                    if(currentUserExpenseGroups.at(i).at(2) == defaulTypes[j])
+                    {
+                        /*ID tables are starting from .1.*/
+                        isDefaultTypeAval = true;
+                        break;
+
+                    }
+                }
+                if(false == isDefaultTypeAval)
+                {
+                    QList<QString> firstRow;
+                    firstRow.append("-1"); // Fake id as it is defaults.
+                    firstRow.append(QString::number(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId())); // Fake id as it is defaults.
+                    firstRow.append(defaulTypes[j]);
+                    firstRow.append(defaulTypesDesc[j]);
+                    currentUserExpenseGroups.append(firstRow);
+                }
+            }
+         }
+     }
+     else
+     {
+         /*Defensive programming if table is empty. No rows from current user.*/
+        for(int i =0 ; i < 5; i++)
+        {
+            QList<QString> firstRow;
+            firstRow.append("-1"); // Fake id as it is defaults.
+            firstRow.append("-1"); // Fake id as it is defaults.
+            firstRow.append(defaulTypes[i]);
+            firstRow.append(defaulTypesDesc[i]);
+            currentUserExpenseGroups.append(firstRow);
+        }
+     }
+     this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_activeUserExpGroups(currentUserExpenseGroups);
+    // qDebug() << currentUserExpenseGroups;
+     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenAddExpenseWindow();
+}
+
 /*Process expenses and provide to report.*/
-void EP_ReportMain::EP_ReportMain_ProcessReport()
+void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QList<QString> dataToProcess)
 {
     /*Get All expense groups.*/
-   QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    /*Initialize input arguments for getExpenseGroups.*/
+    int TypeOfExpense = 0;
+    double Ammount = 0;
+    QString Ammount_delta = "";
+    QString expense_name = "";
+    QString Expense_description = "";
+    int ExpGroups = 0;
+    int FromTime = 0;
+    int toTime = 0;
+    /*Pre-process necessary arguments for calling function getExpense.*/
+    switch (TypeOfReport) {
+    case EP_EXPENSE_TODAY_EXPENSE_TIME:
+    {
+        QDateTime date = QDateTime::currentDateTime();
+        /*Set time format to UNIX*/
+        date.setTimeSpec(Qt::UTC);
+        /*Change query for today date the value to int.*/
+        FromTime = date.toTime_t();
+        break;
+    }
+    case EP_EXPENSE_THIS_WEEK_TIME:
+    {
+        /*Create ending point.*/
+        QDate date = QDate::currentDate();
+        QTime time;
+        /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+        time.setHMS(23,59,59,999);
+        QDateTime endingPoint = QDateTime::currentDateTime();
+        endingPoint.setTime(time);
+        /* - Set time format to UNIX*/
+        /* Get time from ECpoch*/
+        endingPoint.setTimeSpec(Qt::UTC);
+        /*Create strating point.*/
+        int numbOfWeekDay = date.dayOfWeek();
+        /*Always compare current day of week with first-monday.*/
+        qint64 getOffsetForStartingPoint = 1 - numbOfWeekDay;
+        /*Calculate how many days in terms of seconds to substract the current date.*/
+        getOffsetForStartingPoint = (86400 * (numbOfWeekDay * (-1)));
+        qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
+        QDateTime StartingPoint = QDateTime();
+        /*Set time defined by Epoc and timespec to UTC..*/
+        StartingPoint.setTimeSpec(Qt::UTC);
+        StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+        /*Change starting point and ending point.*/
+        toTime = endingPoint.toTime_t();
+        FromTime = StartingPoint.toTime_t();
+        break;
+    }
+    case EP_EXPENSE_THIS_MONTH_TIME:
+    {
+        /*Create ending point.*/
+        QDate date = QDate::currentDate();
+        QTime time;
+        /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+        time.setHMS(23,59,59,999);
+        QDateTime endingPoint = QDateTime::currentDateTime();
+        endingPoint.setTime(time);
+        /* - Set time format to UNIX*/
+        /* Get time from ECpoch*/
+        endingPoint.setTimeSpec(Qt::UTC);
+        /*Create strating point.*/
+        qint64 getOffsetForStartingPoint = (date.day() - date.daysInMonth());
+        /*Calculate how many days in terms of seconds to substract the current date.*/
+        getOffsetForStartingPoint = (86400 * (getOffsetForStartingPoint * (-1)));
+        qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
+        QDateTime StartingPoint = QDateTime();
+        /*Set time defined by Epoc and timespec to UTC..*/
+        StartingPoint.setTimeSpec(Qt::UTC);
+        StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+        /*Change starting point and ending point.*/
+        toTime = endingPoint.toTime_t();
+        FromTime = StartingPoint.toTime_t();
+        break;
+    }
+    case EP_EXPENSE_THIS_YEAR_TIME:
+    {
+        /*Create ending point.*/
+        QDate dateEndOfyear = QDate::currentDate();
+        QTime timeEndOfYear;
+        timeEndOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+        QDateTime endingPoint = QDateTime(dateEndOfyear,timeEndOfYear);
+        /*Create starting point*/
+        QDate dateStartOfyear = QDate(dateEndOfyear.year(),1,1);
+        QTime timeStartOfYear;
+        timeStartOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+        QDateTime StartingPoint = QDateTime(dateStartOfyear,timeStartOfYear);
+        /*Change starting point and ending point.*/
+        toTime = endingPoint.toTime_t();
+        FromTime = StartingPoint.toTime_t();
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
     /*Get All expenses.*/
    QList<QList<QString>> currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(
                 this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
                 this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
-                0, // All groups.
-                0, // Without filter for amounts
-               "", // Empty ammount delta, this is necessary whem amount is presented.
-               "", // Empty filter for sorting by expense name
-               "", // Empty filter for sorting by description
-                0, // Empty filter for sorting by expensegroups.
-                0, // Empty filter for sorting by time -> Starting point.
-                0, // Empty filter for sorting by time -> Ending point.
+                TypeOfExpense, // All groups.
+                Ammount, // Without filter for amounts
+               Ammount_delta, // Empty ammount delta, this is necessary whem amount is presented.
+               expense_name, // Empty filter for sorting by expense name
+               Expense_description, // Empty filter for sorting by description
+                ExpGroups, // Empty filter for sorting by expensegroups.
+                FromTime, // Empty filter for sorting by time -> Starting point.
+                toTime, // Empty filter for sorting by time -> Ending point.
                 0 // Emppty filter for adding limit to the requested expenses.
                 );
-
+    /*Substitue the exp_groups id to name of expense type.*/
    for(int i = 0; i< currentUserExpenses.count();i++)
    {
        for(int j = 0; j< currentUserExpenseGroups.count();j++)
@@ -277,7 +444,7 @@ void EP_ReportMain::EP_ReportMain_ProcessReport()
        }
    }
    /*Emit signal to GUI to generate the window.*/
-   emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateTodayReport(currentUserExpenses);
+   emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateReport(currentUserExpenses, TypeOfReport);
 }
 
 /*Setters*/

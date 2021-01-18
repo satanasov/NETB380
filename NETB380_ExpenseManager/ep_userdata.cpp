@@ -51,6 +51,10 @@ void EP_UserData::EP_UserData_Set_activeUserData(QList<QList<QString>> setThisDa
     this->activeUserData = setThisData;
 }
 
+void EP_UserData::EP_UserData_Set_activeUserExpGroups(QList<QList<QString>> setThisData)
+{
+    this->activeUserExpGroups = setThisData;
+}
 /* Getters*/
 QString EP_UserData::EP_UserData_Get_RegUserName()
 {
@@ -83,4 +87,10 @@ int EP_UserData::EP_UserData_Get_ActiveUserId()
 QList<QList<QString>> EP_UserData::EP_UserData_Get_activeUserData()
 {
     return this->activeUserData;
+}
+
+
+QList<QList<QString>> EP_UserData::EP_UserData_Get_activeUserExpGroups()
+{
+    return this->activeUserExpGroups;
 }

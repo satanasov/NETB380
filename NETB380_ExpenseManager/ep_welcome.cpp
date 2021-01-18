@@ -36,8 +36,9 @@ void ep_welcome::EP_WelcomeScreen_ConnectToED()
 {
     /*All connections to ED to be made here.*/
     //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString, QString)),this,SLOT(EP_WelcomeScreen_InitValues(QString, QString)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateTodayReport(QList<QList<QString>>)),this,SLOT(generateTodayReport(QList<QList<QString>>)));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateReport(QList<QList<QString>>,EP_Report_Types)),this,SLOT(generateReport(QList<QList<QString>>,EP_Report_Types)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateCurrentUserAmount()),this,SLOT(updateCurrentUserAmount()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_OpenAddExpenseWindow()),this,SLOT(openAddExpenseWindow()));
 }
 /**/
 void ep_welcome::EP_WelcomeScreen_InitValues()
@@ -69,19 +70,16 @@ void ep_welcome::on_pushButtonAddMoney_clicked()
 
 void ep_welcome::on_pushButtonNewExpense_clicked()
 {
-    ep_ad_e = new ep_add_expense(this);
-    ep_ad_e -> EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
-    ep_ad_e -> EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
-    ep_ad_e ->EP_AddExpense_ConnectToED();
-    ep_ad_e->show();
-}
+    /*Get current user exp groups for combobox.update.*/
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_updateCurrentUserExpGroups();
 
-void ep_welcome::on_pushButtonToday_clicked()
-{
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport();
+//    ep_ad_e = new ep_add_expense(this);
+//    ep_ad_e -> EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+//    ep_ad_e -> EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+//    ep_ad_e ->EP_AddExpense_ConnectToED();
+//    ep_ad_e->show();
 }
-
-void ep_welcome::generateTodayReport(QList<QList<QString>> queryResult)
+void ep_welcome::generateReport(QList<QList<QString>> queryResult, EP_Report_Types typeOfReport)
 {
     //today
     ep_sh_r = new ep_show_report(this);
@@ -95,11 +93,28 @@ void ep_welcome::generateTodayReport(QList<QList<QString>> queryResult)
     ep_sh_r->show();
 }
 
+void ep_welcome::openAddExpenseWindow()
+{
+    ep_ad_e = new ep_add_expense(this);
+    ep_ad_e -> EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+    ep_ad_e -> EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    ep_ad_e -> EP_AddExpense_ConnectToED();
+    ep_ad_e ->EP_AE_InitializeComboBoxValues();
+    ep_ad_e->show();
+}
+
+/*Today all expense..*/
+void ep_welcome::on_pushButtonToday_clicked()
+{
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_EXPENSE_TODAY_EXPENSE_TIME,Empty);
+}
+/**/
 void ep_welcome::on_pushButtonWeek_clicked()
 {
     //this week
-    ep_sh_r = new ep_show_report(this);
-    ep_sh_r->show();
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_EXPENSE_THIS_WEEK_TIME,Empty);
 }
 
 void ep_welcome::on_pushButtonMonth_clicked()

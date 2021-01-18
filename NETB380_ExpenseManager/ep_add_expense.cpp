@@ -11,7 +11,11 @@ ep_add_expense::ep_add_expense(QWidget *parent) :
     /*Add current system date.*/
     QDate date = QDate::currentDate();
     ui->dateEditDateExpense->setDate(date);
-
+    ui->comboBox->setFocusPolicy(Qt::StrongFocus);
+    ui->comboBox->setFocus();
+    ui->comboBox->installEventFilter(this);
+    /*Connect local */
+    connect(ui->comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(EP_AE_MakeLastLineEditable(int)));
 }
 
 ep_add_expense::~ep_add_expense()
@@ -23,7 +27,7 @@ void ep_add_expense::on_pushButtonExpenseAdd_clicked()
 {
     /*Make input validation.*/
     QString nameOfExpense = ui->lineEditNameExpense->text();
-    QString typeOfExpense = ui->lineEditTypeExpense->text();
+    QString typeOfExpense = ui->comboBox->currentText();
     QString amountOfExpense = ui->doubleSpinBoxPriceExpense->text();
     QString descriptionOfExpense = ui->lineEditDescription->text();
     /* Request expense adding.*/
@@ -37,7 +41,30 @@ void ep_add_expense::EP_AddExpense_ConnectToED()
    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RM_AddExpenseStatus(int)),this,SLOT(EP_AE_AddedExpenseStatus(int)));
 }
 
-
+void ep_add_expense::EP_AE_InitializeComboBoxValues()
+{
+    /*TO DO CHECK FOR EMPTY container.*/
+    int CounterOfExpGroups = 0;
+    ui->comboBox->clear();
+    /*Add items to combobox.*/
+    for(int i =0 ; i < (this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().count()+1);i++)
+    {
+        /*Get all available items.*/
+        if(i < this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().count())
+        {
+            ui->comboBox->addItem(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2),Qt::DisplayRole);
+            ui->comboBox->setEditable(false);
+            ui->comboBox->setCurrentIndex(CounterOfExpGroups);
+        }
+        else
+        {
+            /*Add last item as New.*/
+            ui->comboBox->addItem("New",Qt::DisplayRole);
+            ui->comboBox->setEditable(false);
+            ui->comboBox->setCurrentIndex(CounterOfExpGroups);
+        }
+    }
+}
 
 /*Slots*/
 void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
@@ -68,4 +95,61 @@ void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
     }
     msg.setWindowTitle("Add expense status");
     msg.exec();
+}
+
+void ep_add_expense::EP_AE_MakeLastLineEditable(int CurrentIndex)
+{
+    /*Make comboBox editable only if new selected.*/
+    if(CurrentIndex == (this->ui->comboBox->count() - 1))
+    {
+        this->ui->comboBox->setEditable(true);
+    }
+    else
+    {
+        this->ui->comboBox->setEditable(false);
+    }
+}
+
+bool ep_add_expense::eventFilter(QObject *obj, QEvent *event)
+{
+    if ((event->type() == QEvent::FocusOut))
+    {
+        if(true == ui->comboBox->isEditable())
+        {
+            /*Change policy to add before this index.*/
+            ui->comboBox->setInsertPolicy(QComboBox::InsertBeforeCurrent);
+            /*Get user input.*/
+            QString userInput = ui->comboBox->currentText();
+            /*Check if current string is empty.*/
+            if(userInput != " ")
+            {
+                /*Search if text is already available.*/
+                int FindTextResult = ui->comboBox->findText(userInput, Qt::MatchCaseSensitive);
+                if(FindTextResult != -1)
+                {
+                    ui->comboBox->setEditable(false);
+                    ui->comboBox->setCurrentIndex(ui->comboBox->count()-2);
+
+                    return false;
+                }
+                else
+                {
+                    ui->comboBox->setItemText(ui->comboBox->count()-1, userInput);
+                    ui->comboBox->setEditable(false);
+                    ui->comboBox->addItem("New",Qt::DisplayRole);
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+         return true;
+    }
+    else
+    {
+       // standard event processing
+       return false;
+    }
 }
