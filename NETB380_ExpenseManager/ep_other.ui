@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QDateEdit" name="dateEdit"/>
+    <widget class="QDateEdit" name="dateEditFrom"/>
    </item>
    <item>
     <widget class="QLabel" name="label_2">
@@ -32,10 +32,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QDateEdit" name="dateEdit_2"/>
+    <widget class="QDateEdit" name="dateEditTo"/>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="pushButtonSearch">
      <property name="text">
       <string>Search</string>
      </property>

@@ -17,7 +17,7 @@ public:
     ~ep_other();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButtonSearch_clicked();
 
 private:
     Ui::ep_other *ui;
