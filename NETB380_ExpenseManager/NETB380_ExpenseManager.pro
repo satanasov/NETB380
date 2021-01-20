@@ -21,7 +21,8 @@ SOURCES += \
     ep_userdata.cpp \
     ep_welcome.cpp \
     main.cpp \
-    ep_main.cpp
+    ep_main.cpp \
+    ep_customlabel.cpp
 
 HEADERS += \
     ep_add_expense.h \
@@ -35,7 +36,8 @@ HEADERS += \
     ep_reportmain_wrapper.h \
     ep_show_report.h \
     ep_userdata.h \
-    ep_welcome.h
+    ep_welcome.h \
+    ep_customlabel.h
 
 FORMS += \
     ep_add_expense.ui \
