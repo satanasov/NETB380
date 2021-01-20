@@ -5,6 +5,7 @@
 #include <QFrame>
 #include "ep_show_report.h"
 #include "ui_ep_show_report.h"
+#include "ep_custom_menu.h"
 
 ep_show_report::ep_show_report(QWidget *parent) :
     QDialog(parent),
@@ -16,6 +17,8 @@ ep_show_report::ep_show_report(QWidget *parent) :
     mainLayout->setContentsMargins(1, 1, 1, 1);
     mainLayout->setSpacing(0);
     ui->scrollAreaReport->widget()->setLayout(mainLayout);
+    /*Default background color for all objects in report.*/
+    //this->setStyleSheet("QDialog::item{background-color: grey}");
 }
 
 ep_show_report::~ep_show_report()
@@ -55,18 +58,25 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
             EP_CustomLabel *LabelToStore = new EP_CustomLabel();
             LabelToStore->setLayout(labelLayout);
             LabelToStore->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+            LabelToStore->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+            LabelToStore->setStyleSheet("*:hover{ background-color : rgb(132, 162, 174); style} ");
             LabelToStore->setMinimumSize(500,25);
+            /*Add custom menu.*/
+            LabelToStore->setContextMenuPolicy(Qt::CustomContextMenu);
+            /*Index trought the data.*/
             for(int j = 0; j < 5; j++)
             {
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
+               //label->setVisible(false); // To do remove
                 label->setMinimumSize(100,25);
-                label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
-                /*Default background color for all objects in report.*/
-                this->setStyleSheet( "background-color: rgb(255, 255, 255) ");
+                label->setFrameStyle(QFrame::Panel | QFrame::Plain);
+                //label->setStyleSheet("QLabel { background-color : white; color : black; }");
                 /*Add first row name of columns*/
                 if(-1 == i)
                 {
+                    /*First row is not editable.*/
+                    LabelToStore->setContextMenuPolicy(Qt::NoContextMenu);
                     /*Take name columns from arrayIndexesInDataReport of names.*/
                     label->setText(firstRow[j]);
                     label->setStyleSheet("QLabel { background-color : orange; color : black; }");
@@ -118,5 +128,6 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         newWidgetContainer->setLayout(labelLayout);
         /*Add to the scrollAreaReport.*/
         ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
+       // ui->scrollAreaReport->widget()->setStyleSheet("background-color : white; color : black;");
     }
 }

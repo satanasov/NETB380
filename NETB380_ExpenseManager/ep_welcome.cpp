@@ -3,6 +3,7 @@
 #include <QMutex>
 #include "ep_welcome.h"
 #include "ui_ep_welcome.h"
+#include "ep_other.h"
 
 ep_welcome::ep_welcome(QWidget *parent) :
     QDialog(parent),
@@ -141,7 +142,7 @@ void ep_welcome::on_pushButtonAllTime_clicked()
 void ep_welcome::on_pushButtonCustom_clicked()
 {
     //custom ???????
-    ep_ot = new ep_other(this);
+    ep_other *ep_ot = new ep_other(this);
     ep_ot -> show();
 }
 
