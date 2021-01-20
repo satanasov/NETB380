@@ -141,8 +141,8 @@ void ep_welcome::on_pushButtonAllTime_clicked()
 void ep_welcome::on_pushButtonCustom_clicked()
 {
     //custom ???????
-    ep_sh_r = new ep_show_report(this);
-    ep_sh_r->show();
+    ep_ot = new ep_other(this);
+    ep_ot -> show();
 }
 
 void ep_welcome::on_pushButtonTransport_clicked()

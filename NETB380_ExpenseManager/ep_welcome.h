@@ -7,6 +7,7 @@
 #include "ep_add_expense.h"
 #include "ep_show_report.h"
 #include "EP_CustomTypes.h"
+#include "ep_other.h"
 
 namespace Ui {
 class ep_welcome;
@@ -69,6 +70,8 @@ private:
     ep_add_money *ep_ad_m;
     ep_add_expense *ep_ad_e;
     ep_show_report *ep_sh_r;
+    ep_other *ep_ot;
+
 };
 
 #endif // EP_WELCOME_H
