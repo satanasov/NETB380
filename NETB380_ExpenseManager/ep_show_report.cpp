@@ -45,17 +45,25 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         for(int i = -1; i < reportData.size(); i++)
         {
             /*Create widget container.*/
-            QWidget *newWidgetContainer = new QWidget;
+            //QWidget *newWidgetContainer = new QWidget;
+
             /*Create horizontal box layout.*/
             QHBoxLayout *labelLayout = new QHBoxLayout;
             labelLayout->setContentsMargins(0, 0, 0, 0);
             labelLayout->setSpacing(0);
+            /*Make custom label function.*/
+            EP_CustomLabel *LabelToStore = new EP_CustomLabel();
+            LabelToStore->setLayout(labelLayout);
+            LabelToStore->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
+            LabelToStore->setMinimumSize(500,25);
             for(int j = 0; j < 5; j++)
             {
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
                 label->setMinimumSize(100,25);
                 label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
+                /*Default background color for all objects in report.*/
+                this->setStyleSheet( "background-color: rgb(255, 255, 255) ");
                 /*Add first row name of columns*/
                 if(-1 == i)
                 {
@@ -88,9 +96,9 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                 labelLayout->addWidget(label);
 
                 /*Set to the container widget all gathered Qlabels.*/
-                newWidgetContainer->setLayout(labelLayout);
+                LabelToStore->setLayout(labelLayout);
                 /*Add to the scrollAreaReport.*/
-                ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
+                ui->scrollAreaReport->widget()->layout()->addWidget(LabelToStore);
             }
         }
     }

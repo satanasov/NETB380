@@ -331,91 +331,92 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     int FromTime = 0;
     int toTime = 0;
     /*Pre-process necessary arguments for calling function getExpense.*/
-    switch (TypeOfReport) {
-    case EP_EXPENSE_TODAY_EXPENSE_TIME:
+    switch (TypeOfReport)
     {
-        QDateTime date = QDateTime::currentDateTime();
-        /*Set time format to UNIX*/
-        date.setTimeSpec(Qt::UTC);
-        /*Change query for today date the value to int.*/
-        FromTime = date.toTime_t();
-        break;
-    }
-    case EP_EXPENSE_THIS_WEEK_TIME:
-    {
-        /*Create ending point.*/
-        QDate date = QDate::currentDate();
-        QTime time;
-        /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-        time.setHMS(23,59,59,999);
-        QDateTime endingPoint = QDateTime::currentDateTime();
-        endingPoint.setTime(time);
-        /* - Set time format to UNIX*/
-        /* Get time from ECpoch*/
-        endingPoint.setTimeSpec(Qt::UTC);
-        /*Create strating point.*/
-        int numbOfWeekDay = date.dayOfWeek();
-        /*Always compare current day of week with first-monday.*/
-        qint64 getOffsetForStartingPoint = 1 - numbOfWeekDay;
-        /*Calculate how many days in terms of seconds to substract the current date.*/
-        getOffsetForStartingPoint = (86400 * (numbOfWeekDay * (-1)));
-        qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-        QDateTime StartingPoint = QDateTime();
-        /*Set time defined by Epoc and timespec to UTC..*/
-        StartingPoint.setTimeSpec(Qt::UTC);
-        StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
-        /*Change starting point and ending point.*/
-        toTime = endingPoint.toTime_t();
-        FromTime = StartingPoint.toTime_t();
-        break;
-    }
-    case EP_EXPENSE_THIS_MONTH_TIME:
-    {
-        /*Create ending point.*/
-        QDate date = QDate::currentDate();
-        QTime time;
-        /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-        time.setHMS(23,59,59,999);
-        QDateTime endingPoint = QDateTime::currentDateTime();
-        endingPoint.setTime(time);
-        /* - Set time format to UNIX*/
-        /* Get time from ECpoch*/
-        endingPoint.setTimeSpec(Qt::UTC);
-        /*Create strating point.*/
-        qint64 getOffsetForStartingPoint = (date.day() - date.daysInMonth());
-        /*Calculate how many days in terms of seconds to substract the current date.*/
-        getOffsetForStartingPoint = (86400 * (getOffsetForStartingPoint * (-1)));
-        qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-        QDateTime StartingPoint = QDateTime();
-        /*Set time defined by Epoc and timespec to UTC..*/
-        StartingPoint.setTimeSpec(Qt::UTC);
-        StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
-        /*Change starting point and ending point.*/
-        toTime = endingPoint.toTime_t();
-        FromTime = StartingPoint.toTime_t();
-        break;
-    }
-    case EP_EXPENSE_THIS_YEAR_TIME:
-    {
-        /*Create ending point.*/
-        QDate dateEndOfyear = QDate::currentDate();
-        QTime timeEndOfYear;
-        timeEndOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-        QDateTime endingPoint = QDateTime(dateEndOfyear,timeEndOfYear);
-        /*Create starting point*/
-        QDate dateStartOfyear = QDate(dateEndOfyear.year(),1,1);
-        QTime timeStartOfYear;
-        timeStartOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-        QDateTime StartingPoint = QDateTime(dateStartOfyear,timeStartOfYear);
-        /*Change starting point and ending point.*/
-        toTime = endingPoint.toTime_t();
-        FromTime = StartingPoint.toTime_t();
-        break;
-    }
-    default:
-    {
-        break;
-    }
+        case EP_EXPENSE_TODAY_EXPENSE_TIME:
+        {
+            QDateTime date = QDateTime::currentDateTime();
+            /*Set time format to UNIX*/
+            date.setTimeSpec(Qt::UTC);
+            /*Change query for today date the value to int.*/
+            FromTime = date.toTime_t();
+            break;
+        }
+        case EP_EXPENSE_THIS_WEEK_TIME:
+        {
+            /*Create ending point.*/
+            QDate date = QDate::currentDate();
+            QTime time;
+            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+            time.setHMS(23,59,59,999);
+            QDateTime endingPoint = QDateTime::currentDateTime();
+            endingPoint.setTime(time);
+            /* - Set time format to UNIX*/
+            /* Get time from ECpoch*/
+            endingPoint.setTimeSpec(Qt::UTC);
+            /*Create strating point.*/
+            int numbOfWeekDay = date.dayOfWeek();
+            /*Always compare current day of week with first-monday.*/
+            qint64 getOffsetForStartingPoint = 1 - numbOfWeekDay;
+            /*Calculate how many days in terms of seconds to substract the current date.*/
+            getOffsetForStartingPoint = (86400 * (numbOfWeekDay * (-1)));
+            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
+            QDateTime StartingPoint = QDateTime();
+            /*Set time defined by Epoc and timespec to UTC..*/
+            StartingPoint.setTimeSpec(Qt::UTC);
+            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+            /*Change starting point and ending point.*/
+            toTime = endingPoint.toTime_t();
+            FromTime = StartingPoint.toTime_t();
+            break;
+        }
+        case EP_EXPENSE_THIS_MONTH_TIME:
+        {
+            /*Create ending point.*/
+            QDate date = QDate::currentDate();
+            QTime time;
+            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+            time.setHMS(23,59,59,999);
+            QDateTime endingPoint = QDateTime::currentDateTime();
+            endingPoint.setTime(time);
+            /* - Set time format to UNIX*/
+            /* Get time from ECpoch*/
+            endingPoint.setTimeSpec(Qt::UTC);
+            /*Create strating point.*/
+            qint64 getOffsetForStartingPoint = (date.day() - date.daysInMonth());
+            /*Calculate how many days in terms of seconds to substract the current date.*/
+            getOffsetForStartingPoint = (86400 * (getOffsetForStartingPoint * (-1)));
+            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
+            QDateTime StartingPoint = QDateTime();
+            /*Set time defined by Epoc and timespec to UTC..*/
+            StartingPoint.setTimeSpec(Qt::UTC);
+            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+            /*Change starting point and ending point.*/
+            toTime = endingPoint.toTime_t();
+            FromTime = StartingPoint.toTime_t();
+            break;
+        }
+        case EP_EXPENSE_THIS_YEAR_TIME:
+        {
+            /*Create ending point.*/
+            QDate dateEndOfyear = QDate::currentDate();
+            QTime timeEndOfYear;
+            timeEndOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+            QDateTime endingPoint = QDateTime(dateEndOfyear,timeEndOfYear);
+            /*Create starting point*/
+            QDate dateStartOfyear = QDate(dateEndOfyear.year(),1,1);
+            QTime timeStartOfYear;
+            timeStartOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
+            QDateTime StartingPoint = QDateTime(dateStartOfyear,timeStartOfYear);
+            /*Change starting point and ending point.*/
+            toTime = endingPoint.toTime_t();
+            FromTime = StartingPoint.toTime_t();
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
     /*Get All expenses.*/
    QList<QList<QString>> currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(

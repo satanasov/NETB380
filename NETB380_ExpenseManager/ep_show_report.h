@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "ep_baseclass_gui_reportmain.h"
+#include "ep_customlabel.h"
 
 namespace Ui {
 class ep_show_report;
