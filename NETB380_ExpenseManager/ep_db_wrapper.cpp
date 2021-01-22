@@ -768,7 +768,14 @@ int EP_DB_Wrapper::addExpense(int userId, int accountId, double ammount, QString
                 }
                 else
                 {
-                    db.exec("UPDATE ep_user_accounts SET amount = amount - " + QString("%1").arg(ammount) + " WHERE id = " + QString("%1").arg(accountId));
+                    if (expType == 1)
+                    {
+                        db.exec("UPDATE ep_user_accounts SET amount = amount - " + QString("%1").arg(ammount) + " WHERE id = " + QString("%1").arg(accountId));
+                    }
+                    if (expType == 0)
+                    {
+                        db.exec("UPDATE ep_user_accounts SET amount = amount + " + QString("%1").arg(ammount) + " WHERE id = " + QString("%1").arg(accountId));
+                    }
                     return 0;
                 }
             }
@@ -826,6 +833,10 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                 {
                     request.append(" AND aid = " + QString("%1").arg(userId));
                 }
+                if (type > -1)
+                {
+                    request.append(" AND type = " + QString("%1").arg(type));
+                }
                 if (ammount != 0.0)
                 {
                     request.append(" AND amount " + QString("%1").arg(ammount_delta) + " " + QString("%1").arg(ammount));
@@ -841,6 +852,14 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
                 if (expGroup != 0)
                 {
                     request.append(" AND group_name = " + QString("%1").arg(expGroup));
+                }
+                if (fromTime != 0)
+                {
+                    request.append(" AND added_at >= " + QString("%1").arg(fromTime));
+                }
+                if (toTime != 0)
+                {
+                    request.append(" AND added_at <= " + QString("%1").arg(toTime));
                 }
                 request.append(" AND is_active = 1;"); //+ QString("%1").arg(limit));
                 QSqlQuery expQuery = db.exec(request);
