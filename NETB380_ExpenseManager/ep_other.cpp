@@ -19,7 +19,6 @@ ep_other::~ep_other()
 
 void ep_other::on_pushButtonSearch_clicked()
 {
-    ep_sh_r = new ep_show_report(this);
-    ep_sh_r->show();
-    hide();
+    /*To Do emit signal that custom search is added.*/
+
 }

@@ -60,7 +60,7 @@ private slots:
 public slots:
     void updateTime();
     void updateCurrentUserAmount();
-    void generateReport(QList<QList<QString>> queryResult, EP_Report_Types typeOfReport);
+    void generateReport(QList<QList<QString>> queryResult, QString typeOfReport);
     void openAddExpenseWindow();
 
 

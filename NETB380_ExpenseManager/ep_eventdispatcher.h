@@ -42,7 +42,7 @@ signals:
     void EP_ED_RMDBConectionSuccessfull();
     /*Welcom screen window.*/
     //void EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString amount, QString Name);
-    void EP_ED_RMWlcScreen_GenerateReport(QList<QList<QString>> queryResult, EP_Report_Types ReportType);
+    void EP_ED_RMWlcScreen_GenerateReport(QList<QList<QString>> queryResult, QString reportName);
     void EP_ED_RMWlcScreen_UpdateCurrentUserAmount();
     void EP_ED_RMWlcScreen_OpenAddExpenseWindow();
     /*Add expense window.*/

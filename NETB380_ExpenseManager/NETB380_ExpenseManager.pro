@@ -27,6 +27,7 @@ SOURCES += \
     ep_other.cpp
 
 HEADERS += \
+    EP_CustomTypes.h \
     ep_add_expense.h \
     ep_add_money.h \
     ep_baseclass_gui_reportmain.h \

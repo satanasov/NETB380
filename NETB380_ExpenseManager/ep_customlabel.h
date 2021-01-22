@@ -6,6 +6,7 @@
 
 class EP_CustomLabel : public QLabel
 {
+    Q_OBJECT
 public:
     EP_CustomLabel();
 
@@ -16,14 +17,13 @@ protected:
     /*Create highlight effect.*/
     void enterEvent(QEvent *ev) override
     {
-//        this->setStyleSheet("background-color: rgb(132, 162, 174)");
        this->setFrameStyle(QFrame::Panel | QFrame::Raised);
+       //this->
 
     }
 
     void leaveEvent(QEvent *ev) override
     {
-//        this->setStyleSheet("background-color: unset");
        this->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     }
 

@@ -1,6 +1,8 @@
 #include <QMenu>
 #include <QPoint>
 #include <QWidget>
+#include <QLayout>
+#include <QDebug>
 #include "ep_customlabel.h"
 #include "ep_custom_menu.h"
 
@@ -15,8 +17,15 @@ EP_CustomLabel::EP_CustomLabel()
 
 void EP_CustomLabel::createMenu(const QPoint &pos)
 {
+//        QList <QLabel*> pointToLabel = this->findChildren<QLabel*>();
+//        for(QLabel *LabelsInside: pointToLabel)
+//        {
+//            qDebug() << LabelsInside->text();
+//        }
+//    qDebug() << "createMenu"; TO DO use this information to pass to edit menu.
     /*Create menu object.*/
     EP_custom_menu *menu = new EP_custom_menu();
+    menu->pointToLabelOwner = this;
     /*TO DO : Delete inline stylsheet. Provide program stylesheet for different windows.*/
     menu->setStyleSheet("QMenu::item:selected{background-color: rgb(132, 162, 174)} "
                         "QMenu{background-color: rgb(255, 255, 255)}"

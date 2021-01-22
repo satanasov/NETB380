@@ -9,7 +9,7 @@ class EP_custom_menu : public QMenu
 public:
     explicit EP_custom_menu();
     ~EP_custom_menu();
-
+    QWidget *pointToLabelOwner = nullptr;
 
 public slots:
 void editButtonClicked(QAction *action);

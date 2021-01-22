@@ -14,8 +14,10 @@ ep_show_report::ep_show_report(QWidget *parent) :
     ui->setupUi(this);
     /*/*Add VBoxLayout to the scrollArea.*/
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->setContentsMargins(1, 1, 1, 1);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
+    mainLayout->setAlignment(Qt::AlignTop);
+   // mainLayout->set
     ui->scrollAreaReport->widget()->setLayout(mainLayout);
     /*Default background color for all objects in report.*/
     //this->setStyleSheet("QDialog::item{background-color: grey}");
@@ -47,9 +49,6 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
     {
         for(int i = -1; i < reportData.size(); i++)
         {
-            /*Create widget container.*/
-            //QWidget *newWidgetContainer = new QWidget;
-
             /*Create horizontal box layout.*/
             QHBoxLayout *labelLayout = new QHBoxLayout;
             labelLayout->setContentsMargins(0, 0, 0, 0);
@@ -61,6 +60,7 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
             LabelToStore->setFrameStyle(QFrame::Panel | QFrame::Sunken);
             LabelToStore->setStyleSheet("*:hover{ background-color : rgb(132, 162, 174); style} ");
             LabelToStore->setMinimumSize(500,25);
+            LabelToStore->setMaximumHeight(50);
             /*Add custom menu.*/
             LabelToStore->setContextMenuPolicy(Qt::CustomContextMenu);
             /*Index trought the data.*/
@@ -128,6 +128,5 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         newWidgetContainer->setLayout(labelLayout);
         /*Add to the scrollAreaReport.*/
         ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
-       // ui->scrollAreaReport->widget()->setStyleSheet("background-color : white; color : black;");
     }
 }

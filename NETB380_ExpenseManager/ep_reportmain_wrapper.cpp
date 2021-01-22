@@ -319,6 +319,9 @@ void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups()
 /*Process expenses and provide to report.*/
 void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QList<QString> dataToProcess)
 {
+    /*Local vars.*/
+    QString typeOfReport = "";
+    bool isUserRequestAval = false;
     /*Get All expense groups.*/
     QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
     /*Initialize input arguments for getExpenseGroups.*/
@@ -340,6 +343,9 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             date.setTimeSpec(Qt::UTC);
             /*Change query for today date the value to int.*/
             FromTime = date.toTime_t();
+            typeOfReport = "Today expenses.";
+            isUserRequestAval = true;
+            TypeOfExpense = 1; // Expense.
             break;
         }
         case EP_EXPENSE_THIS_WEEK_TIME:
@@ -368,6 +374,9 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             /*Change starting point and ending point.*/
             toTime = endingPoint.toTime_t();
             FromTime = StartingPoint.toTime_t();
+            typeOfReport = "This week expenses.";
+            isUserRequestAval = true;
+            TypeOfExpense = 1; // Expense.
             break;
         }
         case EP_EXPENSE_THIS_MONTH_TIME:
@@ -394,6 +403,9 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             /*Change starting point and ending point.*/
             toTime = endingPoint.toTime_t();
             FromTime = StartingPoint.toTime_t();
+            typeOfReport = "This month expenses.";
+            isUserRequestAval = true;
+            TypeOfExpense = 1; // Expense.
             break;
         }
         case EP_EXPENSE_THIS_YEAR_TIME:
@@ -411,6 +423,138 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             /*Change starting point and ending point.*/
             toTime = endingPoint.toTime_t();
             FromTime = StartingPoint.toTime_t();
+            typeOfReport = "This year expenses.";
+            isUserRequestAval = true;
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_ALL_TIME_TIME:
+        {
+            typeOfReport = "All time expenses.";
+            isUserRequestAval = true;
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_CUSTOM_TIME:
+        {
+            typeOfReport = "Custom time fileters expenses.";
+            break;
+        }
+        case EP_EXPENSE_TRANSPORT_TYPE:
+        {
+            QString expenseGroupConst = "Transport";
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
+            typeOfReport = "Transport expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_FOOD_TYPE:
+        {
+            QString expenseGroupConst = "Food";
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
+            typeOfReport = "Food expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_CLOTHES_TYPE:
+        {
+            QString expenseGroupConst = "Clothes";
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
+            typeOfReport = "Clothes expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_UTILITY_TYPE:
+        {
+            QString expenseGroupConst = "Utility";
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
+            typeOfReport = "Utility expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_BANK_TYPE:
+        {
+            QString expenseGroupConst = "Bank";
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
+            typeOfReport = "Bank expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_EXPENSE_OTHER_TYPE:
+        {
+            typeOfReport = "Custom type filters expenses.";
+            TypeOfExpense = 1; // Expense.
+            break;
+        }
+        case EP_INCOME_TODAY:
+        {
+            typeOfReport = "Today incomes.";
+            TypeOfExpense = 0; // Expense.
+            break;
+        }
+        case EP_INCOME_THIS_WEEK:
+        {
+            typeOfReport = "This week incomes.";
+            TypeOfExpense = 0; // Expense.
+            break;
+        }
+        case EP_INCOME_THIS_MONTH:
+        {
+            typeOfReport = "This month incomes.";
+            TypeOfExpense = 0; // Expense.
+            break;
+        }
+        case EP_INCOME_THIS_YEAR:
+        {
+            typeOfReport = "This year incomes.";
+            TypeOfExpense = 0; // Expense.
+            break;
+        }
+        case EP_INCOME_ALL_TIME:
+        {
+            typeOfReport = "All time incomes.";
+            TypeOfExpense = 0; // Expense.
+            break;
+        }
+        case EP_INCOME_CUSTOM:
+        {
+            typeOfReport = "Custom filter incomes.";
+            TypeOfExpense = 0; // Expense.
             break;
         }
         default:
@@ -418,21 +562,30 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             break;
         }
     }
-    /*Get All expenses.*/
-   QList<QList<QString>> currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(
-                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
-                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
-                TypeOfExpense, // All groups.
-                Ammount, // Without filter for amounts
-               Ammount_delta, // Empty ammount delta, this is necessary whem amount is presented.
-               expense_name, // Empty filter for sorting by expense name
-               Expense_description, // Empty filter for sorting by description
-                ExpGroups, // Empty filter for sorting by expensegroups.
-                FromTime, // Empty filter for sorting by time -> Starting point.
-                toTime, // Empty filter for sorting by time -> Ending point.
-                0 // Emppty filter for adding limit to the requested expenses.
-                );
-    /*Substitue the exp_groups id to name of expense type.*/
+    QList<QList<QString>> currentUserExpenses;
+    if(isUserRequestAval == true)
+    {
+        /*Get All expenses.*/
+       currentUserExpenses= this->EP_ReportMain_GetDBPointer()->getExpenses(
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(0).toInt(),
+                    TypeOfExpense, // All groups.
+                    Ammount, // Without filter for amounts
+                   Ammount_delta, // Empty ammount delta, this is necessary whem amount is presented.
+                   expense_name, // Empty filter for sorting by expense name
+                   Expense_description, // Empty filter for sorting by description
+                    ExpGroups, // Empty filter for sorting by expensegroups.
+                    FromTime, // Empty filter for sorting by time -> Starting point.
+                    toTime, // Empty filter for sorting by time -> Ending point.
+                    0 // Empty filter for adding limit to the requested expenses.
+                    );
+    }
+    else
+    {
+        // Do nothing QList of QList is already empty.
+    }
+
+   /*Substitue the exp_groups id to name of expense type.*/
    for(int i = 0; i< currentUserExpenses.count();i++)
    {
        for(int j = 0; j< currentUserExpenseGroups.count();j++)
@@ -445,7 +598,7 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
        }
    }
    /*Emit signal to GUI to generate the window.*/
-   emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateReport(currentUserExpenses, TypeOfReport);
+   emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateReport(currentUserExpenses, typeOfReport);
 }
 
 /*Setters*/
