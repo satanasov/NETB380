@@ -74,6 +74,7 @@ public slots:
     void updateCurrentUserAmount();
     void generateReport(QList<QList<QString>> queryResult, QString typeOfReport);
     void openAddExpenseWindow();
+    void openCustomExpFilterWindow();
 
 
 private:

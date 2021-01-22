@@ -4,6 +4,7 @@
 #include "ep_welcome.h"
 #include "ui_ep_welcome.h"
 #include "ep_other.h"
+#include "ep_expenestype_customfilter.h"
 
 ep_welcome::ep_welcome(QWidget *parent) :
     QDialog(parent),
@@ -40,6 +41,7 @@ void ep_welcome::EP_WelcomeScreen_ConnectToED()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateReport(QList<QList<QString>>,QString)),this,SLOT(generateReport(QList<QList<QString>>,QString)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateCurrentUserAmount()),this,SLOT(updateCurrentUserAmount()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_OpenAddExpenseWindow()),this,SLOT(openAddExpenseWindow()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_OpenCustomExpTypeFilter()),this,SLOT(openCustomExpFilterWindow()));
 }
 /**/
 void ep_welcome::EP_WelcomeScreen_InitValues()
@@ -72,7 +74,7 @@ void ep_welcome::on_pushButtonAddMoney_clicked()
 void ep_welcome::on_pushButtonNewExpense_clicked()
 {
     /*Get current user exp groups for combobox.update.*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_updateCurrentUserExpGroups();
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_updateCurrentUserExpGroups(0);
 }
 void ep_welcome::generateReport(QList<QList<QString>> queryResult, QString typeOfReport)
 {
@@ -95,6 +97,17 @@ void ep_welcome::openAddExpenseWindow()
     ep_ad_e -> EP_AddExpense_ConnectToED();
     ep_ad_e ->EP_AE_InitializeComboBoxValues();
     ep_ad_e->show();
+}
+
+void ep_welcome::openCustomExpFilterWindow()
+{
+    //custom ???????
+    /*Send to report main request for all available exp groups.*/
+    EP_ExpenesType_CustomFilter *CustomFilter = new EP_ExpenesType_CustomFilter();
+    CustomFilter->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    CustomFilter->EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+    CustomFilter->UpdateComboList();
+    CustomFilter->exec();
 }
 
 /*Today all expense..*/
@@ -177,9 +190,8 @@ void ep_welcome::on_pushButtonBank_clicked()
 
 void ep_welcome::on_pushButtonOther_clicked()
 {
-    //custom ???????
-    ep_other *customFilteres = new ep_other();
-    customFilteres->exec();
+    /*Request update.*/
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_updateCurrentUserExpGroups(1);
 }
 
 void ep_welcome::on_pushButtonTodayIncomes_clicked()

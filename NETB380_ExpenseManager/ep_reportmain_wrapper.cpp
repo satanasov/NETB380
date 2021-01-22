@@ -36,7 +36,7 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport(EP_Report_Types,QList<QString>)),this,SLOT(EP_ReportMain_ProcessReport(EP_Report_Types,QList<QString>)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)),this,SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups()), this, SLOT(EP_ReportMain_Update_activeUserExpGroups()));
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups(int)), this, SLOT(EP_ReportMain_Update_activeUserExpGroups(int)));
 }
 
 /* Function to DB.*/
@@ -246,7 +246,7 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
 
 }
 
-void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups()
+void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups(int TypeOfReq)
 {
     QString defaulTypes[5] = {"Bank","Transport","Utility","Food","Clothes"};
     QString defaulTypesDesc[5] = {"Bank expenses.","Transport expenses.","Utility expenses.","Food expenses.","Clothes expenses."};
@@ -312,8 +312,17 @@ void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups()
         }
      }
      this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Set_activeUserExpGroups(currentUserExpenseGroups);
-    // qDebug() << currentUserExpenseGroups;
-     emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenAddExpenseWindow();
+
+     if(TypeOfReq == 0)
+     {
+        /*Request add expense window.*/
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenAddExpenseWindow();
+     }
+     else
+     {
+         /*Request custom window for searching by type.*/
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenCustomExpTypeFilter();
+     }
 }
 
 /*Process expenses and provide to report.*/
@@ -525,6 +534,15 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         {
             typeOfReport = "Custom type filters expenses.";
             TypeOfExpense = 1; // Expense.
+            QString expenseGroupConst = dataToProcess.at(0);
+            for(int i = 0; i < currentUserExpenseGroups.size();i++)
+            {
+                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                {
+                    isUserRequestAval = true;
+                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                }
+            }
             break;
         }
         case EP_INCOME_TODAY:

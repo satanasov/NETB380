@@ -56,7 +56,7 @@ public slots:
   //  void EP_ReportMain_ActiveUserNameAndAmount();
     void EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QList<QString> dataToProcess);
     void EP_ReportMain_Update_activeUserData();
-    void EP_ReportMain_Update_activeUserExpGroups();
+    void EP_ReportMain_Update_activeUserExpGroups(int TypeOfReq);
 
     /*Add expense window*/
     void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date, int ExpType);
