@@ -135,8 +135,9 @@ void ep_welcome::on_pushButtonAllTime_clicked()
 void ep_welcome::on_pushButtonCustom_clicked()
 {
     //custom ???????
-    ep_other *customFilteres = new ep_other();
-    customFilteres->exec();
+    ep_other *customTime = new ep_other();
+    customTime->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    customTime->exec();
 }
 
 void ep_welcome::on_pushButtonTransport_clicked()
@@ -179,4 +180,46 @@ void ep_welcome::on_pushButtonOther_clicked()
     //custom ???????
     ep_other *customFilteres = new ep_other();
     customFilteres->exec();
+}
+
+void ep_welcome::on_pushButtonTodayIncomes_clicked()
+{
+    //bank
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_TODAY,Empty);
+}
+
+void ep_welcome::on_pushButtonWeekIncomes_clicked()
+{
+    //bank
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_THIS_WEEK,Empty);
+}
+
+void ep_welcome::on_pushButtonMonthIncomes_clicked()
+{
+    //bank
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_THIS_MONTH,Empty);
+}
+
+void ep_welcome::on_pushButtonYear_2_clicked()
+{
+    //bank
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_THIS_YEAR,Empty);
+}
+
+void ep_welcome::on_pushButtonAllTimeIncomes_clicked()
+{
+    //bank
+    QList<QString> Empty;
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_ALL_TIME,Empty);
+}
+
+void ep_welcome::on_pushButtonCustomIncomes_clicked()
+{
+    ep_other *customTime = new ep_other();
+    customTime->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
+    customTime->exec();
 }

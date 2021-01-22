@@ -32,7 +32,7 @@ ep_show_report::~ep_show_report()
 void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportData)
 {
     /*TO DO get real money aval.*/
-    ui->labelAmountOfMoney->setText("Your current amount is: " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(4) + " BGN");
+    double AmountInThisRecord = 0;
     /*Set current user*/
     ui->labelDefaultUser->setText("Username: " + this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_LogUserName());
     /*Get current time and date for report generation.*/
@@ -97,6 +97,10 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                 }
                 else
                 {
+                    if(arrayIndexesInDataReport[j] == 3)
+                    {
+                        AmountInThisRecord += reportData.at(i).at(arrayIndexesInDataReport[j]).toDouble();
+                    }
                     /*Take all other data.*/
                     label->setText(reportData.at(i).at(arrayIndexesInDataReport[j]));
                 }
@@ -129,4 +133,5 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         /*Add to the scrollAreaReport.*/
         ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
     }
+    ui->labelAmountOfMoney->setText("Total amount in current report records is: " + QString::number(AmountInThisRecord) + " BGN");
 }

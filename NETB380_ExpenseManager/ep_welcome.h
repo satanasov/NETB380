@@ -57,6 +57,18 @@ private slots:
 
     void on_pushButtonOther_clicked();
 
+    void on_pushButtonTodayIncomes_clicked();
+
+    void on_pushButtonWeekIncomes_clicked();
+
+    void on_pushButtonMonthIncomes_clicked();
+
+    void on_pushButtonYear_2_clicked();
+
+    void on_pushButtonAllTimeIncomes_clicked();
+
+    void on_pushButtonCustomIncomes_clicked();
+
 public slots:
     void updateTime();
     void updateCurrentUserAmount();

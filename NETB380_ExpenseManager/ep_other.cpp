@@ -19,6 +19,24 @@ ep_other::~ep_other()
 
 void ep_other::on_pushButtonSearch_clicked()
 {
-    /*To Do emit signal that custom search is added.*/
+    QList<QString> info;
+    /*From time.*/
+    QDateTime from;
+    from = ui->dateEditFrom->dateTime();
+    from.setTimeSpec(Qt::UTC);
+    int UTC_TimeFrom = from.toTime_t();
+    /*To time.*/
+    QDateTime to;
+    to = ui->dateEditTo->dateTime();
+    to.setTimeSpec(Qt::UTC);
+    int UTC_TimeTo = to.toTime_t();
+    /*Append information to qlist and emit signal to generate report*/
+    info.append(QString::number(UTC_TimeFrom));
+    info.append(QString::number(UTC_TimeTo));
 
+    /*Emit signal*/
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_EXPENSE_CUSTOM_TIME,info);
+
+    /*Close window.*/
+    this->~ep_other();
 }
