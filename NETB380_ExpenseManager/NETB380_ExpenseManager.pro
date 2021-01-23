@@ -15,6 +15,7 @@ SOURCES += \
     ep_custom_menu.cpp \
     ep_db_settings.cpp \
     ep_db_wrapper.cpp \
+    ep_edit.cpp \
     ep_eventdispatcher.cpp \
     ep_expenestype_customfilter.cpp \
     ep_register.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     ep_custom_menu.h \
     ep_db_settings.h \
     ep_db_wrapper.h \
+    ep_edit.h \
     ep_eventdispatcher.h \
     ep_expenestype_customfilter.h \
     ep_main.h \
@@ -50,6 +52,7 @@ FORMS += \
     ep_add_expense.ui \
     ep_add_money.ui \
     ep_db_settings.ui \
+    ep_edit.ui \
     ep_expenestype_customfilter.ui \
     ep_main.ui \
     ep_register.ui \
