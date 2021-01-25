@@ -8,8 +8,8 @@ ep_other::ep_other(QWidget *parent) :
 {
     ui->setupUi(this);
     QDate date = QDate::currentDate();
-    ui->dateEditFrom->setDate(date);
-    ui->dateEditTo->setDate(date);
+    ui->dateTimeEditFrom->setDate(date);
+    ui->dateTimeEditTo->setDate(date);
 }
 
 ep_other::~ep_other()
@@ -22,12 +22,12 @@ void ep_other::on_pushButtonSearch_clicked()
     QList<QString> info;
     /*From time.*/
     QDateTime from;
-    from = ui->dateEditFrom->dateTime();
+    from = ui->dateTimeEditFrom->dateTime();
     from.setTimeSpec(Qt::UTC);
     int UTC_TimeFrom = from.toTime_t();
     /*To time.*/
     QDateTime to;
-    to = ui->dateEditTo->dateTime();
+    to = ui->dateTimeEditTo->dateTime();
     to.setTimeSpec(Qt::UTC);
     int UTC_TimeTo = to.toTime_t();
     /*Append information to qlist and emit signal to generate report*/

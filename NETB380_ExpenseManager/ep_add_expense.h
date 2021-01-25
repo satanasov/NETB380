@@ -21,6 +21,7 @@ public:
     void EP_AddExpense_ConnectToED();
     void EP_AE_InitializeComboBoxValues();
 
+    QStringList AllAvalExpTypes;
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;

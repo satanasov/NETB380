@@ -6,16 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>122</width>
-    <height>154</height>
+    <width>189</width>
+    <height>168</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Select dates</string>
-  </property>
-  <property name="windowIcon">
-   <iconset resource="resources.qrc">
-    <normaloff>:/new/icon/images/ep_icon.ico</normaloff>:/new/icon/images/ep_icon.ico</iconset>
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -26,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QDateEdit" name="dateEditFrom"/>
+    <widget class="QDateTimeEdit" name="dateTimeEditFrom"/>
    </item>
    <item>
     <widget class="QLabel" name="label_2">
@@ -36,7 +32,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QDateEdit" name="dateEditTo"/>
+    <widget class="QDateTimeEdit" name="dateTimeEditTo"/>
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonSearch">
@@ -47,8 +43,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

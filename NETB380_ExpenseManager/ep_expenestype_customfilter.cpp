@@ -20,8 +20,12 @@ void EP_ExpenesType_CustomFilter::UpdateComboList()
     /*Add items to combobox.*/
     for(int i =0 ; i < (this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().count());i++)
     {
-        ui->comboBox->addItem(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2),Qt::DisplayRole);
-        ui->comboBox->setEditable(false);
+        if(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2) != "Income")
+        {
+            qDebug() << this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2);
+            ui->comboBox->addItem(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2),Qt::DisplayRole);
+            ui->comboBox->setEditable(false);
+        }
     }
 }
 

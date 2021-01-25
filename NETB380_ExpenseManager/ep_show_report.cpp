@@ -91,7 +91,8 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                     /*Date of expense-income.*/
                     QDateTime timestamp;
                     /*Get date of expense.*/
-                    timestamp.setTime_t(reportData.at(i).at(7).toUInt());
+                    timestamp.setTimeSpec(Qt::UTC);
+                    timestamp.setTime_t(reportData.at(i).at(7).toUInt());                  
                     QString expense_date = timestamp.date().toString();
                     label->setText(expense_date);
                 }

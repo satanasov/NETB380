@@ -9,6 +9,7 @@ Here we will:
 #include <QThread>
 #include <QMessageBox>
 #include <QDateTime>
+#include <QTimeZone>
 #include <QList>
 #include <QTimeZone>
 #include "ep_db_wrapper.h"
@@ -220,6 +221,7 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
                     UTC_Time,
                     ExpType
                     );
+        qDebug("This is the UTC Time when ADDED: %d", UTC_Time);
         // This is example of how edit works.
         //addExpenseStatus = this->EP_ReportMain_GetDBPointer()->updateExpense(1, 0, 0, 25.9, 0, "edit test");
     }
@@ -333,6 +335,7 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     bool isUserRequestAval = false;
     /*Get All expense groups.*/
     QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    qDebug("Size of empty exp groups: %d", currentUserExpenseGroups.size());
     /*Initialize input arguments for getExpenseGroups.*/
     int TypeOfExpense = 0;
     double Ammount = 0;
@@ -347,11 +350,18 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     {
         case EP_EXPENSE_TODAY_EXPENSE_TIME:
         {
-            QDateTime date = QDateTime::currentDateTime();
+            /*All expenses from today at 00.00.000*/
+            QDate Currdate = QDate::currentDate();
+            QTime dateTime = QTime(00,00,00,000);
+            QDateTime date = QDateTime(Currdate,dateTime);
+            dateTime.setHMS(23,59,59,999);
+            QDateTime date1 = QDateTime(Currdate,dateTime);
             /*Set time format to UNIX*/
             date.setTimeSpec(Qt::UTC);
+            date1.setTimeSpec(Qt::UTC);
             /*Change query for today date the value to int.*/
             FromTime = date.toTime_t();
+            toTime = date1.toTime_t();
             typeOfReport = "Today expenses.";
             isUserRequestAval = true;
             TypeOfExpense = 1; // Expense.
@@ -359,30 +369,39 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_THIS_WEEK_TIME:
         {
-            /*Create ending point.*/
-            QDate date = QDate::currentDate();
-            QTime time;
-            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            time.setHMS(23,59,59,999);
-            QDateTime endingPoint = QDateTime::currentDateTime();
-            endingPoint.setTime(time);
-            /* - Set time format to UNIX*/
-            /* Get time from ECpoch*/
+            /*Get current date..*/
+            QDate currentDate = QDate::currentDate();
+            /*Get current day of week.*/
+            int dayInWeek = currentDate.dayOfWeek();
+            /*Create starting and ending offset.*/
+            int startingOffset = 1 - dayInWeek;
+            int endingOffset = 7 - dayInWeek;
+            /*Set current hour to 00.00.00.000 AM*/
+            QTime offsetTime = QTime(00,00,00,000);
+            QDateTime offsetDateTime = QDateTime(currentDate,offsetTime);
+            /*Calcaulte in MS the time difference.*/
+            qint64 startingDayDiffsInSeconds = (86400 * startingOffset);
+            qint64 endingDayDiffsInSeconds = (86400 * endingOffset);
+            /*Get current day since EPOCH and calculate starting and edning point.*/
+            qint64 startingPointInEPOCH = offsetDateTime.currentSecsSinceEpoch() + startingDayDiffsInSeconds;
+            qint64 endingPointInEPOCH = offsetDateTime.currentSecsSinceEpoch() + endingDayDiffsInSeconds;
+            /*Create QDateTime object to accumulate new calculate date and time.*/
+            QDateTime startingPoint = QDateTime();
+            startingPoint.setSecsSinceEpoch(startingPointInEPOCH);
+            QDateTime endingPoint = QDateTime();
+            endingPoint.setSecsSinceEpoch(endingPointInEPOCH);
+            /*Set QTime to starting and ending hour.*/
+            QTime startingTime = QTime(00,00,00,000);
+            QTime endingTime = QTime(23,59,59,999);
+            /*Assign times to QDateTime objects.*/
+            startingPoint.setTime(startingTime);
+            endingPoint.setTime(endingTime);
+            /*Convert both dates to UTC.*/
+            startingPoint.setTimeSpec(Qt::UTC);
             endingPoint.setTimeSpec(Qt::UTC);
-            /*Create strating point.*/
-            int numbOfWeekDay = date.dayOfWeek();
-            /*Always compare current day of week with first-monday.*/
-            qint64 getOffsetForStartingPoint = 1 - numbOfWeekDay;
-            /*Calculate how many days in terms of seconds to substract the current date.*/
-            getOffsetForStartingPoint = (86400 * (numbOfWeekDay * (-1)));
-            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-            QDateTime StartingPoint = QDateTime();
-            /*Set time defined by Epoc and timespec to UTC..*/
-            StartingPoint.setTimeSpec(Qt::UTC);
-            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
             /*Change starting point and ending point.*/
+            FromTime = startingPoint.toTime_t();
             toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
             typeOfReport = "This week expenses.";
             isUserRequestAval = true;
             TypeOfExpense = 1; // Expense.
@@ -390,28 +409,23 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_THIS_MONTH_TIME:
         {
-            /*Create ending point.*/
-            QDate date = QDate::currentDate();
-            QTime time;
-            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            time.setHMS(23,59,59,999);
-            QDateTime endingPoint = QDateTime::currentDateTime();
-            endingPoint.setTime(time);
-            /* - Set time format to UNIX*/
-            /* Get time from ECpoch*/
-            endingPoint.setTimeSpec(Qt::UTC);
-            /*Create strating point.*/
-            qint64 getOffsetForStartingPoint = (date.day() - date.daysInMonth());
-            /*Calculate how many days in terms of seconds to substract the current date.*/
-            getOffsetForStartingPoint = (86400 * (getOffsetForStartingPoint * (-1)));
-            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-            QDateTime StartingPoint = QDateTime();
-            /*Set time defined by Epoc and timespec to UTC..*/
-            StartingPoint.setTimeSpec(Qt::UTC);
-            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+            /*Get current date..*/
+            QDate currentDate = QDate::currentDate();
+            /*Create starting point.*/
+            int daysInMonth = currentDate.daysInMonth();
+            QTime startingPointTime = QTime(00,00,00,000);
+            QDate startingPointDate = QDate(currentDate.year(),currentDate.month(),1);
+            QDateTime startingDate = QDateTime(startingPointDate,startingPointTime);
+            /*Create ending point*/
+            QTime endingPointTime = QTime(23,59,59,999);
+            QDate endingPointDate = QDate(currentDate.year(),currentDate.month(),daysInMonth);
+            QDateTime endingDate = QDateTime(endingPointDate,endingPointTime);
+            /*Convert both dates to UTC.*/
+            endingDate.setTimeSpec(Qt::UTC);
+            startingDate.setTimeSpec(Qt::UTC);
             /*Change starting point and ending point.*/
-            toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
+            toTime = endingDate.toTime_t();
+            FromTime = startingDate.toTime_t();
             typeOfReport = "This month expenses.";
             isUserRequestAval = true;
             TypeOfExpense = 1; // Expense.
@@ -419,19 +433,24 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_THIS_YEAR_TIME:
         {
-            /*Create ending point.*/
-            QDate dateEndOfyear = QDate::currentDate();
-            QTime timeEndOfYear;
-            timeEndOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            QDateTime endingPoint = QDateTime(dateEndOfyear,timeEndOfYear);
-            /*Create starting point*/
-            QDate dateStartOfyear = QDate(dateEndOfyear.year(),1,1);
-            QTime timeStartOfYear;
-            timeStartOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            QDateTime StartingPoint = QDateTime(dateStartOfyear,timeStartOfYear);
+            /*Get current date year.*/
+            QDate currentDate = QDate::currentDate();
+            int currentDateYear = currentDate.year();
+            /*Create new time object.*/
+            QTime startingTime = QTime(00,00,00,000);
+            QTime endingTime = QTime(23,59,59,999);
+            /*Create new dates.*/
+            QDate startingDate = QDate(currentDateYear,1,1);
+            QDate endingDate = QDate(currentDateYear,12,31);
+            /*Create new Date and Time objects.*/
+            QDateTime startingDateTime = QDateTime(startingDate,startingTime);
+            QDateTime endingDateTime = QDateTime(endingDate,endingTime);
+            /*Conver to UTC.*/
+            startingDateTime.setTimeSpec(Qt::UTC);
+            endingDateTime.setTimeSpec(Qt::UTC);
             /*Change starting point and ending point.*/
-            toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
+            FromTime = startingDateTime.toTime_t();
+            toTime = endingDateTime.toTime_t();
             typeOfReport = "This year expenses.";
             isUserRequestAval = true;
             TypeOfExpense = 1; // Expense.
@@ -448,9 +467,7 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         {
             typeOfReport = "Custom time fileters expenses.";
             FromTime = dataToProcess.at(0).toInt();
-            qDebug("From time : %d", FromTime);
             toTime = dataToProcess.at(1).toInt();
-            qDebug("To time : %d", toTime);
             TypeOfExpense = 1; // Expense.
             isUserRequestAval = true;
             break;
@@ -460,10 +477,13 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = "Transport";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             typeOfReport = "Transport expenses.";
@@ -475,10 +495,13 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = "Food";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             typeOfReport = "Food expenses.";
@@ -490,10 +513,13 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = "Clothes";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             typeOfReport = "Clothes expenses.";
@@ -505,10 +531,13 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = "Utility";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             typeOfReport = "Utility expenses.";
@@ -520,10 +549,13 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = "Bank";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             typeOfReport = "Bank expenses.";
@@ -537,21 +569,31 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
             QString expenseGroupConst = dataToProcess.at(0);
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
-                if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
-                    isUserRequestAval = true;
-                    ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
+                    {
+                        isUserRequestAval = true;
+                        ExpGroups = currentUserExpenseGroups.at(i).at(0).toInt();
+                    }
                 }
             }
             break;
         }
         case EP_INCOME_TODAY:
         {
-            QDateTime date = QDateTime::currentDateTime();
+            /*All expenses from today at 00.00.000*/
+            QDate Currdate = QDate::currentDate();
+            QTime dateTime = QTime(00,00,00,000);
+            QDateTime date = QDateTime(Currdate,dateTime);
+            dateTime.setHMS(23,59,59,999);
+            QDateTime date1 = QDateTime(Currdate,dateTime);
             /*Set time format to UNIX*/
             date.setTimeSpec(Qt::UTC);
+            date1.setTimeSpec(Qt::UTC);
             /*Change query for today date the value to int.*/
             FromTime = date.toTime_t();
+            toTime = date1.toTime_t();
             typeOfReport = "Today incomes.";
             isUserRequestAval = true;
             TypeOfExpense = 0; // Expense.
@@ -559,30 +601,39 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_INCOME_THIS_WEEK:
         {
-            /*Create ending point.*/
-            QDate date = QDate::currentDate();
-            QTime time;
-            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            time.setHMS(23,59,59,999);
-            QDateTime endingPoint = QDateTime::currentDateTime();
-            endingPoint.setTime(time);
-            /* - Set time format to UNIX*/
-            /* Get time from ECpoch*/
+            /*Get current date..*/
+            QDate currentDate = QDate::currentDate();
+            /*Get current day of week.*/
+            int dayInWeek = currentDate.dayOfWeek();
+            /*Create starting and ending offset.*/
+            int startingOffset = 1 - dayInWeek;
+            int endingOffset = 7 - dayInWeek;
+            /*Set current hour to 00.00.00.000 AM*/
+            QTime offsetTime = QTime(00,00,00,000);
+            QDateTime offsetDateTime = QDateTime(currentDate,offsetTime);
+            /*Calcaulte in MS the time difference.*/
+            qint64 startingDayDiffsInSeconds = (86400 * startingOffset);
+            qint64 endingDayDiffsInSeconds = (86400 * endingOffset);
+            /*Get current day since EPOCH and calculate starting and edning point.*/
+            qint64 startingPointInEPOCH = offsetDateTime.currentSecsSinceEpoch() + startingDayDiffsInSeconds;
+            qint64 endingPointInEPOCH = offsetDateTime.currentSecsSinceEpoch() + endingDayDiffsInSeconds;
+            /*Create QDateTime object to accumulate new calculate date and time.*/
+            QDateTime startingPoint = QDateTime();
+            startingPoint.setSecsSinceEpoch(startingPointInEPOCH);
+            QDateTime endingPoint = QDateTime();
+            endingPoint.setSecsSinceEpoch(endingPointInEPOCH);
+            /*Set QTime to starting and ending hour.*/
+            QTime startingTime = QTime(00,00,00,000);
+            QTime endingTime = QTime(23,59,59,999);
+            /*Assign times to QDateTime objects.*/
+            startingPoint.setTime(startingTime);
+            endingPoint.setTime(endingTime);
+            /*Convert both dates to UTC.*/
+            startingPoint.setTimeSpec(Qt::UTC);
             endingPoint.setTimeSpec(Qt::UTC);
-            /*Create strating point.*/
-            int numbOfWeekDay = date.dayOfWeek();
-            /*Always compare current day of week with first-monday.*/
-            qint64 getOffsetForStartingPoint = 1 - numbOfWeekDay;
-            /*Calculate how many days in terms of seconds to substract the current date.*/
-            getOffsetForStartingPoint = (86400 * (numbOfWeekDay * (-1)));
-            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-            QDateTime StartingPoint = QDateTime();
-            /*Set time defined by Epoc and timespec to UTC..*/
-            StartingPoint.setTimeSpec(Qt::UTC);
-            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
             /*Change starting point and ending point.*/
+            FromTime = startingPoint.toTime_t();
             toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
             typeOfReport = "This week incomes.";
             isUserRequestAval = true;
             TypeOfExpense = 0; // Expense.
@@ -590,28 +641,23 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_INCOME_THIS_MONTH:
         {
-            /*Create ending point.*/
-            QDate date = QDate::currentDate();
-            QTime time;
-            /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            time.setHMS(23,59,59,999);
-            QDateTime endingPoint = QDateTime::currentDateTime();
-            endingPoint.setTime(time);
-            /* - Set time format to UNIX*/
-            /* Get time from ECpoch*/
-            endingPoint.setTimeSpec(Qt::UTC);
-            /*Create strating point.*/
-            qint64 getOffsetForStartingPoint = (date.day() - date.daysInMonth());
-            /*Calculate how many days in terms of seconds to substract the current date.*/
-            getOffsetForStartingPoint = (86400 * (getOffsetForStartingPoint * (-1)));
-            qint64 startingPointOfweekInEpochSecs = (endingPoint.toSecsSinceEpoch() - getOffsetForStartingPoint);
-            QDateTime StartingPoint = QDateTime();
-            /*Set time defined by Epoc and timespec to UTC..*/
-            StartingPoint.setTimeSpec(Qt::UTC);
-            StartingPoint.setSecsSinceEpoch(startingPointOfweekInEpochSecs);
+            /*Get current date..*/
+            QDate currentDate = QDate::currentDate();
+            /*Create starting point.*/
+            int daysInMonth = currentDate.daysInMonth();
+            QTime startingPointTime = QTime(00,00,00,000);
+            QDate startingPointDate = QDate(currentDate.year(),currentDate.month(),1);
+            QDateTime startingDate = QDateTime(startingPointDate,startingPointTime);
+            /*Create ending point*/
+            QTime endingPointTime = QTime(23,59,59,999);
+            QDate endingPointDate = QDate(currentDate.year(),currentDate.month(),daysInMonth);
+            QDateTime endingDate = QDateTime(endingPointDate,endingPointTime);
+            /*Convert both dates to UTC.*/
+            endingDate.setTimeSpec(Qt::UTC);
+            startingDate.setTimeSpec(Qt::UTC);
             /*Change starting point and ending point.*/
-            toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
+            toTime = endingDate.toTime_t();
+            FromTime = startingDate.toTime_t();
             typeOfReport = "This month incomes.";
             isUserRequestAval = true;
             TypeOfExpense = 0; // Expense.
@@ -619,22 +665,27 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_INCOME_THIS_YEAR:
         {
-            /*Create ending point.*/
-            QDate dateEndOfyear = QDate::currentDate();
-            QTime timeEndOfYear;
-            timeEndOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            QDateTime endingPoint = QDateTime(dateEndOfyear,timeEndOfYear);
-            /*Create starting point*/
-            QDate dateStartOfyear = QDate(dateEndOfyear.year(),1,1);
-            QTime timeStartOfYear;
-            timeStartOfYear.setHMS(23,59,59,999); /*Set time to last possible hour/minute/second/milisceond of the current day.*/
-            QDateTime StartingPoint = QDateTime(dateStartOfyear,timeStartOfYear);
+            /*Get current date year.*/
+            QDate currentDate = QDate::currentDate();
+            int currentDateYear = currentDate.year();
+            /*Create new time object.*/
+            QTime startingTime = QTime(00,00,00,000);
+            QTime endingTime = QTime(23,59,59,999);
+            /*Create new dates.*/
+            QDate startingDate = QDate(currentDateYear,1,1);
+            QDate endingDate = QDate(currentDateYear,12,31);
+            /*Create new Date and Time objects.*/
+            QDateTime startingDateTime = QDateTime(startingDate,startingTime);
+            QDateTime endingDateTime = QDateTime(endingDate,endingTime);
+            /*Conver to UTC.*/
+            startingDateTime.setTimeSpec(Qt::UTC);
+            endingDateTime.setTimeSpec(Qt::UTC);
             /*Change starting point and ending point.*/
-            toTime = endingPoint.toTime_t();
-            FromTime = StartingPoint.toTime_t();
+            FromTime = startingDateTime.toTime_t();
+            toTime = endingDateTime.toTime_t();
             typeOfReport = "This year incomes.";
             isUserRequestAval = true;
-            TypeOfExpense = 0; // Income.
+            TypeOfExpense = 0; // Expense.
             break;
         }
         case EP_INCOME_ALL_TIME:
@@ -648,9 +699,7 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         {
             typeOfReport = "Custom time fileters incomes.";
             FromTime = dataToProcess.at(0).toInt();
-            qDebug("From time : %d", FromTime);
             toTime = dataToProcess.at(1).toInt();
-            qDebug("To time : %d", toTime);
             TypeOfExpense = 0; // Expense.
             isUserRequestAval = true;
             break;
@@ -682,7 +731,8 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     {
         // Do nothing QList of QList is already empty.
     }
-
+    qDebug("This is the requested timestamp from : %d", FromTime);
+    qDebug("This is the requested timestamp to : %d", toTime);
    /*Substitue the exp_groups id to name of expense type.*/
    for(int i = 0; i< currentUserExpenses.count();i++)
    {

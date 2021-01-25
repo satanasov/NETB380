@@ -10,7 +10,7 @@ ep_add_expense::ep_add_expense(QWidget *parent) :
     ui->setupUi(this);
     /*Add current system date.*/
     QDate date = QDate::currentDate();
-    ui->dateEditDateExpense->setDate(date);
+    ui->dateTimeEditDateExpense->setDate(date);
     ui->comboBox->setFocusPolicy(Qt::StrongFocus);
     ui->comboBox->setFocus();
     ui->comboBox->installEventFilter(this);
@@ -31,7 +31,7 @@ void ep_add_expense::on_pushButtonExpenseAdd_clicked()
     QString amountOfExpense = ui->doubleSpinBoxPriceExpense->text();
     QString descriptionOfExpense = ui->lineEditDescription->text();
     /* Request expense adding.*/
-    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,descriptionOfExpense,ui->dateEditDateExpense->dateTime(),1);
+    this->EP_BaseClass_GetEDPointer()->EP_ED_AEWinRequestAddingExpense(nameOfExpense,typeOfExpense,amountOfExpense,descriptionOfExpense,ui->dateTimeEditDateExpense->dateTime(),1);
 }
 
 /* Local function.*/
@@ -52,9 +52,13 @@ void ep_add_expense::EP_AE_InitializeComboBoxValues()
         /*Get all available items.*/
         if(i < this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().count())
         {
-            ui->comboBox->addItem(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2),Qt::DisplayRole);
-            ui->comboBox->setEditable(false);
-            ui->comboBox->setCurrentIndex(CounterOfExpGroups);
+            if(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2) != "Income")
+            {
+                ui->comboBox->addItem(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2),Qt::DisplayRole);
+                ui->comboBox->setEditable(false);
+                ui->comboBox->setCurrentIndex(CounterOfExpGroups);
+                this->AllAvalExpTypes.append(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserExpGroups().at(i).at(2));
+            }
         }
         else
         {
@@ -103,6 +107,8 @@ void ep_add_expense::EP_AE_MakeLastLineEditable(int CurrentIndex)
     if(CurrentIndex == (this->ui->comboBox->count() - 1))
     {
         this->ui->comboBox->setEditable(true);
+        QCompleter *newCompleter = (this->AllAvalExpTypes,nullptr);
+        this->ui->comboBox->setCompleter(newCompleter);
     }
     else
     {

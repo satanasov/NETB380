@@ -16,11 +16,11 @@ public:
     ~ep_edit();
 
 private slots:
-    void on_pushButtonExpenseAdd_clicked();
+//    void on_pushButtonExpenseAdd_clicked();
 
-    void on_pushButtonDeleteEdit_clicked();
+//    void on_pushButtonDeleteEdit_clicked();
 
-    void on_pushButtonExpenseAddEdit_clicked();
+//    void on_pushButtonExpenseAddEdit_clicked();
 
 private:
     Ui::ep_edit *ui;
