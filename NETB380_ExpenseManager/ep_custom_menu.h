@@ -10,6 +10,7 @@ class EP_custom_menu : public QMenu, EP_BaseClass_GUI_ReportMain
 public:
     explicit EP_custom_menu();
     ~EP_custom_menu();
+    /*Pointer to QLabel that will be parent object to this class object..*/
     QWidget *pointToLabelOwner = nullptr;
 
     /*Exposing base class functions.*/
@@ -17,10 +18,9 @@ public:
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer;
-
-
 public slots:
-void editButtonClicked(QAction *action);
+    /*Slot for executing expense edit.*/
+    void editButtonClicked(QAction *action);
 
 };
 

@@ -103,7 +103,7 @@ void ep_add_expense::EP_AE_AddedExpenseStatus(int Status)
 
 void ep_add_expense::EP_AE_MakeLastLineEditable(int CurrentIndex)
 {
-    /*Make comboBox editable only if new selected.*/
+    /*Make comboBox editable only if new/Last index is selected.*/
     if(CurrentIndex == (this->ui->comboBox->count() - 1))
     {
         this->ui->comboBox->setEditable(true);

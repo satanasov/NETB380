@@ -16,7 +16,7 @@ public:
     explicit EP_ExpenesType_CustomFilter(QWidget *parent = nullptr);
     ~EP_ExpenesType_CustomFilter();
 
-    /**/
+    /*Function to update ComboBox with available expense types.*/
     void UpdateComboList();
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;

@@ -29,6 +29,7 @@ private slots:
     void on_pushButtonMoneyAdd_clicked();
 
 public slots:
+    /*Status of added income.*/
     void EP_AM_AddedMoneyStatus(int Status);
 
 private:

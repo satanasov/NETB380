@@ -23,23 +23,26 @@ EP_ReportMain::EP_ReportMain(QObject *parent) : QObject(parent)
 
 void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
 {
-    /*Connection between Event Dispatcher and report main.*/
-    /*LogIn Window requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_LogWinLogInRequest()), this, SLOT(EP_ReportMain_GetUserLogInStatus()));
-    /*Registration Window requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RegWinRegistrationRequest()), this, SLOT(EP_ReportMain_GetUserDataRegisterStatus()));
-    /*DB_Settings requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDBConnection(int)), this, SIGNAL(EP_ReportMain_OpenDB(int)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDeployTable()), this, SLOT(EP_ReportMain_DeployTableInCurrentDB()));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDropTable()), this, SLOT(EP_ReportMain_DropTableInCurrentDB()));
-    /*Welcome screen requests.*/
-    //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcWinRequestCurrentActiveUserBalanceAndName),this,SLOT(EP_ReportMain_GetCurrentUserAvalCurrency));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport(EP_Report_Types,QList<QString>)),this,SLOT(EP_ReportMain_ProcessReport(EP_Report_Types,QList<QString>)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)),this,SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups(int)), this, SLOT(EP_ReportMain_Update_activeUserExpGroups(int)));
-    /*Edit window requests.*/
-    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_EWinRequestTableRowUpdate(QList<QString>)), this, SLOT(EP_ReportMain_UpdateExpense(QList<QString>)));
+    /*Connections between Event Dispatcher and report main.*/
+        /*LogIn Window requests.*/
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_LogWinLogInRequest()), this, SLOT(EP_ReportMain_GetUserLogInStatus()));
+
+        /*Registration Window requests.*/
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RegWinRegistrationRequest()), this, SLOT(EP_ReportMain_GetUserDataRegisterStatus()));
+
+        /*DB_Settings requests.*/
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDBConnection(int)), this, SIGNAL(EP_ReportMain_OpenDB(int)));
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDeployTable()), this, SLOT(EP_ReportMain_DeployTableInCurrentDB()));
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_DBWinRequestDropTable()), this, SLOT(EP_ReportMain_DropTableInCurrentDB()));
+
+        /*Welcome screen requests.*/
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_getReport(EP_Report_Types,QList<QString>)),this,SLOT(EP_ReportMain_ProcessReport(EP_Report_Types,QList<QString>)));
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)),this,SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups(int)), this, SLOT(EP_ReportMain_Update_activeUserExpGroups(int)));
+
+        /*Edit window requests.*/
+        connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_EWinRequestTableRowUpdate(QList<QString>)), this, SLOT(EP_ReportMain_UpdateExpense(QList<QString>)));
 }
 
 /* Function to DB.*/
@@ -118,7 +121,7 @@ void EP_ReportMain::EP_ReportMain_OpenDBConnection(int idOfRequest)
     // TODO: Check if DB settings have connected to the DB and recheck
     if (DB_HOST  == "" || DB_NAME == "" || DB_USER == "" || DB_PASS == "")
     {
-        qDebug() << "You are missing DB settings :D";
+        // Missing DB settings.
     }
     else
     {
@@ -223,9 +226,6 @@ void EP_ReportMain::EP_ReportMain_AddExpense(QString nameOfExpense, QString type
                     UTC_Time,
                     ExpType
                     );
-        qDebug("This is the UTC Time when ADDED: %d", UTC_Time);
-        // This is example of how edit works.
-        //addExpenseStatus = this->EP_ReportMain_GetDBPointer()->updateExpense(1, 0, 0, 25.9, 0, "edit test");
     }
     else
     {
@@ -341,7 +341,6 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     bool isUserRequestAval = false;
     /*Get All expense groups.*/
     QList<QList<QString>> currentUserExpenseGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
-    qDebug("Size of empty exp groups: %d", currentUserExpenseGroups.size());
     /*Initialize input arguments for getExpenseGroups.*/
     int TypeOfExpense = 0;
     double Ammount = 0;
@@ -480,11 +479,14 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_TRANSPORT_TYPE:
         {
+            /*Check for Transport type expenses.*/
             QString expenseGroupConst = "Transport";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -498,11 +500,14 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_FOOD_TYPE:
         {
+            /*Check for Food type expenses.*/
             QString expenseGroupConst = "Food";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -516,11 +521,14 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_CLOTHES_TYPE:
         {
+             /*Check for Clothes type expenses.*/
             QString expenseGroupConst = "Clothes";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -534,11 +542,14 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_UTILITY_TYPE:
         {
+            /*Check for Utility type expenses.*/
             QString expenseGroupConst = "Utility";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -552,11 +563,14 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_BANK_TYPE:
         {
+             /*Check for Bank type expenses.*/
             QString expenseGroupConst = "Bank";
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -570,13 +584,16 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
         }
         case EP_EXPENSE_OTHER_TYPE:
         {
+            /*Check for Custom type expenses.*/
             typeOfReport = "Custom type filters expenses.";
             TypeOfExpense = 1; // Expense.
             QString expenseGroupConst = dataToProcess.at(0);
             for(int i = 0; i < currentUserExpenseGroups.size();i++)
             {
+                /*If user still has not made any expenses.*/
                 if(currentUserExpenseGroups.at(0).at(0) != "emptyTable")
                 {
+                    /*Check for expense with requested group.*/
                     if(currentUserExpenseGroups.at(i).at(2) == expenseGroupConst)
                     {
                         isUserRequestAval = true;
@@ -798,30 +815,38 @@ void EP_ReportMain::EP_ReportMain_UpdateExpense(QList<QString> rowData)
 
 QString EP_ReportMain::translateTypeOfCurrencyToString(int ExpGroup)
 {
+    /*Get from DB aval expense groups.*/
     QList<QList<QString>> expGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
     QString groupName = "";
+    /*Iterate trought result.*/
     for(int i = 0; i< expGroups.count();i++)
     {
+        /*Check for expense group ID availability.*/
         if(expGroups.at(i).at(0) == ExpGroup)
         {
+            /*Get name of expense group.*/
             groupName = expGroups.at(i).at(2);
         }
     }
+    /*Return result.*/
     return groupName;
 }
 
 int EP_ReportMain::translateTypeOfCurrencyToExpGroupNumb(QString typeOfExpense)
 {
+     /*Get from DB aval expense groups.*/
     QList<QList<QString>> expGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
     int ExpGroup = -1;
     for(int i = 0; i< expGroups.count();i++)
     {
+        /*Search for expense group ID by Name.*/
         if(expGroups.at(i).at(2) == typeOfExpense)
         {
-            qDebug() << expGroups.at(i).at(2) + " " + typeOfExpense;
+            /*Get id in table.*/
             ExpGroup = expGroups.at(i).at(0).toInt();
         }
     }
+    /*Return result.*/
     return ExpGroup;
 }
 

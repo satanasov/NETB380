@@ -13,8 +13,6 @@ EP_Main::EP_Main(QWidget *parent)
     ui->setupUi(this);
     ui->LogInUsername->setPlaceholderText("Enter your username");
     ui->LogInPassword->setPlaceholderText("Enter your password");
-    //placeholders for log in fields
-
     ui->pushButtonConnectDB->setStyleSheet("color: #FF0000"); //red text alert of button
 }
 

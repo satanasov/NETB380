@@ -24,7 +24,7 @@ ep_welcome::~ep_welcome()
     delete ui;
 }
 
-/**/
+/*SLOT:Update time of welcome screen.*/
 void ep_welcome::updateTime()
 {
     QTime time = QTime::currentTime();
@@ -35,16 +35,17 @@ void ep_welcome::updateTime()
     ui->labelDate->setText(date_text);
 }
 
+/*FUCNTION:*/
 void ep_welcome::EP_WelcomeScreen_ConnectToED()
 {
     /*All connections to ED to be made here.*/
-    //connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateUserNameAndAmount(QString, QString)),this,SLOT(EP_WelcomeScreen_InitValues(QString, QString)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_GenerateReport(QList<QList<QString>>,QString)),this,SLOT(generateReport(QList<QList<QString>>,QString)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_UpdateCurrentUserAmount()),this,SLOT(updateCurrentUserAmount()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_OpenAddExpenseWindow()),this,SLOT(openAddExpenseWindow()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_OpenCustomExpTypeFilter()),this,SLOT(openCustomExpFilterWindow()));
 }
-/**/
+
+/*Get current user information: Name and ammoint available.*/
 void ep_welcome::EP_WelcomeScreen_InitValues()
 {
    /**/
@@ -55,11 +56,12 @@ void ep_welcome::EP_WelcomeScreen_InitValues()
    ui->labelBalance->setText("Your current amount is: " + amount + " BGN");
 }
 
+/*Update ammount in welcome screen.*/
 void ep_welcome::updateCurrentUserAmount()
 {
-    /**/
+    /*Get available user ammount.*/
     QString amount = this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_activeUserData().at(0).at(4);
-    /**/
+    /*Set text to Welcome screen.*/
     ui->labelBalance->setText("Your current amount is: " + amount + " BGN");
 }
 
@@ -102,7 +104,6 @@ void ep_welcome::openAddExpenseWindow()
 
 void ep_welcome::openCustomExpFilterWindow()
 {
-    //custom ???????
     /*Send to report main request for all available exp groups.*/
     EP_ExpenesType_CustomFilter *CustomFilter = new EP_ExpenesType_CustomFilter();
     CustomFilter->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());

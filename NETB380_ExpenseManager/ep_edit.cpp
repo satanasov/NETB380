@@ -7,14 +7,15 @@ ep_edit::ep_edit(QWidget *parent) :
     ui(new Ui::ep_edit)
 {
     ui->setupUi(this);
+    /*Change focus policy of ComboBox*/
     ui->comboBoxTypeEdit->setFocusPolicy(Qt::StrongFocus);
     ui->comboBoxTypeEdit->setFocus();
+    /*Connect to override function eventFilter to get Tab key press.*/
     ui->comboBoxTypeEdit->installEventFilter(this);
+    /*Connect class signal slot for making line editable.*/
     connect(ui->comboBoxTypeEdit,SIGNAL(currentIndexChanged(int)),this,SLOT(EP_E_MakeLastLineEditable(int)));
 
 }
-
-//todo get values from the selected expense
 
 ep_edit::~ep_edit()
 {
@@ -28,6 +29,7 @@ void ep_edit::ConnectToED()
 
 void ep_edit::on_pushButtonExpenseAddEdit_clicked()
 {
+    /**/
     bool IsAmountChanged = false;
     int AmmountDif = 0;
     QList<QString> updatedData;
@@ -204,26 +206,34 @@ void ep_edit::EP_E_UpdateCurrentRowInReport(int StatusOfUpdate)
           {
               if(ArrIndex == 0)
               {
+                /*Update name in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(0));
               }
               else if(ArrIndex == 1)
               {
+                /*Update type in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(1));
               }
+
               else if(ArrIndex == 2)
               {
+                /*Update price in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(2));
               }
+
               else if(ArrIndex == 3)
               {
+                /*Update currency type in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(3));
               }
               else if(ArrIndex == 4)
               {
+                /*Update date in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(4));
               }
               else if(ArrIndex == 5)
               {
+                /*Update description in show report window..*/
                 LabelsInside->setText(this->modifiedText.at(5));
               }
               ArrIndex++;
@@ -234,5 +244,4 @@ void ep_edit::EP_E_UpdateCurrentRowInReport(int StatusOfUpdate)
     msg.setWindowTitle("Update expense status");
     msg.setText("Expense is updates successfully!");
     msg.exec();
-    qDebug() << "Edit stauts we are here!";
 }

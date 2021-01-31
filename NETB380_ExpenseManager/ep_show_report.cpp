@@ -76,10 +76,8 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
                 label->setWordWrap(true);
-               //label->setVisible(false); // To do remove
                 label->setMinimumSize(100,25);
                 label->setFrameStyle(QFrame::Panel | QFrame::Plain);
-                //label->setStyleSheet("QLabel { background-color : white; color : black; }");
                 /*Add first row name of columns*/
                 if(-1 == i)
                 {
@@ -130,7 +128,7 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         QWidget *newWidgetContainer = new QWidget;
         /*Create horizontal box layout.*/
         QHBoxLayout *labelLayout = new QHBoxLayout;
-        /**/
+        /*Create QLabel to put information.*/
         QLabel *label = new QLabel();
         label->setFrameStyle(QFrame::StyledPanel | QFrame::Plain);
         label->setText("No data to present. Please firstly add the requested data for report.");
@@ -141,5 +139,4 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         /*Add to the scrollAreaReport.*/
         ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
     }
-    //ui->labelAmountOfMoney->setText("Total amount in current report records is: " + QString::number(AmountInThisRecord) + " BGN");
 }

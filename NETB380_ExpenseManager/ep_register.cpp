@@ -13,8 +13,7 @@ ep_register::ep_register(QWidget *parent) :
     ui->RegisterPassword->setPlaceholderText("Enter a password");
     ui->RegisterRepeat->setPlaceholderText("Repeat the password");
     ui->RegisterEmail->setPlaceholderText("Enter an email");
-    //placeholders for register fields
-     connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
+    connect(this, SIGNAL(EP_Register_registerDialogFilledCorrectly()),this,SLOT(EP_Register_Save_Data_In_UserData()));
 }
 
 ep_register::~ep_register()
@@ -27,14 +26,6 @@ void ep_register::on_pushButtonRegister_clicked()
 {
     int WhichFieldIsEmpty = 0; // Init value.
     bool ErrorInField = false;
-    //todo
-    /*
-        when databese is connected
-        -check if username already exists
-        -check if email is a valid one
-        -make a new account
-    */
-    /**/
     for(WhichFieldIsEmpty; WhichFieldIsEmpty <= 4; WhichFieldIsEmpty++)
     {
         if(true == (ErrorInField = this->IsLineEditEmptyOrDefault(WhichFieldIsEmpty)))
@@ -119,6 +110,7 @@ bool ep_register::IsLineEditEmptyOrDefault(int FieldType)
 
  void ep_register::CreateWarningDialog(int FieldType)
 {
+     /*Process FieldType error and create warning dialog.*/
      switch (FieldType)
      {
          case 0:

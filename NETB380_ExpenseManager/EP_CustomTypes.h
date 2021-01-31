@@ -1,6 +1,7 @@
 #ifndef EP_CUSTOMTYPES_H
 #define EP_CUSTOMTYPES_H
 
+/*Custom type for Report_Type.*/
 typedef enum EP_Report_Types{
     EP_EXPENSE_TODAY_EXPENSE_TIME = 0,
     EP_EXPENSE_THIS_WEEK_TIME = 1,

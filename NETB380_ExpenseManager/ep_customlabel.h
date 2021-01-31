@@ -13,7 +13,7 @@ class EP_CustomLabel : public QLabel, EP_BaseClass_GUI_ReportMain
 public:
     EP_CustomLabel();
 
-    /**/
+    /*ID of table row in DB for the current expense/income.*/
     int IdInTable = 0;
 
     /*Exposing base class functions.*/

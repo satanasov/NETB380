@@ -929,7 +929,7 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         }
         if (type > 0)
         {
-             req << " type = " + QString("%1").arg(expense_id);
+             req << " type = " + QString("%1").arg(type);
         }
         if (name != "")
         {
@@ -954,7 +954,6 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         QString rq = req.join(",");
         request.append(rq);
         request.append(" WHERE id = " + QString("%1").arg(expense_id) + ";");
-        qDebug() << request;
         db.exec(request);
         if (db.lastError().isValid())
         {

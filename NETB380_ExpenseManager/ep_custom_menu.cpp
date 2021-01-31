@@ -45,7 +45,8 @@ void EP_custom_menu::editButtonClicked(QAction *action)
    }
    else
    {
+        /*Close window.*/
         this->~EP_custom_menu();
         newEdit->~ep_edit();
-   }/*Close window.*/
+   }
 }

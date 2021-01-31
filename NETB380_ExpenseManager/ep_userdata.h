@@ -9,6 +9,7 @@ class EP_UserData : QObject
 {
     Q_OBJECT
 public:
+
     EP_UserData();
     ~EP_UserData();
     /*Setters.*/
@@ -29,10 +30,8 @@ public:
     int EP_UserData_Get_ActiveUserId();
     QList<QList<QString>> EP_UserData_Get_activeUserData();
     QList<QList<QString>> EP_UserData_Get_activeUserExpGroups();
+
 private:
-    /*To DO:
-     * Add here the containers necessary to update GUI report and all User data that will be provided to and from the GUI.
-    */
     QString RegUserName;
     QString RegUserPassword;
     QString RegUserEmail;
