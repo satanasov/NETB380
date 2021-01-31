@@ -3,22 +3,36 @@
 
 #include <QLabel>
 #include <QFrame>
+#include "ep_baseclass_gui_reportmain.h"
 
-class EP_CustomLabel : public QLabel
+class EP_CustomLabel : public QLabel, EP_BaseClass_GUI_ReportMain
 {
     Q_OBJECT
+
+    Q_PROPERTY(int m_Id MEMBER IdInTable)
 public:
     EP_CustomLabel();
 
+    /**/
+    int IdInTable = 0;
+
+    /*Exposing base class functions.*/
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetUserDataPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;
+    using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetUserDataPointer;
+
+
 public slots:
     void createMenu(const QPoint &pos);
+
+
 
 protected:
     /*Create highlight effect.*/
     void enterEvent(QEvent *ev) override
     {
        this->setFrameStyle(QFrame::Panel | QFrame::Raised);
-       //this->
 
     }
 

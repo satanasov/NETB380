@@ -5,6 +5,7 @@
 #include "ui_ep_welcome.h"
 #include "ep_other.h"
 #include "ep_expenestype_customfilter.h"
+#include "ep_edit.h"
 
 ep_welcome::ep_welcome(QWidget *parent) :
     QDialog(parent),

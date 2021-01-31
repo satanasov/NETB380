@@ -3,6 +3,7 @@
 #include <QHeaderView>
 #include <QHBoxLayout>
 #include <QFrame>
+#include <QTextCodec>
 #include "ep_show_report.h"
 #include "ui_ep_show_report.h"
 #include "ep_custom_menu.h"
@@ -12,15 +13,12 @@ ep_show_report::ep_show_report(QWidget *parent) :
     ui(new Ui::ep_show_report)
 {
     ui->setupUi(this);
-    /*/*Add VBoxLayout to the scrollArea.*/
+    /*Add VBoxLayout to the scrollArea.*/
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
     mainLayout->setAlignment(Qt::AlignTop);
-   // mainLayout->set
     ui->scrollAreaReport->widget()->setLayout(mainLayout);
-    /*Default background color for all objects in report.*/
-    //this->setStyleSheet("QDialog::item{background-color: grey}");
 }
 
 ep_show_report::~ep_show_report()
@@ -41,9 +39,9 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
     QString final_date = "Current date is: " + dateTime;
     ui->label_3->setText(final_date);
     /*Indexes in reportData.*/
-    int arrayIndexesInDataReport[5] = {4,6,3,255,7}; // 255 should be subsitute with the currency type of the expense.
+    int arrayIndexesInDataReport[6] = {4,6,3,255,7,5}; // 255 should be subsitute with the currency type of the expense.
     /*Start of report first column of */
-    QString firstRow[5] = {"Name","Type","Amount","Currency Type","Date"};
+    QString firstRow[6] = {"Name","Type","Amount","Currency Type","Date","Description"};
     /*Process all expenses/incomes only if they are available. */
     if(false == reportData.isEmpty())
     {
@@ -56,18 +54,28 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
             /*Make custom label function.*/
             EP_CustomLabel *LabelToStore = new EP_CustomLabel();
             LabelToStore->setLayout(labelLayout);
+            LabelToStore -> EP_BaseClass_SetUserDataPointer(this->EP_BaseClass_GetUserDataPointer());
+            LabelToStore -> EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
             LabelToStore->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
             LabelToStore->setFrameStyle(QFrame::Panel | QFrame::Sunken);
             LabelToStore->setStyleSheet("*:hover{ background-color : rgb(132, 162, 174); style} ");
-            LabelToStore->setMinimumSize(500,25);
+            LabelToStore->setMinimumSize(600,25);
             LabelToStore->setMaximumHeight(50);
+            /*First row is informative.*/
+            if(i > -1)
+            {
+                /*Get id in table.*/
+                LabelToStore->IdInTable = reportData.at(i).at(0).toUInt();
+                LabelToStore->setProperty("tableId",reportData.at(i).at(0).toUInt());
+            }
             /*Add custom menu.*/
             LabelToStore->setContextMenuPolicy(Qt::CustomContextMenu);
             /*Index trought the data.*/
-            for(int j = 0; j < 5; j++)
+            for(int j = 0; j < 6; j++)
             {
                 /*Name of expense.*/
                 QLabel *label = new QLabel();
+                label->setWordWrap(true);
                //label->setVisible(false); // To do remove
                 label->setMinimumSize(100,25);
                 label->setFrameStyle(QFrame::Panel | QFrame::Plain);
@@ -93,7 +101,7 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                     /*Get date of expense.*/
                     timestamp.setTimeSpec(Qt::UTC);
                     timestamp.setTime_t(reportData.at(i).at(7).toUInt());                  
-                    QString expense_date = timestamp.date().toString();
+                    QString expense_date = timestamp.toString("dd.MM.yyyy hh:mm:ss");
                     label->setText(expense_date);
                 }
                 else
@@ -103,13 +111,12 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
                         AmountInThisRecord += reportData.at(i).at(arrayIndexesInDataReport[j]).toDouble();
                     }
                     /*Take all other data.*/
-                    label->setText(reportData.at(i).at(arrayIndexesInDataReport[j]));
+                    label->setText(reportData.at(i).at(arrayIndexesInDataReport[j]).toUtf8());
                 }
                 /*Make center alignment*/
                 label->setAlignment(Qt::AlignCenter | Qt::AlignCenter);
                 /*Add label to layout*/
                 labelLayout->addWidget(label);
-
                 /*Set to the container widget all gathered Qlabels.*/
                 LabelToStore->setLayout(labelLayout);
                 /*Add to the scrollAreaReport.*/
@@ -134,5 +141,5 @@ void ep_show_report::EP_ShowReport_ProcessReport(QList<QList<QString>> reportDat
         /*Add to the scrollAreaReport.*/
         ui->scrollAreaReport->widget()->layout()->addWidget(newWidgetContainer);
     }
-    ui->labelAmountOfMoney->setText("Total amount in current report records is: " + QString::number(AmountInThisRecord) + " BGN");
+    //ui->labelAmountOfMoney->setText("Total amount in current report records is: " + QString::number(AmountInThisRecord) + " BGN");
 }

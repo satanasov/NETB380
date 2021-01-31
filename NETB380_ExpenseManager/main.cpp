@@ -4,6 +4,7 @@
 #include "ep_eventdispatcher.h"
 #include <QThread>
 #include <QApplication>
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {

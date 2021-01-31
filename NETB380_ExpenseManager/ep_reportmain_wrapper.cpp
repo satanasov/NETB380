@@ -38,6 +38,8 @@ void EP_ReportMain::EP_ReportMain_ConnectToEventDispacther()
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_WlcScreenUpdateCurrentUserData()),this,SLOT(EP_ReportMain_Update_activeUserData()));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_AEWinRequestAddingExpense(QString,QString,QString,QString,QDateTime,int)),this,SLOT(EP_ReportMain_AddExpense(QString,QString,QString,QString,QDateTime,int)));
     connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_RMWlcScreen_updateCurrentUserExpGroups(int)), this, SLOT(EP_ReportMain_Update_activeUserExpGroups(int)));
+    /*Edit window requests.*/
+    connect(this->EP_BaseClass_GetEDPointer(),SIGNAL(EP_ED_EWinRequestTableRowUpdate(QList<QString>)), this, SLOT(EP_ReportMain_UpdateExpense(QList<QString>)));
 }
 
 /* Function to DB.*/
@@ -320,10 +322,14 @@ void EP_ReportMain::EP_ReportMain_Update_activeUserExpGroups(int TypeOfReq)
         /*Request add expense window.*/
         emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenAddExpenseWindow();
      }
-     else
+     else if(TypeOfReq == 1)
      {
          /*Request custom window for searching by type.*/
         emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_OpenCustomExpTypeFilter();
+     }
+     else
+     {
+         /*Here it will be the edit window.*/
      }
 }
 
@@ -731,8 +737,6 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
     {
         // Do nothing QList of QList is already empty.
     }
-    qDebug("This is the requested timestamp from : %d", FromTime);
-    qDebug("This is the requested timestamp to : %d", toTime);
    /*Substitue the exp_groups id to name of expense type.*/
    for(int i = 0; i< currentUserExpenses.count();i++)
    {
@@ -747,6 +751,78 @@ void EP_ReportMain::EP_ReportMain_ProcessReport(EP_Report_Types TypeOfReport, QL
    }
    /*Emit signal to GUI to generate the window.*/
    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_GenerateReport(currentUserExpenses, typeOfReport);
+}
+
+void EP_ReportMain::EP_ReportMain_UpdateExpense(QList<QString> rowData)
+{
+    /*Prepare time.*/
+    QDateTime DateTimeFromString = QDateTime::fromString(rowData.at(4), "dd.MM.yyyy hh:mm:ss");
+    /*Set time format to UNIX*/
+    DateTimeFromString.setTimeSpec(Qt::UTC);
+    /*Assign the value to int.*/
+    int UTC_Time = DateTimeFromString.toTime_t();
+
+    /*Translate group name to group id.*/
+    /*Substitue the exp_groups id to name of expense type.*/
+    int ExpGroup = this->translateTypeOfCurrencyToExpGroupNumb(rowData.at(1));
+    if(ExpGroup == -1)
+    {
+        this->EP_ReportMain_GetDBPointer()->addExpenseGroup(
+                    this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                    rowData.at(1),
+                    "Default description."
+                    );
+        ExpGroup = this->translateTypeOfCurrencyToExpGroupNumb(rowData.at(1));
+    }
+    /*Start with expense type : Expense*/
+    int TypeOfExp = 1;
+    /*Check if current row is income.*/
+    if(rowData.at(1) == "Income")
+    {
+        TypeOfExp = 0;
+    }
+    /*Update current expense.*/
+    int UpdateResult = this->EP_ReportMain_GetDBPointer()->updateExpense(
+                rowData.at(rowData.size()-1).toInt(),
+                this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId(),
+                TypeOfExp,
+                rowData.at(2).toDouble(),
+                ExpGroup,
+                rowData.at(5),
+                UTC_Time,
+                rowData.at(0)
+                );
+    /*Report result of update.*/
+    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RM_Editexpenseincoem(UpdateResult);
+}
+
+QString EP_ReportMain::translateTypeOfCurrencyToString(int ExpGroup)
+{
+    QList<QList<QString>> expGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    QString groupName = "";
+    for(int i = 0; i< expGroups.count();i++)
+    {
+        if(expGroups.at(i).at(0) == ExpGroup)
+        {
+            groupName = expGroups.at(i).at(2);
+        }
+    }
+    return groupName;
+}
+
+int EP_ReportMain::translateTypeOfCurrencyToExpGroupNumb(QString typeOfExpense)
+{
+    QList<QList<QString>> expGroups = this->EP_ReportMain_GetDBPointer()->getExpenseGroups(this->EP_BaseClass_GetUserDataPointer()->EP_UserData_Get_ActiveUserId());
+    int ExpGroup = -1;
+    for(int i = 0; i< expGroups.count();i++)
+    {
+        if(expGroups.at(i).at(2) == typeOfExpense)
+        {
+            qDebug() << expGroups.at(i).at(2) + " " + typeOfExpense;
+            ExpGroup = expGroups.at(i).at(0).toInt();
+        }
+    }
+    return ExpGroup;
 }
 
 /*Setters*/

@@ -74,20 +74,6 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QPushButton" name="pushButtonAddMoney">
-     <property name="text">
-      <string>Add money</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="3">
-    <widget class="QPushButton" name="pushButtonNewExpense">
-     <property name="text">
-      <string>Add new expense</string>
-     </property>
-    </widget>
-   </item>
    <item row="5" column="2" colspan="2">
     <widget class="QLabel" name="label_3">
      <property name="text">
@@ -241,6 +227,20 @@
     <widget class="QPushButton" name="pushButtonCustomIncomes">
      <property name="text">
       <string>Custom</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QPushButton" name="pushButtonNewExpense">
+     <property name="text">
+      <string>Add new expense</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QPushButton" name="pushButtonAddMoney">
+     <property name="text">
+      <string>Add money</string>
      </property>
     </widget>
    </item>

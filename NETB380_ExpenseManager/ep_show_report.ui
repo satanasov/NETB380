@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>450</height>
+    <width>720</width>
+    <height>441</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -52,16 +52,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="labelAmountOfMoney">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
-        </property>
-        <property name="text">
-         <string>Your amount of money : </string>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QLabel" name="label_3">
         <property name="frameShape">
          <enum>QFrame::NoFrame</enum>
@@ -94,8 +84,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>580</width>
-        <height>321</height>
+        <width>700</width>
+        <height>331</height>
        </rect>
       </property>
      </widget>

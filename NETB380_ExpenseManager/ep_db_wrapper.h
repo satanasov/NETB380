@@ -29,7 +29,7 @@ public:
     QList<QList<QString>> getUserAccounts(int userId);
     int addExpense(int userId, int accountId, double ammount, QString name, QString description, int expGroup, int added_at, int expType);
     QList<QList<QString>> getExpenses(int userId, int accountId = 0, int type = -1, double ammount = 0.0, QString ammount_delta = "<", QString name = "", QString description = "", int expGroup = 0, int fromTime = 0, int toTime = 0, int limit = 20);
-    int updateExpense(int expense_id, int new_aid, int type, double ammount, int new_group_name, QString new_desc);
+    int updateExpense(int expense_id, int new_aid, int type, double ammount, int new_group_name, QString new_desc, int dateAdded, QString name);
 };
 
 #endif // EP_DB_WRAPPER_H

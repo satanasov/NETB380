@@ -32,6 +32,10 @@ public:
     /*Getters*/
     EP_DB_Wrapper* EP_ReportMain_GetDBPointer();
 
+    /*Local help funcs.*/
+    QString translateTypeOfCurrencyToString(int ExpGroup);
+    int translateTypeOfCurrencyToExpGroupNumb(QString typeOfExpense);
+
 private:
     /*Pointer to DB wrapper.*/
     EP_DB_Wrapper *sql = nullptr;
@@ -58,6 +62,8 @@ public slots:
     void EP_ReportMain_Update_activeUserData();
     void EP_ReportMain_Update_activeUserExpGroups(int TypeOfReq);
 
+    /*Edit window*/
+    void EP_ReportMain_UpdateExpense(QList<QString> rowData);
     /*Add expense window*/
     void EP_ReportMain_AddExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString descriptionOfExpense, QDateTime date, int ExpType);
 

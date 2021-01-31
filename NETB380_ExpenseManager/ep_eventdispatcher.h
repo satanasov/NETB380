@@ -30,8 +30,10 @@ signals:
     void EP_ED_WlcScreenUpdateCurrentUserData();
     void EP_ED_RMWlcScreen_getReport(EP_Report_Types ReportType, QList<QString> DataToProvide);
     void EP_ED_RMWlcScreen_updateCurrentUserExpGroups(int ReqType);
-    /*Add expense window*/
+    /*Add expense window.*/
     void EP_ED_AEWinRequestAddingExpense(QString nameOfExpense, QString typeOfExpense, QString amountOfExpense, QString description, QDateTime date, int expType);
+    /*Editing expense window.*/
+    void EP_ED_EWinRequestTableRowUpdate(QList<QString> data);
 
     /*Signals to GUI.*/
     /*Registration window.*/
@@ -50,6 +52,8 @@ signals:
     void EP_ED_RM_AddExpenseStatus(int Status);
     /*Add money window.*/
     void EP_ED_RM_AddMoneyStatus(int Status);
+    /*Edit window.*/
+    void EP_ED_RM_Editexpenseincoem(int Status);
 };
 
 #endif // EP_EVENTDISPATCHER_H

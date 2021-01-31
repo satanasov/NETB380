@@ -915,7 +915,7 @@ QList<QList<QString>> EP_DB_Wrapper::getExpenses(int userId, int accountId, int 
  * @param new_desc
  * @return
  */
-int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, double ammount = 0, int new_group_name = 0, QString new_desc = "")
+int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, double ammount = 0, int new_group_name = 0, QString new_desc = "", int dateAdded = 0, QString name = "")
 {
     QSqlDatabase db = QSqlDatabase::database("appdb");
     if (db.isOpen())
@@ -931,6 +931,10 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         {
              req << " type = " + QString("%1").arg(expense_id);
         }
+        if (name != "")
+        {
+             req << " name = '" + QString("%1").arg(name)+ "'";
+        }
         if (ammount > 0)
         {
             req << " amount = " + QString("%1").arg(ammount);
@@ -939,13 +943,17 @@ int EP_DB_Wrapper::updateExpense(int expense_id, int new_aid = 0, int type = 0, 
         {
             req << " group_name = " + QString("%1").arg(new_group_name);
         }
+        if (dateAdded != 0)
+        {
+            req << " added_at = " + QString("%1").arg(dateAdded);
+        }
         if (new_desc != "")
         {
-            req << " description = '" + QString("%1").arg(new_group_name) + "'";
-        }
+            req << " description = '" + QString("%1").arg(new_desc) + "'";
+        }       
         QString rq = req.join(",");
         request.append(rq);
-        request.append(" WHERE id = " + QString("%1").arg(expense_id));
+        request.append(" WHERE id = " + QString("%1").arg(expense_id) + ";");
         qDebug() << request;
         db.exec(request);
         if (db.lastError().isValid())
