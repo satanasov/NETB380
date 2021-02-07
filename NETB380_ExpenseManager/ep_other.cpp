@@ -35,8 +35,14 @@ void ep_other::on_pushButtonSearch_clicked()
     info.append(QString::number(UTC_TimeTo));
 
     /*Emit signal*/
-    emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_EXPENSE_CUSTOM_TIME,info);
-
+    if(this->typeOfOther == 0)
+    {
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_EXPENSE_CUSTOM_TIME,info);
+    }
+    else
+    {
+        emit this->EP_BaseClass_GetEDPointer()->EP_ED_RMWlcScreen_getReport(EP_INCOME_CUSTOM,info);
+    }
     /*Close window.*/
     this->~ep_other();
 }

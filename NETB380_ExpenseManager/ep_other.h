@@ -17,6 +17,8 @@ public:
     explicit ep_other(QWidget *parent = nullptr);
     ~ep_other();
 
+    /*Type of report - Income or Expnese.*/
+    int typeOfOther;
     /*Exposing base class functions.*/
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_SetEventDispatcherPointer;
     using EP_BaseClass_GUI_ReportMain::EP_BaseClass_GetEDPointer;

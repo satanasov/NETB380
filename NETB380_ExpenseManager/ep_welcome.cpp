@@ -151,6 +151,7 @@ void ep_welcome::on_pushButtonCustom_clicked()
 {
     //custom ???????
     ep_other *customTime = new ep_other();
+    customTime->typeOfOther = 0;
     customTime->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
     customTime->exec();
 }
@@ -234,6 +235,8 @@ void ep_welcome::on_pushButtonAllTimeIncomes_clicked()
 void ep_welcome::on_pushButtonCustomIncomes_clicked()
 {
     ep_other *customTime = new ep_other();
+    /*Income*/
+    customTime->typeOfOther = 1;
     customTime->EP_BaseClass_SetEventDispatcherPointer(this->EP_BaseClass_GetEDPointer());
     customTime->exec();
 }
