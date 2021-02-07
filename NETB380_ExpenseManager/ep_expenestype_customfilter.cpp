@@ -6,7 +6,7 @@ EP_ExpenesType_CustomFilter::EP_ExpenesType_CustomFilter(QWidget *parent) :
     ui(new Ui::EP_ExpenesType_CustomFilter)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Expense type filter.");
+    this->setWindowTitle("Expense type");
 }
 
 EP_ExpenesType_CustomFilter::~EP_ExpenesType_CustomFilter()
